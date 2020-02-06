@@ -16,6 +16,7 @@ public class CatalogCountsStoreInJsonRepository implements ICrudActionsRepositor
         if (catalogCounts == null) {
             throw new Exception("saveCatalogCounts object is null");
         }
+
         Gson catalogCountsJson = new Gson();
         String jsonValue = catalogCountsJson.toJson(catalogCounts);
         System.out.println(jsonValue);
@@ -24,13 +25,14 @@ public class CatalogCountsStoreInJsonRepository implements ICrudActionsRepositor
         jsonObject.put("one_value", jsonValue);
 
         //Write JSON file
-        try (FileWriter file = new FileWriter("catalog_counts.json")) {
+        try (FileWriter file = new FileWriter("catalog_counts.json", true)) {
 
             file.write(jsonObject.toJSONString());
             file.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
+            //what ever
         }
     }
 

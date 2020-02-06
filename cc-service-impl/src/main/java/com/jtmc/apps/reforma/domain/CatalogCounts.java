@@ -1,5 +1,6 @@
 package com.jtmc.apps.reforma.domain;
 
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
@@ -7,8 +8,8 @@ import java.time.LocalDateTime;
 public class CatalogCounts {
 
     private double amount;
-    private CatalogCountsEnum countsEnum;
     private String details;
+    private CatalogCountsEnum countsEnum;
     private LocalDateTime registrationDateTime;
 
     public CatalogCounts() {
@@ -59,5 +60,10 @@ public class CatalogCounts {
             throw new Exception("registration DateTime shouldn't be null");
         }
         this.registrationDateTime = registrationDateTime;
+    }
+
+    public String getObjectAsJson() {
+       Gson gson = new Gson();
+       return gson.toJson(this);
     }
 }
