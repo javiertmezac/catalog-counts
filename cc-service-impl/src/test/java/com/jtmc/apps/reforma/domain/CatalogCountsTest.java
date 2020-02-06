@@ -1,5 +1,6 @@
 package com.jtmc.apps.reforma.domain;
 
+import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -82,5 +83,23 @@ public class CatalogCountsTest {
         CatalogCountsEnum countsEnum = CatalogCountsEnum.OFRENDA;
         catalogCounts.setCountsEnum(countsEnum);
         assertEquals(countsEnum, catalogCounts.getCountsEnum());
+    }
+
+    @Test
+    public void getCatalogCounts_AsJson() throws Exception {
+        LocalDateTime expectedDateTime = LocalDateTime.MAX;
+        CatalogCountsEnum expectedCountsEnum = CatalogCountsEnum.DIEZMO;
+        String expectedDetails = "random details value";
+        double expectedAmount = 0.54;
+
+        catalogCounts.setRegistrationDateTime(expectedDateTime);
+        catalogCounts.setCountsEnum(expectedCountsEnum);
+        catalogCounts.setAmount(expectedAmount);
+        catalogCounts.setDetails(expectedDetails);
+
+        String actualValue = catalogCounts.getObjectAsJson();
+        Gson gson = new Gson();
+        CatalogCounts actualCounts = gson.fromJson(actualValue, CatalogCounts.class);
+        assertTrue(expectedAmount == actualCounts.getAmount());
     }
 }
