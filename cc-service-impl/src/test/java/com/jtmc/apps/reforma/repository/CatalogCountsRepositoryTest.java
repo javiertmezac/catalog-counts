@@ -22,14 +22,14 @@ public class CatalogCountsRepositoryTest {
     public void saveNullRecord_ThrowsException() throws Exception {
 
         mockCatalogCount = null;
-        catalogCountsRepository.saveNewRecord(mockCatalogCount);
+        catalogCountsRepository.saveCatalogCounts(mockCatalogCount);
     }
 
     @Test (expected = Exception.class)
     public void saveNewRecord_ThrowsException_WhenAmount_LessEqualsZero() throws Exception {
        mockCatalogCount = new CatalogCounts();
        mockCatalogCount.setAmount(0.0);
-       catalogCountsRepository.saveNewRecord(mockCatalogCount);
+       catalogCountsRepository.saveCatalogCounts(mockCatalogCount);
     }
 
 }

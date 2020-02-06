@@ -1,12 +1,13 @@
 package com.jtmc.apps.reforma.domain;
 
-import com.google.inject.Inject;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 
 import static org.junit.Assert.*;
 
 public class CatalogCountsEnumTest {
-    @Inject
+
+    @InjectMocks
     private CatalogCountsEnum countsEnum;
 
     @Test

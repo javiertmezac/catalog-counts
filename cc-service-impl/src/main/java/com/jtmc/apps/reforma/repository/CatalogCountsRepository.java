@@ -3,9 +3,13 @@ package com.jtmc.apps.reforma.repository;
 import com.jtmc.apps.reforma.domain.CatalogCounts;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-class CatalogCountsRepository {
+/*
+    Stores CatalogCounts in Memory
+ */
+class CatalogCountsRepository implements  ICrudActionsRepository {
 
     private List<CatalogCounts> countsRegistry;
 
@@ -13,19 +17,28 @@ class CatalogCountsRepository {
         this.countsRegistry = new ArrayList<>();
     }
 
-    void saveNewRecord(CatalogCounts catalogCounts) throws Exception {
+    @Override
+    public void saveCatalogCounts(CatalogCounts catalogCounts) throws  Exception {
+
         if (catalogCounts == null) {
             throw new Exception("cannot store a null object");
-        }
-
-        if (catalogCounts.getAmount() <= 0.0) {
-            throw new Exception("Amount cannot be less or equals to zero");
         }
 
         this.countsRegistry.add(catalogCounts);
     }
 
-    List<CatalogCounts> getAllCountsRegistered() {
-        return this.countsRegistry;
+    @Override
+    public CatalogCounts getCatalogCount(CatalogCounts catalogCounts) {
+        return null;
+    }
+
+    @Override
+    public List<CatalogCounts> getAllCatalogCounts() {
+        return null;
+    }
+
+    @Override
+    public List<CatalogCounts> getRangeDateRegisteredCatalogCounts(Date from, Date to) {
+        return null;
     }
 }
