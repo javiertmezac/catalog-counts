@@ -1,0 +1,15 @@
+
+    CatalogCountEnum
+    - PK - autoIncrement
+    - identifier (String)
+    - name (String)
+    - description (String)
+    - type (boolean)
+        - the type will represent in or out
+
+    CatalogCount
+    - PK - autoIncrement
+    - registrationDate (DateTime)
+    - CatalogCountEnum (foreignKey_CatalogCountsEnum)
+    - amount  (double/float)
+    - extraNotes/details (String)
