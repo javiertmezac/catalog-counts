@@ -9,7 +9,7 @@ public class CatalogCounts {
 
     private double amount;
     private String details;
-    private CatalogCountsEnum countsEnum;
+    private CatalogCountEnum countsEnum;
     private LocalDateTime registrationDateTime;
 
     public CatalogCounts() {
@@ -27,11 +27,11 @@ public class CatalogCounts {
         this.amount = amount;
     }
 
-    public CatalogCountsEnum getCountsEnum() {
+    public CatalogCountEnum getCountsEnum() {
         return countsEnum;
     }
 
-    public void setCountsEnum(CatalogCountsEnum countsEnum) throws Exception {
+    public void setCountsEnum(CatalogCountEnum countsEnum) throws Exception {
         if ( countsEnum == null) {
             throw new Exception("counts cannot be null");
         }
