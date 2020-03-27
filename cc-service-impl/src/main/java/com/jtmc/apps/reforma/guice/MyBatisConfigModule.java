@@ -68,6 +68,5 @@ public class MyBatisConfigModule extends MyBatisModule {
                         getClass().getClassLoader().getResource(filePath).getFile()
                 ));
     }
-
 }
 

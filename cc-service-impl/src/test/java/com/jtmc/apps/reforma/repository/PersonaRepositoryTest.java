@@ -1,5 +1,6 @@
 package com.jtmc.apps.reforma.repository;
 
+import com.jtmc.apps.reforma.domain.Persona;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

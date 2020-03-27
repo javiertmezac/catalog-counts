@@ -7,11 +7,11 @@ public class Persona {
     private String name;
     private Date lastTimeVisited;
 
-    Persona(String name) {
+    public Persona(String name) {
        this.name = name;
     }
 
-    Persona(String name, Date lastTimeVisited) {
+    public Persona(String name, Date lastTimeVisited) {
         this.name = name;
         this.lastTimeVisited = lastTimeVisited;
     }

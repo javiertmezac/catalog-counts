@@ -10,7 +10,6 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>cc-service-impl</module>
-        <module>cc-service-db</module>
         <module>cc-service-server</module>
     </modules>
 

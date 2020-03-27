@@ -17,6 +17,7 @@ public class CatalogCountEnum {
                 ", description='" + description + '\'' +
                 ", type=" + type +
                 ", isDeleted=" + isDeleted +
+
                 '}';
     }
 }
