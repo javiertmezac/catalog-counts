@@ -1,23 +1,17 @@
-import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.name.Names;
-import com.jtmc.apps.reforma.FooService;
-import org.mybatis.guice.datasource.helper.JdbcHelper;
+import com.jtmc.apps.reforma.domain.CatalogCountEnum;
+import com.jtmc.apps.reforma.repository.ICatalogCountEnumService;
 
-import java.util.Date;
-import java.util.Properties;
-import java.util.Scanner;
+import java.util.List;
 
 public class Launcher {
 
     public static void main(String[] args) {
 
         Injector injector = Guice.createInjector(new ServerModule());
-        FooService fooService = injector.getInstance(FooService.class);
-        fooService.sayHello();
-        fooService.doSomeBusinessStuff(1);
+        ICatalogCountEnumService ICatalogCountEnumService = injector.getInstance(ICatalogCountEnumService.class);
+        List<CatalogCountEnum> catalogCountEnums = ICatalogCountEnumService.selectAllCatalogCountEnum();
 
 
 //        try{
