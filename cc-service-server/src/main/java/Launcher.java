@@ -1,7 +1,8 @@
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
-import com.jtmc.apps.reforma.repository.ICatalogCountEnumService;
+import com.jtmc.apps.reforma.api.v1.impl.ICatalogCountEnumService;
+import org.apache.commons.configuration2.resolver.CatalogResolver;
 
 import java.util.List;
 
@@ -11,7 +12,15 @@ public class Launcher {
 
         Injector injector = Guice.createInjector(new ServerModule());
         ICatalogCountEnumService ICatalogCountEnumService = injector.getInstance(ICatalogCountEnumService.class);
-        List<CatalogCountEnum> catalogCountEnums = ICatalogCountEnumService.selectAllCatalogCountEnum();
+
+        CatalogCountEnum catalogTest = new CatalogCountEnum(
+                "5.3", "Comida para niños", "comida de los dias domingos", false, false
+        );
+
+        ICatalogCountEnumService.insertCatalogCountEnum(catalogTest);
+//        CatalogCountEnum result = ICatalogCountEnumService.getCatalogCountEnum(3);
+//        System.out.println(result.toString());
+//        List<CatalogCountEnum> catalogCountEnums = ICatalogCountEnumService.selectAllCatalogCountEnum();
 
 
 //        try{

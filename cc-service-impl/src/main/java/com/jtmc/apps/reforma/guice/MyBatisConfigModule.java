@@ -2,8 +2,8 @@ package com.jtmc.apps.reforma.guice;
 
 import com.google.inject.name.Names;
 import com.jtmc.apps.reforma.dbmapper.CatalogCountEnumMapper;
-import com.jtmc.apps.reforma.repository.CatalogCountEnumMapperImpl;
-import com.jtmc.apps.reforma.repository.ICatalogCountEnumService;
+import com.jtmc.apps.reforma.api.v1.impl.CatalogCountEnumMapperImpl;
+import com.jtmc.apps.reforma.api.v1.impl.ICatalogCountEnumService;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
