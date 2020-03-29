@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.repository;
+package com.jtmc.apps.reforma.api.v1.impl;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.dbmapper.CatalogCountEnumMapper;
@@ -19,5 +19,10 @@ public class CatalogCountEnumMapperImpl implements ICatalogCountEnumService {
 
    public List<CatalogCountEnum> selectAllCatalogCountEnum() {
       return catalogCountEnumMapper.getAllCatalogCountEnum();
+   }
+
+   @Transactional
+    public void insertCatalogCountEnum(CatalogCountEnum catalogCountEnum) {
+        catalogCountEnumMapper.insertIntoCatalogCountEnum(catalogCountEnum);
    }
 }

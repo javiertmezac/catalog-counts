@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.repository;
+package com.jtmc.apps.reforma.api.v1.impl;
 
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 
@@ -8,4 +8,5 @@ public interface ICatalogCountEnumService {
 
     CatalogCountEnum getCatalogCountEnum(int id);
     List<CatalogCountEnum> selectAllCatalogCountEnum();
+    void insertCatalogCountEnum(CatalogCountEnum catalogCountEnum);
 }
