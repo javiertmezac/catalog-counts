@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.api.v1.impl;
+package com.jtmc.apps.reforma.api.v1;
 
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 

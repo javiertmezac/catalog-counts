@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.api.v1.impl;
+package com.jtmc.apps.reforma.api.v1;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.dbmapper.CatalogCountEnumMapper;

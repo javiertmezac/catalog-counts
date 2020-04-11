@@ -1,60 +1,79 @@
-import com.google.inject.Guice;
+import com.google.common.collect.Sets;
+import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.jtmc.apps.reforma.domain.CatalogCountEnum;
-import com.jtmc.apps.reforma.api.v1.impl.ICatalogCountEnumService;
-import org.apache.commons.configuration2.resolver.CatalogResolver;
+import com.google.inject.Module;
+import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
+import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckImpl;
+import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.util.Set;
 
 public class Launcher {
+    private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
 
     public static void main(String[] args) {
-
-        Injector injector = Guice.createInjector(new ServerModule());
-        ICatalogCountEnumService ICatalogCountEnumService = injector.getInstance(ICatalogCountEnumService.class);
-
-        CatalogCountEnum catalogTest = new CatalogCountEnum(
-                "5.3", "Comida para niños", "comida de los dias domingos", false, false
-        );
-
-        ICatalogCountEnumService.insertCatalogCountEnum(catalogTest);
-//        CatalogCountEnum result = ICatalogCountEnumService.getCatalogCountEnum(3);
-//        System.out.println(result.toString());
-//        List<CatalogCountEnum> catalogCountEnums = ICatalogCountEnumService.selectAllCatalogCountEnum();
-
-
-//        try{
-//            storeJson();
-//        }catch(Exception e){System.out.println(e);}
-//        System.out.println("Success...");
+            startJettyServer();
     }
 
-    private static void storeJson() throws Exception {
-//        CatalogCountsStoreInJsonRepository storeInJsonRepository = new CatalogCountsStoreInJsonRepository();
-//
-//        CatalogCounts expected = new CatalogCounts();
-//        expected.setDetails("some value");
-//        expected.setAmount(9.3);
-//        expected.setCountsEnum(CatalogCountsEnum.DIEZMO);
-//        expected.setRegistrationDateTime(LocalDateTime.MAX);
-//
-//        storeInJsonRepository.saveCatalogCounts(expected);
+    private static class JettyLauncherModule extends AbstractModule {
 
+        @Override
+        protected void configure() {
+            install(new ServerModule());
+            bind(HealthcheckApi.class).to(HealthcheckImpl.class);
+        }
     }
 
-    private void previousTest() {
+    private static class CatalogCountsApplication extends GuiceApplication {
+        @Override
+        protected Set<Module> modules() {
+            return Sets.newHashSet(new JettyLauncherModule());
+        }
 
-//        System.out.println("write your name dude!:");
-//        Scanner scanner = new Scanner(System.in);
-//        String personsName = scanner.next();
-//
-//        PersonaRepository personaRepository = new PersonaRepository();
-//
-//        Date date = new Date("Mon Dec 09 23:21:05 PST 2019");
-//        personaRepository.addNewPerson(new Persona(personsName, date));
-//
-//
-////        personaRepository.printAllList();
-//        personaRepository.getMostRecentVisit();
+        @Override
+        protected Set<Object> serviceInstances(Injector injector) {
+            return Sets.newHashSet(
+                    injector.getInstance(HealthcheckApi.class)
+            );
+        }
+    }
+
+    private static void startJettyServer() {
+
+        HandlerCollection handlers = new HandlerCollection();
+
+        //servletContextHandler
+        ServletHolder servletHolder = new ServletHolder(
+                new CXFNonSpringJaxrsServlet(new CatalogCountsApplication()));
+        ServletContextHandler servletContextHandler = new ServletContextHandler();
+        servletContextHandler.setContextPath("/");
+        servletContextHandler.addServlet(servletHolder, "/api/*");
+
+        handlers.addHandler(servletContextHandler);
+
+
+        Server jettyServer = new Server();
+        ServerConnector serverConnector = new ServerConnector(jettyServer);
+        serverConnector.setPort(8080);
+        jettyServer.addConnector(serverConnector);
+
+        jettyServer.setHandler(handlers);
+
+
+        try {
+            jettyServer.start();
+            jettyServer.join();
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage());
+        } finally {
+            jettyServer.destroy();
+        }
     }
 }
