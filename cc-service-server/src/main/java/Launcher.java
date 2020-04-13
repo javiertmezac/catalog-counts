@@ -2,6 +2,8 @@ import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApi;
+import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckImpl;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
@@ -28,6 +30,7 @@ public class Launcher {
         protected void configure() {
             install(new ServerModule());
             bind(HealthcheckApi.class).to(HealthcheckImpl.class);
+            bind(CatalogCountApi.class).to(CatalogCountImpl.class);
         }
     }
 
@@ -40,7 +43,8 @@ public class Launcher {
         @Override
         protected Set<Object> serviceInstances(Injector injector) {
             return Sets.newHashSet(
-                    injector.getInstance(HealthcheckApi.class)
+                    injector.getInstance(HealthcheckApi.class),
+                    injector.getInstance(CatalogCountApi.class)
             );
         }
     }

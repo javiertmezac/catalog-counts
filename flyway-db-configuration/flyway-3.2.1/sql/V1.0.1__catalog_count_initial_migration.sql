@@ -16,8 +16,6 @@ CREATE TABLE `catalog_count_enum` (
 CREATE TABLE `catalog_count` (
   `id`                  BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
   `registrationDate`    DATE               NOT NULL,
-  `durationInDays`      INT(4)             NOT NULL,
-  `expirationDate`      DATE               NOT NULL,
   `catalogCountEnumId`  BIGINT(8) UNSIGNED NOT NULL,
   `amount`              DOUBLE             NOT NULL,
   `details`             VARCHAR(64)        NOT NULL,
