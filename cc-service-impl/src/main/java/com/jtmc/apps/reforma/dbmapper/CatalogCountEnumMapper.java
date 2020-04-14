@@ -1,5 +1,6 @@
 package com.jtmc.apps.reforma.dbmapper;
 
+import com.jtmc.apps.reforma.dbmapper.CatalogCountEnumMapperProvider;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 import org.apache.ibatis.annotations.*;
 

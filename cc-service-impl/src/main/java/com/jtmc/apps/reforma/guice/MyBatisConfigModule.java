@@ -4,7 +4,7 @@ import com.google.inject.name.Names;
 import com.jtmc.apps.reforma.dbmapper.CatalogCountEnumMapper;
 import com.jtmc.apps.reforma.api.v1.CatalogCountEnumMapperImpl;
 import com.jtmc.apps.reforma.api.v1.ICatalogCountEnumService;
-import com.jtmc.apps.reforma.dbmapper.CatalogCountMapper;
+import com.jtmc.apps.reforma.dbmapper.catalogcount.CatalogCountMapper;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -55,14 +55,15 @@ public class MyBatisConfigModule extends MyBatisModule {
             myBatisProperties.setProperty("JDBC.password", config.getString("JDBC.password"));
 
         } catch (ConfigurationException ex) {
-            Logger.error(ex.getMessage());
+            Logger.error("Couldn't set MyBatisProperties: ", ex.getMessage());
         }
 
         return myBatisProperties;
     }
 
     private String getSystemEnvVariable() {
-        return System.getenv("app_env");
+        String systemEnv = System.getenv("app_env");
+        return  systemEnv == null ? "local" : systemEnv;
     }
 
     private Configuration propertiesConfiguration(String environment) throws ConfigurationException {

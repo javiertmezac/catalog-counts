@@ -1,5 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
+import com.jtmc.apps.reforma.api.v1.BadRequestException;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -15,5 +17,5 @@ public interface CatalogCountApi {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    String insert(CatalogCountRequest catalogCountRequest);
+    String insert(CatalogCountRequest catalogCountRequest) throws BadRequestException;
 }

@@ -18,7 +18,7 @@ public class CatalogCountRequest {
     }
 
     public void setAmount(double amount) {
-        this.amount = amount;
+       this.amount = amount;
     }
 
     public String getDetails() {
