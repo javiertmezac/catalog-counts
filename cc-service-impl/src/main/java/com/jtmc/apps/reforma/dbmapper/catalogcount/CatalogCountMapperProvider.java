@@ -1,8 +1,9 @@
-package com.jtmc.apps.reforma.dbmapper;
+package com.jtmc.apps.reforma.dbmapper.catalogcount;
 
 import org.apache.ibatis.jdbc.SQL;
 
 public class CatalogCountMapperProvider {
+
     private String tableName = "catalog_count";
     private String colRegistrationDate = "registrationDate";
     private String colCatalogCountEnum = "catalogCountEnumId";
