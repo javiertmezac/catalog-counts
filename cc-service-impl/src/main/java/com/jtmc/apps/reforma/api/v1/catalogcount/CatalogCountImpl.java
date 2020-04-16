@@ -9,7 +9,6 @@ import org.mybatis.guice.transactional.Transactional;
 import java.time.Instant;
 import java.util.Date;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CatalogCountImpl implements CatalogCountApi {
@@ -40,7 +39,6 @@ public class CatalogCountImpl implements CatalogCountApi {
         } catch (NullPointerException | IllegalArgumentException e) {
             throw new BadRequestException(e.getMessage());
         }
-
 
         catalogCountMapper.insertIntoCatalogCount(catalogCount);
         return "All good!";
