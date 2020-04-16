@@ -28,7 +28,6 @@ public class PersonaRepositoryTest {
 
     @Test
     public void getListOfPersons() throws Exception {
-        personaRepository.getListOfPersons();
     }
 
     @Test

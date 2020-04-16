@@ -68,4 +68,8 @@ public class CatalogCount {
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
+
+    public boolean isValidCatalogCountEnum() {
+       return false;
+    }
 }
