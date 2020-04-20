@@ -1,6 +1,5 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
-import com.jtmc.apps.reforma.api.v1.BadRequestException;
 import com.jtmc.apps.reforma.dbmapper.catalogcount.CatalogCountMapper;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import org.junit.Assert;
@@ -10,9 +9,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.*;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(BlockJUnit4ClassRunner.class)
@@ -91,5 +94,85 @@ public class CatalogCountImplTest {
         Assert.assertTrue(expectedCatalogCountEnumId == actual.getCatalogCountEnumId());
         Assert.assertEquals(expectedDetails, actual.getDetails());
 
+    }
+
+    /*
+        GET LIST method
+     */
+    @Test
+    public void testGetList_shouldCall_catalogCountMapper_selectAllMethod() throws Exception {
+        catalogCountImpl.getList();
+        verify(catalogCountMapper, times(1)).selectAllRecords();
+    }
+
+    @Test
+    public void testGetList_shouldReturn_ExpectedValues_whenSelectAllMethod(){
+        Date expectedDate = new Date();
+        System.out.println(expectedDate.toString());
+        CatalogCount expectedCatalogCount = new CatalogCount();
+        expectedCatalogCount.setDetails(expectedDetails);
+        expectedCatalogCount.setRegistrationDate(expectedDate);
+
+        List<CatalogCount> listOfCatalogCount = new ArrayList<>();
+        listOfCatalogCount.add(expectedCatalogCount);
+        when(catalogCountMapper.selectAllRecords()).thenReturn(listOfCatalogCount);
+
+        CatalogCountResponseList actualList = catalogCountImpl.getList();
+
+        CatalogCountResponse actualCatalogCountResponse = actualList.catalogCountResponseCollection.get(0);
+        Assert.assertEquals(expectedCatalogCount.getDetails(), actualCatalogCountResponse.getDetails());
+        Assert.assertEquals(expectedDate, actualCatalogCountResponse.getRegistrationDate());
+
+    }
+
+    /*
+        GET ONE RECORD
+     */
+
+
+    //note we can try implementing everything as a mock
+    //like this example
+    @Test
+    public void testGetCatalogCount_shouldCall_mapperGetOneRecordMethod() throws Exception {
+
+        int expectedId = 1;
+        CatalogCount mockCatalogCount = Mockito.mock(CatalogCount.class);
+        when(catalogCountMapper.selectOneRecord(expectedId)).thenReturn(mockCatalogCount);
+
+        catalogCountImpl.getCatalogCount(expectedId);
+        verify(catalogCountMapper, times(1)).selectOneRecord(expectedId);
+    }
+
+    @Test
+    public void testGetCatalogCount_shouldReturn_expectedRecord() throws Exception {
+
+        int expectedId = 1;
+        CatalogCount expectedCatalogCount = new CatalogCount();
+        expectedCatalogCount.setDetails(expectedDetails);
+        when(catalogCountMapper.selectOneRecord(expectedId)).thenReturn(expectedCatalogCount);
+
+        CatalogCountResponse actualResponse = catalogCountImpl.getCatalogCount(expectedId);
+        verify(catalogCountMapper, times(1)).selectOneRecord(expectedId);
+
+        Assert.assertEquals(expectedDetails, actualResponse.getDetails());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testGetCatalogCount_returnsNotFoundException() throws Exception {
+       when(catalogCountMapper.selectOneRecord(anyInt())).thenReturn(null);
+
+       int expectedCatalogCountId = 1;
+       catalogCountImpl.getCatalogCount(expectedCatalogCountId);
+    }
+
+    /*
+        LOGICAL DELETE RECORD
+     */
+
+    @Test
+    public void testLogicalDelete_shouldCall_MapperLogicalDelete() {
+        int expectedId = 1;
+        catalogCountImpl.logicalDeleteRecord(expectedId);
+        verify(catalogCountMapper, times(1)).logicalDeleteRecord(expectedId);
     }
 }
