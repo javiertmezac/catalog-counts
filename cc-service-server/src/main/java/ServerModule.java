@@ -11,9 +11,11 @@ public class ServerModule extends AbstractModule {
     protected void configure() {
         install(new MyBatisConfigModule());
 
+
         ObjectMapper objectMapper = new ObjectMapper()
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
         JacksonJsonProvider jsonProvider = new JacksonJsonProvider(objectMapper);
 
         bind(ObjectMapper.class).toInstance(objectMapper);
