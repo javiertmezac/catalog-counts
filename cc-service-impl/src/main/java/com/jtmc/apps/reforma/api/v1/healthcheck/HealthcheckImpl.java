@@ -1,15 +1,15 @@
 package com.jtmc.apps.reforma.api.v1.healthcheck;
 
+
+import javax.ws.rs.core.Response;
+
 public class HealthcheckImpl implements HealthcheckApi {
 
     @Override
-    public String checkHealth() {
-        return "Health check: OK";
-    }
-
-    @Override
-    public String checkStatus() {
-        return "Status: OK";
+    public Response checkStatus() {
+        HealthcheckStatus status = new HealthcheckStatus();
+        status.setStatus("Pass");
+        return Response.status(200).entity(status).build();
     }
 }
 

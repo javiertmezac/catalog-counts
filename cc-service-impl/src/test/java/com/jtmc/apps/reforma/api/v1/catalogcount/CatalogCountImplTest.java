@@ -41,30 +41,30 @@ public class CatalogCountImplTest {
         catalogCountRequest.setCatalogCountEnumId(expectedCatalogCountEnumId);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test(expected = NullPointerException.class)
     public void test_insert_shouldReturnBadRequest_whenRequestObjectNull() {
         catalogCountImpl.insert(null);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testInsert_shouldReturnBadRequestException_whenAmountLessThanZero() {
         catalogCountRequest.setAmount(-0.7);
         catalogCountImpl.insert(catalogCountRequest);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testInsert_shouldReturnBadRequestException_whenAmountEqualsZero() {
         catalogCountRequest.setAmount(0.0);
         catalogCountImpl.insert(catalogCountRequest);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testInsert_shouldReturnBadRequest_whenDetailsBlank() {
        catalogCountRequest.setDetails("   ");
        catalogCountImpl.insert(catalogCountRequest);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testInsert_shouldReturnBadRequest_whenCatalogCountEnumNotSet() {
         //note: for testing purposes we are setting catalogCountEnumId equals 0
         //this is to simulate no value was set in the original api call

@@ -1,7 +1,7 @@
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider; import com.google.common.collect.Sets; import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.jtmc.apps.reforma.api.v1.GenericWebApplicationExceptionMapper;
+import com.jtmc.apps.reforma.api.v1.GenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApi;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
@@ -47,7 +47,7 @@ public class Launcher {
                     injector.getInstance(HealthcheckApi.class),
                     injector.getInstance(CatalogCountApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
-                    injector.getInstance(GenericWebApplicationExceptionMapper.class)
+                    injector.getInstance(GenericExceptionMapper.class)
             );
         }
     }

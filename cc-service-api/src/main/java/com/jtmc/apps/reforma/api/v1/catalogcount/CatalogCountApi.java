@@ -2,6 +2,7 @@ package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/v1/catalog-count")
 public interface CatalogCountApi {
@@ -14,8 +15,8 @@ public interface CatalogCountApi {
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    String insert(CatalogCountRequest catalogCountRequest);
+    @Produces(MediaType.APPLICATION_JSON)
+    Response insert(CatalogCountRequest catalogCountRequest);
 
     @GET
     @Path("/{catalogCountId}")
@@ -24,5 +25,5 @@ public interface CatalogCountApi {
 
     @DELETE
     @Path("/{catalogCountId}")
-    String logicalDeleteRecord(@PathParam("catalogCountId") int id);
+    Response logicalDeleteRecord(@PathParam("catalogCountId") int id);
 }
