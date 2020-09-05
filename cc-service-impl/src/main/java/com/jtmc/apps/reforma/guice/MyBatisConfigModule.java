@@ -55,7 +55,7 @@ public class MyBatisConfigModule extends MyBatisModule {
             myBatisProperties.setProperty("JDBC.password", config.getString("JDBC.password"));
 
         } catch (ConfigurationException ex) {
-            Logger.error("Couldn't set MyBatisProperties: ", ex.getMessage());
+            Logger.error("Couldn't set MyBatisProperties: ", ex);
         }
 
         return myBatisProperties;
@@ -69,9 +69,7 @@ public class MyBatisConfigModule extends MyBatisModule {
     private Configuration propertiesConfiguration(String environment) throws ConfigurationException {
         String filePath = String.format("mybatis-config/%s-config.properties", environment);
         Configurations configurations = new Configurations();
-       return configurations.properties(new File(
-                        getClass().getClassLoader().getResource(filePath).getFile()
-                ));
+       return configurations.properties(new File(getClass().getClassLoader().getResource(filePath).getFile()));
     }
 }
 

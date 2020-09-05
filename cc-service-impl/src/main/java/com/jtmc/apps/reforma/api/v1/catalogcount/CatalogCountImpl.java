@@ -1,6 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 import com.google.inject.Inject;
+import com.jtmc.apps.reforma.api.v1.GenericResponseMessage;
 import com.jtmc.apps.reforma.dbmapper.catalogcount.CatalogCountMapper;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import org.mybatis.guice.transactional.Transactional;
@@ -8,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,25 +45,21 @@ public class CatalogCountImpl implements CatalogCountApi {
 
     @Override
     @Transactional
-    public String insert(CatalogCountRequest catalogCountRequest) {
+    public Response insert(CatalogCountRequest catalogCountRequest) {
 
         CatalogCount catalogCount = new CatalogCount();
         Date registration = new Date();
 
-        try {
-            checkNotNull(catalogCountRequest, "request object cannot be null");
-            catalogCount.setAmount(catalogCountRequest.getAmount());
-            catalogCount.setDetails(catalogCountRequest.getDetails());
-            catalogCount.setCatalogCountEnumId(catalogCountRequest.getCatalogCountEnumId());
-            catalogCount.setDeleted(false);
-            catalogCount.setRegistrationDate(registration);
-
-        } catch (NullPointerException | IllegalArgumentException e) {
-            throw new javax.ws.rs.BadRequestException(e.getMessage());
-        }
+        checkNotNull(catalogCountRequest, "request object cannot be null");
+        catalogCount.setAmount(catalogCountRequest.getAmount());
+        catalogCount.setDetails(catalogCountRequest.getDetails());
+        catalogCount.setCatalogCountEnumId(catalogCountRequest.getCatalogCountEnumId());
+        catalogCount.setDeleted(false);
+        catalogCount.setRegistrationDate(registration);
 
         catalogCountMapper.insertIntoCatalogCount(catalogCount);
-        return "All good!";
+        //todo: this is not Json type
+        return Response.ok().build();
     }
 
     public CatalogCountResponse getCatalogCount(int id) {
@@ -67,7 +67,7 @@ public class CatalogCountImpl implements CatalogCountApi {
 
         CatalogCount catalogCount = catalogCountMapper.selectOneRecord(id);
         if (catalogCount == null) {
-           throw new NotFoundException("Catalog Count id:" + id + " not found");
+           throw new NotFoundException("Catalog Count id: " + id + " not found");
         }
 
         return new CatalogCountResponse(
@@ -79,11 +79,10 @@ public class CatalogCountImpl implements CatalogCountApi {
         );
     }
 
-
     //todo: should have a test to verify logicalDelete was done correctly
     @Transactional
-    public String logicalDeleteRecord(int id) {
+    public Response logicalDeleteRecord(int id) {
         catalogCountMapper.logicalDeleteRecord(id);
-        return "All good!";
+        return Response.noContent().build();
     }
 }

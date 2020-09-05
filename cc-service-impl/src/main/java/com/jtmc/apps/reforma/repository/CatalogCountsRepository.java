@@ -21,7 +21,7 @@ class CatalogCountsRepository implements  ICrudActionsRepository {
     public void saveCatalogCounts(CatalogCounts catalogCounts) throws  Exception {
 
         if (catalogCounts == null) {
-            throw new Exception("cannot store a null object");
+            throw new RuntimeException("cannot store a null object");
         }
 
         this.countsRegistry.add(catalogCounts);
