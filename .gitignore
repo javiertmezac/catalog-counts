@@ -27,3 +27,7 @@ target/
 
 *.iml
 *.idea
+
+#maven
+pom.xml.releaseBackup
+pom.xml.versionsBackup
