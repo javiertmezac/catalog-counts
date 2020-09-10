@@ -61,7 +61,7 @@ public class Launcher {
                 new CXFNonSpringJaxrsServlet(new CatalogCountsApplication()));
         ServletContextHandler servletContextHandler = new ServletContextHandler();
         servletContextHandler.setContextPath("/");
-        servletContextHandler.addServlet(servletHolder, "/api/*");
+        servletContextHandler.addServlet(servletHolder, "/cc-service/api/*");
 
         handlers.addHandler(servletContextHandler);
 

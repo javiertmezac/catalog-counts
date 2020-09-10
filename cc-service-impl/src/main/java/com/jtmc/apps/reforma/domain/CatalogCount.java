@@ -72,4 +72,9 @@ public class CatalogCount {
     public boolean isValidCatalogCountEnum() {
        return false;
     }
+
+    public boolean isIncoming() {
+        //todo: implement logic to know if incoming or expense
+        return true;
+    }
 }

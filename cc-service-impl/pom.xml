@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+        <dependency>
             <groupId>com.jtmc.apps.reforma</groupId>
             <artifactId>cc-service-api</artifactId>
             <version>0.1.0-SNAPSHOT</version>
