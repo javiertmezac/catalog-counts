@@ -28,19 +28,33 @@ public class CatalogCountImpl implements CatalogCountApi {
     @Override
     public CatalogCountResponseList getList() {
         CatalogCountResponseList responseList = new CatalogCountResponseList();
-        responseList.catalogCountResponseCollection = new ArrayList<>();
+        responseList.setCatalogCountResponseCollection(new ArrayList<>());
+        responseList.setSaldoAnterior(1500);
 
         Collection<CatalogCount> catalogCounts = catalogCountMapper.selectAllRecords();
+
+        double total = responseList.getSaldoAnterior();
         for (CatalogCount next : catalogCounts) {
-            responseList.catalogCountResponseCollection.add(new CatalogCountResponse(
+            total = getTotal(next, total);
+            responseList.getCatalogCountResponseCollection().add(new CatalogCountResponse(
                     next.getId(),
                     next.getRegistrationDate(),
                     next.getCatalogCountEnumId(),
                     next.getAmount(),
-                    next.getDetails()
+                    next.getDetails(),
+                    total
             ));
         }
         return responseList;
+    }
+
+    private double getTotal(CatalogCount catalogCount, double saldo) {
+       if (catalogCount.getCatalogCountEnumId() <= 3)  {
+          saldo = saldo + catalogCount.getAmount();
+       } else {
+           saldo = saldo - catalogCount.getAmount();
+       }
+       return saldo;
     }
 
     @Override
@@ -75,7 +89,8 @@ public class CatalogCountImpl implements CatalogCountApi {
                 catalogCount.getRegistrationDate(),
                 catalogCount.getCatalogCountEnumId(),
                 catalogCount.getAmount(),
-                catalogCount.getDetails()
+                catalogCount.getDetails(),
+                1
         );
     }
 

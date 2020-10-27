@@ -8,13 +8,20 @@ public class CatalogCountResponse {
     private int catalogCountEnumId;
     private double amount;
     private String details;
+    private double total;
 
-    public CatalogCountResponse(int id, Date registrationDate, int catalogCountEnumId, double amount, String details) {
+    public CatalogCountResponse(int id,
+                                Date registrationDate,
+                                int catalogCountEnumId,
+                                double amount,
+                                String details,
+                                double total) {
         this.id = id;
         this.registrationDate = registrationDate;
         this.catalogCountEnumId = catalogCountEnumId;
         this.amount = amount;
         this.details = details;
+        this.total = total;
     }
 
     public int getId() {
@@ -55,5 +62,13 @@ public class CatalogCountResponse {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 }

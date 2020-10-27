@@ -119,7 +119,7 @@ public class CatalogCountImplTest {
 
         CatalogCountResponseList actualList = catalogCountImpl.getList();
 
-        CatalogCountResponse actualCatalogCountResponse = actualList.catalogCountResponseCollection.get(0);
+        CatalogCountResponse actualCatalogCountResponse = actualList.getCatalogCountResponseCollection().get(0);
         Assert.assertEquals(expectedCatalogCount.getDetails(), actualCatalogCountResponse.getDetails());
         Assert.assertEquals(expectedDate, actualCatalogCountResponse.getRegistrationDate());
 
