@@ -31,3 +31,6 @@ target/
 #maven
 pom.xml.releaseBackup
 pom.xml.versionsBackup
+
+#excel import
+flyway-db-configuration/flyway-6.5.5/
