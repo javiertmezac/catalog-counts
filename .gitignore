@@ -31,3 +31,10 @@ target/
 #maven
 pom.xml.releaseBackup
 pom.xml.versionsBackup
+
+#flyway
+flyway-db-configuration/flyway-6.5.5/
+
+#excel example file
+cc-service-impl/src/main/resources/excel-import/example1.xlsx
+cc-service-server/src/main/java/ExcelImportLauncher.java
