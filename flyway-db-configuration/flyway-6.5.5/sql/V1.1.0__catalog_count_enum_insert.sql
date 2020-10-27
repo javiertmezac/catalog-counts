@@ -4,7 +4,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -12,7 +12,7 @@ VALUES
   '1.1',
   'Ofrendas',
   'Cada Domingo',
-  TRUE,
+  FALSE,
   FALSE
 );
 
@@ -21,7 +21,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -29,7 +29,7 @@ VALUES
   '1.2',
   'Donaciones',
   'Por parte de los hermanos o actividades de la iglesia',
-  TRUE,
+  FALSE,
   FALSE
 );
 
@@ -38,7 +38,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -46,8 +46,8 @@ VALUES
   '1.3',
   'Diezmos',
   'Por parte de los hermanos',
-  TRUE,
-  TRUE
+  FALSE,
+  FALSE
 );
 
 
@@ -57,7 +57,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -74,7 +74,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -91,7 +91,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -108,7 +108,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -125,7 +125,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -142,7 +142,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -159,7 +159,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -176,7 +176,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -193,14 +193,14 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
 (
   '3.4',
   'Aportación a la región',
-  '10% de ofrenda y diezmos'
+  '10% de ofrenda y diezmos',
   TRUE,
   FALSE
 );
@@ -210,7 +210,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -227,7 +227,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -244,7 +244,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -261,7 +261,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -278,7 +278,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -295,7 +295,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -312,7 +312,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -329,7 +329,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -346,7 +346,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -363,7 +363,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -380,7 +380,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -397,7 +397,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
@@ -414,7 +414,7 @@ INSERT INTO catalog_count_enum
   identifier,
   name,
   description,
-  TYPE,
+  type,
   isDeleted
 )
 VALUES
