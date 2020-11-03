@@ -24,6 +24,19 @@ public class CatalogCountResponse {
         this.total = total;
     }
 
+    //todo: should we have another Response Class for single CatalogCount ("no total column")?
+    public CatalogCountResponse(int id,
+                                Date registrationDate,
+                                int catalogCountEnumId,
+                                double amount,
+                                String details) {
+        this.id = id;
+        this.registrationDate = registrationDate;
+        this.catalogCountEnumId = catalogCountEnumId;
+        this.amount = amount;
+        this.details = details;
+    }
+
     public int getId() {
         return id;
     }

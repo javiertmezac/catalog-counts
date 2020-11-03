@@ -9,7 +9,6 @@ import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.time.Month;
@@ -23,6 +22,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class CatalogCountImpl implements CatalogCountApi {
     private Logger LOGGER = LoggerFactory.getLogger(CatalogCountImpl.class);
 
+
+    //todo: these Mapper Classes shouldn't be used at this level
+    //maybe it is better to have an interface with (CRUD) operations and maybe more
+    //and internally used the DB layer/service we want!
     @Inject
     private CatalogCountMapper catalogCountMapper;
 
@@ -57,6 +60,7 @@ public class CatalogCountImpl implements CatalogCountApi {
         int month = Month.from(LocalDate.now()).getValue();
         MonthlyTotal monthlyTotal = monthlyTotalMapper.selectMonthlyTotal(year, month - 1);
         if (monthlyTotal == null) {
+            //todo: find appropriate exception. Consider corresponding layer
             throw new RuntimeException("MonthlyTotal null");
         }
         return monthlyTotal.getTotal();
@@ -97,7 +101,8 @@ public class CatalogCountImpl implements CatalogCountApi {
 
         CatalogCount catalogCount = catalogCountMapper.selectOneRecord(id);
         if (catalogCount == null) {
-           throw new NotFoundException("Catalog Count id: " + id + " not found");
+            //todo: bad exception handling here
+           throw new RuntimeException("Catalog Count id: " + id + " not found");
         }
 
         return new CatalogCountResponse(
@@ -105,8 +110,7 @@ public class CatalogCountImpl implements CatalogCountApi {
                 catalogCount.getRegistrationDate(),
                 catalogCount.getCatalogCountEnumId(),
                 catalogCount.getAmount(),
-                catalogCount.getDetails(),
-                1
+                catalogCount.getDetails()
         );
     }
 
