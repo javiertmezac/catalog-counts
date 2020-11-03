@@ -1,5 +1,25 @@
 # catalog-counts
 catalog-counts
+it seems we are missing 2 columns in CatalogCount table.
+1- we should identified to which church the "entry" belongs to
+2- who is using the application (user/profile Id)
+
+# Saldo Anterior - (possible Table Name: MonthlyTotal)
+At the end of each month we should have a "reference/value" representing the current total
+after adding and subtracting all operations/movements.
+This value should be considered at the end and beginning of each month.
+
+The idea is to have another table containing following columns:
+1- value (float/double)
+2- registrationDate (datetime)
+3- churchId (id) - this could be a foreignKey
+
+This means, there should be a process behind updating this table at the end of the month.
+the process should consider following scenario:
+1- taking last month total
+2- addition and subtraction of current month's movements/entries (CatalogCount Table)
+3- inserting new value to MonthlyTotal Table
+4- repeat the same for each registered church?
 
 # Excel Import
 Documentation

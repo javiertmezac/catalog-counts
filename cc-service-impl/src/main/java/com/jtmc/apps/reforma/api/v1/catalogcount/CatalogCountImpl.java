@@ -1,18 +1,19 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.api.v1.GenericResponseMessage;
 import com.jtmc.apps.reforma.dbmapper.catalogcount.CatalogCountMapper;
+import com.jtmc.apps.reforma.dbmapper.monthlytotal.MonthlyTotalMapper;
 import com.jtmc.apps.reforma.domain.CatalogCount;
+import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -25,11 +26,14 @@ public class CatalogCountImpl implements CatalogCountApi {
     @Inject
     private CatalogCountMapper catalogCountMapper;
 
+    @Inject
+    private MonthlyTotalMapper monthlyTotalMapper;
+
     @Override
     public CatalogCountResponseList getList() {
         CatalogCountResponseList responseList = new CatalogCountResponseList();
         responseList.setCatalogCountResponseCollection(new ArrayList<>());
-        responseList.setSaldoAnterior(1500);
+        responseList.setSaldoAnterior(getCorrespondingMonthlyTotal());
 
         Collection<CatalogCount> catalogCounts = catalogCountMapper.selectAllRecords();
 
@@ -48,13 +52,25 @@ public class CatalogCountImpl implements CatalogCountApi {
         return responseList;
     }
 
+    private double getCorrespondingMonthlyTotal() {
+        int year = Year.now().getValue();
+        int month = Month.from(LocalDate.now()).getValue();
+        MonthlyTotal monthlyTotal = monthlyTotalMapper.selectMonthlyTotal(year, month - 1);
+        if (monthlyTotal == null) {
+            throw new RuntimeException("MonthlyTotal null");
+        }
+        return monthlyTotal.getTotal();
+    }
+
     private double getTotal(CatalogCount catalogCount, double saldo) {
-       if (catalogCount.getCatalogCountEnumId() <= 3)  {
-          saldo = saldo + catalogCount.getAmount();
-       } else {
-           saldo = saldo - catalogCount.getAmount();
-       }
-       return saldo;
+        //todo: this will only work is first 3 rows from CatalogCountEnum are "incoming values"
+        int incomingEnums = 3;
+        if (catalogCount.getCatalogCountEnumId() <= incomingEnums)  {
+            saldo = saldo + catalogCount.getAmount();
+        } else {
+            saldo = saldo - catalogCount.getAmount();
+        }
+        return saldo;
     }
 
     @Override
