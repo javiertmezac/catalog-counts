@@ -46,6 +46,8 @@ public class CatalogCountImpl {
     public double getCorrespondingMonthlyTotal() {
         int year = Year.now().getValue();
         int month = Month.from(LocalDate.now()).getValue();
+        //todo: exception when sever is not available
+
         MonthlyTotal monthlyTotal = monthlyTotalMapper.selectMonthlyTotal(year, month - 1);
         if (monthlyTotal == null) {
             //todo: find appropriate exception. Consider corresponding layer
