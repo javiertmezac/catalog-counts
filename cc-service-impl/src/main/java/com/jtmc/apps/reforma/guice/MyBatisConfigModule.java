@@ -1,11 +1,11 @@
 package com.jtmc.apps.reforma.guice;
 
 import com.google.inject.name.Names;
-import com.jtmc.apps.reforma.dbmapper.CatalogCountEnumMapper;
-import com.jtmc.apps.reforma.api.v1.CatalogCountEnumMapperImpl;
-import com.jtmc.apps.reforma.api.v1.ICatalogCountEnumService;
-import com.jtmc.apps.reforma.dbmapper.catalogcount.CatalogCountMapper;
-import com.jtmc.apps.reforma.dbmapper.monthlytotal.MonthlyTotalMapper;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum.CatalogCountEnumMapper;
+import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumMapperImpl;
+import com.jtmc.apps.reforma.api.v1.catalogcountenum.ICatalogCountEnumService;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcount.CatalogCountMapper;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;

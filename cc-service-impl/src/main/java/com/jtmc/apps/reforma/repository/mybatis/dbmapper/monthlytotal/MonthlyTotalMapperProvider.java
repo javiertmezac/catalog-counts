@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.dbmapper.monthlytotal;
+package com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal;
 
 import org.apache.ibatis.jdbc.SQL;
 

@@ -1,7 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
-import com.jtmc.apps.reforma.dbmapper.catalogcount.CatalogCountMapper;
 import com.jtmc.apps.reforma.domain.CatalogCount;
+import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.*;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,13 +17,13 @@ import static org.mockito.Mockito.*;
 
 
 @RunWith(BlockJUnit4ClassRunner.class)
-public class CatalogCountImplTest {
+public class CatalogCountApiImplTest {
 
     @InjectMocks
-    private CatalogCountImpl catalogCountImpl;
+    private CatalogCountApiImpl catalogCountApiImpl;
 
     @Mock
-    private CatalogCountMapper catalogCountMapper;
+    private CatalogCountImpl catalogCountImpl;
 
     private CatalogCountRequest catalogCountRequest;
     private double expectedAmount = 0.1;
@@ -43,25 +41,25 @@ public class CatalogCountImplTest {
 
     @Test(expected = NullPointerException.class)
     public void test_insert_shouldReturnBadRequest_whenRequestObjectNull() {
-        catalogCountImpl.insert(null);
+        catalogCountApiImpl.insert(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInsert_shouldReturnBadRequestException_whenAmountLessThanZero() {
         catalogCountRequest.setAmount(-0.7);
-        catalogCountImpl.insert(catalogCountRequest);
+        catalogCountApiImpl.insert(catalogCountRequest);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInsert_shouldReturnBadRequestException_whenAmountEqualsZero() {
         catalogCountRequest.setAmount(0.0);
-        catalogCountImpl.insert(catalogCountRequest);
+        catalogCountApiImpl.insert(catalogCountRequest);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInsert_shouldReturnBadRequest_whenDetailsBlank() {
        catalogCountRequest.setDetails("   ");
-       catalogCountImpl.insert(catalogCountRequest);
+       catalogCountApiImpl.insert(catalogCountRequest);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -69,25 +67,25 @@ public class CatalogCountImplTest {
         //note: for testing purposes we are setting catalogCountEnumId equals 0
         //this is to simulate no value was set in the original api call
         catalogCountRequest.setCatalogCountEnumId(0);
-       catalogCountImpl.insert(catalogCountRequest);
+       catalogCountApiImpl.insert(catalogCountRequest);
     }
 
     @Test
-    public void testInsert_shouldCall_catalogMapper_insertWithRegistrationDate() {
-        catalogCountImpl.insert(catalogCountRequest);
+    public void testInsert_shouldCall_catalogCountImpl_insertWithRegistrationDate() {
+        catalogCountApiImpl.insert(catalogCountRequest);
 
         ArgumentCaptor<CatalogCount> captor = ArgumentCaptor.forClass(CatalogCount.class);
-        verify(catalogCountMapper).insertIntoCatalogCount(captor.capture());
+        verify(catalogCountImpl).insertIntoCatalogCount(captor.capture());
         CatalogCount actual = captor.getValue();
         Assert.assertTrue(actual.getRegistrationDate() != null);
     }
 
     @Test
     public void testInsert_happyPath() throws Exception {
-        catalogCountImpl.insert(catalogCountRequest);
+        catalogCountApiImpl.insert(catalogCountRequest);
 
         ArgumentCaptor<CatalogCount> captor = ArgumentCaptor.forClass(CatalogCount.class);
-        verify(catalogCountMapper).insertIntoCatalogCount(captor.capture());
+        verify(catalogCountImpl).insertIntoCatalogCount(captor.capture());
         CatalogCount actual = captor.getValue();
         Assert.assertTrue(actual.getRegistrationDate() != null);
         Assert.assertTrue(expectedAmount == actual.getAmount());
@@ -100,29 +98,40 @@ public class CatalogCountImplTest {
         GET LIST method
      */
     @Test
-    public void testGetList_shouldCall_catalogCountMapper_selectAllMethod() throws Exception {
-        catalogCountImpl.getList();
-        verify(catalogCountMapper, times(1)).selectAllRecords();
+    public void testGetList_shouldCall_catalogCountImpl_selectAllMethod() throws Exception {
+        catalogCountApiImpl.getList();
+        verify(catalogCountImpl, times(1)).selectAllRecordsWithTotalColumn(anyDouble());
     }
 
     @Test
-    public void testGetList_shouldReturn_ExpectedValues_whenSelectAllMethod(){
+    public void testGetList_shouldReturn_ExpectedValues_whenSelectAllRecords(){
         Date expectedDate = new Date();
-        System.out.println(expectedDate.toString());
-        CatalogCount expectedCatalogCount = new CatalogCount();
-        expectedCatalogCount.setDetails(expectedDetails);
-        expectedCatalogCount.setRegistrationDate(expectedDate);
+        int expectedId = 3;
+        CatalogCountResponse expectedCatalogCountResponse =
+                new CatalogCountResponse(
+                        expectedId,
+                        expectedDate,
+                        expectedCatalogCountEnumId,
+                        expectedAmount,
+                        expectedDetails
+                );
 
-        List<CatalogCount> listOfCatalogCount = new ArrayList<>();
-        listOfCatalogCount.add(expectedCatalogCount);
-        when(catalogCountMapper.selectAllRecords()).thenReturn(listOfCatalogCount);
+        List<CatalogCountResponse> listOfCatalogCount = new ArrayList<>();
+        listOfCatalogCount.add(expectedCatalogCountResponse);
+        when(catalogCountImpl.selectAllRecordsWithTotalColumn(anyDouble())).thenReturn(listOfCatalogCount);
 
-        CatalogCountResponseList actualList = catalogCountImpl.getList();
+        CatalogCountResponseList actualList = catalogCountApiImpl.getList();
 
         CatalogCountResponse actualCatalogCountResponse = actualList.getCatalogCountResponseCollection().get(0);
-        Assert.assertEquals(expectedCatalogCount.getDetails(), actualCatalogCountResponse.getDetails());
+        Assert.assertEquals(expectedCatalogCountResponse.getDetails(), actualCatalogCountResponse.getDetails());
         Assert.assertEquals(expectedDate, actualCatalogCountResponse.getRegistrationDate());
 
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetList_throwsException_whenNotAbleToGet_MonthlyTotal() throws Exception {
+       when(catalogCountImpl.getCorrespondingMonthlyTotal()).thenThrow(RuntimeException.class);
+       catalogCountApiImpl.getList();
     }
 
     /*
@@ -137,10 +146,10 @@ public class CatalogCountImplTest {
 
         int expectedId = 1;
         CatalogCount mockCatalogCount = Mockito.mock(CatalogCount.class);
-        when(catalogCountMapper.selectOneRecord(expectedId)).thenReturn(mockCatalogCount);
+        when(catalogCountImpl.selectOneRecord(expectedId)).thenReturn(mockCatalogCount);
 
-        catalogCountImpl.getCatalogCount(expectedId);
-        verify(catalogCountMapper, times(1)).selectOneRecord(expectedId);
+        catalogCountApiImpl.getCatalogCount(expectedId);
+        verify(catalogCountImpl, times(1)).selectOneRecord(expectedId);
     }
 
     @Test
@@ -149,20 +158,20 @@ public class CatalogCountImplTest {
         int expectedId = 1;
         CatalogCount expectedCatalogCount = new CatalogCount();
         expectedCatalogCount.setDetails(expectedDetails);
-        when(catalogCountMapper.selectOneRecord(expectedId)).thenReturn(expectedCatalogCount);
+        when(catalogCountImpl.selectOneRecord(expectedId)).thenReturn(expectedCatalogCount);
 
-        CatalogCountResponse actualResponse = catalogCountImpl.getCatalogCount(expectedId);
-        verify(catalogCountMapper, times(1)).selectOneRecord(expectedId);
+        CatalogCountResponse actualResponse = catalogCountApiImpl.getCatalogCount(expectedId);
+        verify(catalogCountImpl, times(1)).selectOneRecord(expectedId);
 
         Assert.assertEquals(expectedDetails, actualResponse.getDetails());
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expected = RuntimeException.class)
     public void testGetCatalogCount_returnsNotFoundException() throws Exception {
-       when(catalogCountMapper.selectOneRecord(anyInt())).thenReturn(null);
+       when(catalogCountImpl.selectOneRecord(anyInt())).thenReturn(null);
 
        int expectedCatalogCountId = 1;
-       catalogCountImpl.getCatalogCount(expectedCatalogCountId);
+       catalogCountApiImpl.getCatalogCount(expectedCatalogCountId);
     }
 
     /*
@@ -172,7 +181,7 @@ public class CatalogCountImplTest {
     @Test
     public void testLogicalDelete_shouldCall_MapperLogicalDelete() {
         int expectedId = 1;
-        catalogCountImpl.logicalDeleteRecord(expectedId);
-        verify(catalogCountMapper, times(1)).logicalDeleteRecord(expectedId);
+        catalogCountApiImpl.logicalDeleteRecord(expectedId);
+        verify(catalogCountImpl, times(1)).logicalDeleteRecord(expectedId);
     }
 }

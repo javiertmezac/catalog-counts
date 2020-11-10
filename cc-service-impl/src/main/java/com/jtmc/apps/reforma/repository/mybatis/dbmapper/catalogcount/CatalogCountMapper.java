@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.dbmapper.catalogcount;
+package com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcount;
 
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import org.apache.ibatis.annotations.*;

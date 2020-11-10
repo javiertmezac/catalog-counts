@@ -1,8 +1,8 @@
 package com.jtmc.apps.reforma.repository.mybatis;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.dbmapper.CatalogCountEnumMapper;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum.CatalogCountEnumMapper;
 
 import java.util.List;
 
