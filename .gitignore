@@ -31,3 +31,7 @@ target/
 #maven
 pom.xml.releaseBackup
 pom.xml.versionsBackup
+
+#flyway
+flyway-db-configuration/flyway-6.5.5/
+

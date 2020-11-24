@@ -1,7 +1,7 @@
-package com.jtmc.apps.reforma.api.v1;
+package com.jtmc.apps.reforma.api.v1.catalogcountenum;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.dbmapper.CatalogCountEnumMapper;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum.CatalogCountEnumMapper;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 import org.mybatis.guice.transactional.Transactional;
 

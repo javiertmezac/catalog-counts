@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.dbmapper;
+package com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum;
 
 import org.apache.ibatis.jdbc.SQL;
 
