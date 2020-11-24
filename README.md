@@ -36,18 +36,32 @@ Note Columns are written in spanish.
     - (if "cuenta" equals 1.x then Cargo column should have a value)
     - format should be <number>.<number>
  - Abono (if "cuenta" != 1.x then Abono column should have a value)
- - Salgo column should be the last column
+ - Saldo column should be the last column
  
  Specifications:
  - excel extension should be .xlsx
  - Columns should be in order as described above.
- - There should not be "empty rows" between months (if there is an empty row, should be have a way to "interrupt" the import and let the user know about this error, then resume from last successful "row"?)
- - Tab should be named as "Registros" 
- - There should be only one row describing the columns name and it should start on cel/box "B2"
+ - There should not be "empty rows" between months (if there is an empty row, 
+    should be have a way to "interrupt" the import and let the user know about this error, 
+    then resume from last successful "row"?) (NOTE: //todo: evaluate if "empty rows" validation can be done
+    before import process starts. Take a look at com.jtmc.apps.reforma.service.excelimport.ExcelSheet for more details)
+ - There should be only one row describing the columns name and it should start on cel/box "B2" (first row of the table)
+ - "Saldo Anterior" row should always be the "second row"
  - Last row should be the "total row"
     - consider selecting all the rows and giving a table format
- - "Saldo Anterior" row should always be the "second row"
-    - Consider the possibility of importing "registros" per year.
+
+    
+ # Excel import pending considerations
+ ## importing "registros" per year.
+ - Tab should be named as "Registros <year>" 
+    - this means it should only contain all the related "info/incoming/expenses" to that year
+    - this should be helpful to import data related to this year
+    
+    ### same excel file may be uploaded many times..
+        - scenario #1: maybe first time a user uploads, it only sets latest year of data (eg. 2020)
+        - scenario #1.1: same file has been "locally" updated with data from (eg.2019), then user uploads the excel file
+         ( for this scenario how do we ensure consistency between excel and database?)
+         - consider checksum of each multiple version, or uploading each "Registros <year>" as a separate file?
     
     
  Technical Specifications
@@ -69,6 +83,7 @@ Note Columns are written in spanish.
     
   Excel Imports
   - there should be an API to "start" import process
+    - to start an import, we need to know which tab
     - post method with name of the file as json payload
     
     

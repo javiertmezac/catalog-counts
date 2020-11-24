@@ -13,6 +13,7 @@ public interface ExcelImportApi {
     Response excelImportStatus(@QueryParam("personProfileId") UUID personProfileId);
 
     @POST
+    @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     Response startExcelImportProcess(ExcelImportProcessRequest importProcessRequest);
 

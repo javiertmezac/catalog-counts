@@ -34,3 +34,6 @@ pom.xml.versionsBackup
 
 #flyway
 flyway-db-configuration/flyway-6.5.5/
+
+#excel example file
+excel-import/
