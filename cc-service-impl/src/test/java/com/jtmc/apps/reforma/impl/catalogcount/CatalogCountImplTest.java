@@ -83,4 +83,6 @@ class CatalogCountImplTest {
         Assertions.assertEquals(expectedTotalForCatalogCount2, actualResponse.get(1).getTotal());
     }
 
+
+
 }
