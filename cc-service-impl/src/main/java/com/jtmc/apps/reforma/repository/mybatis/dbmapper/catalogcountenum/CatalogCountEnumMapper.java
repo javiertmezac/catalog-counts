@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.dbmapper;
+package com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum;
 
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 import org.apache.ibatis.annotations.InsertProvider;

@@ -1,50 +1,37 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.api.v1.GenericResponseMessage;
-import com.jtmc.apps.reforma.dbmapper.catalogcount.CatalogCountMapper;
 import com.jtmc.apps.reforma.domain.CatalogCount;
-import org.mybatis.guice.transactional.Transactional;
+import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CatalogCountImpl implements CatalogCountApi {
-    private Logger LOGGER = LoggerFactory.getLogger(CatalogCountImpl.class);
+public class CatalogCountApiImpl implements CatalogCountApi {
+    private Logger LOGGER = LoggerFactory.getLogger(CatalogCountApiImpl.class);
 
     @Inject
-    private CatalogCountMapper catalogCountMapper;
+    private CatalogCountImpl catalogCountImpl;
 
     @Override
     public CatalogCountResponseList getList() {
         CatalogCountResponseList responseList = new CatalogCountResponseList();
-        responseList.catalogCountResponseCollection = new ArrayList<>();
+        responseList.setCatalogCountResponseCollection(new ArrayList<>());
+        responseList.setSaldoAnterior(catalogCountImpl.getCorrespondingMonthlyTotal());
 
-        Collection<CatalogCount> catalogCounts = catalogCountMapper.selectAllRecords();
-        for (CatalogCount next : catalogCounts) {
-            responseList.catalogCountResponseCollection.add(new CatalogCountResponse(
-                    next.getId(),
-                    next.getRegistrationDate(),
-                    next.getCatalogCountEnumId(),
-                    next.getAmount(),
-                    next.getDetails()
-            ));
-        }
+        double total = responseList.getSaldoAnterior();
+        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllRecordsWithTotalColumn(total));
+
         return responseList;
     }
 
+
     @Override
-    @Transactional
     public Response insert(CatalogCountRequest catalogCountRequest) {
 
         CatalogCount catalogCount = new CatalogCount();
@@ -57,17 +44,18 @@ public class CatalogCountImpl implements CatalogCountApi {
         catalogCount.setDeleted(false);
         catalogCount.setRegistrationDate(registration);
 
-        catalogCountMapper.insertIntoCatalogCount(catalogCount);
+        catalogCountImpl.insertIntoCatalogCount(catalogCount);
         //todo: this is not Json type
         return Response.ok().build();
     }
 
     public CatalogCountResponse getCatalogCount(int id) {
-        LOGGER.info("CatalogCountId payload: " + id);
+        LOGGER.info("CatalogCountId payload: {} ", id);
 
-        CatalogCount catalogCount = catalogCountMapper.selectOneRecord(id);
+        CatalogCount catalogCount = catalogCountImpl.selectOneRecord(id);
         if (catalogCount == null) {
-           throw new NotFoundException("Catalog Count id: " + id + " not found");
+            //todo: bad exception handling here
+           throw new RuntimeException("Catalog Count id: " + id + " not found");
         }
 
         return new CatalogCountResponse(
@@ -80,9 +68,10 @@ public class CatalogCountImpl implements CatalogCountApi {
     }
 
     //todo: should have a test to verify logicalDelete was done correctly
-    @Transactional
     public Response logicalDeleteRecord(int id) {
-        catalogCountMapper.logicalDeleteRecord(id);
+        LOGGER.info("CatalogCountId to be deleted: {}", id);
+
+        catalogCountImpl.logicalDeleteRecord(id);
         return Response.noContent().build();
     }
 }
