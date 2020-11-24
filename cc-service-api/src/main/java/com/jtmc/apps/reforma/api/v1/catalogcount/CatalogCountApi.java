@@ -8,7 +8,6 @@ import javax.ws.rs.core.Response;
 public interface CatalogCountApi {
 
     //todo: missing "authorization"
-
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)

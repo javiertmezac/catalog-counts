@@ -57,7 +57,7 @@ public class CatalogCount {
     }
 
     public void setDetails(String details) {
-        checkArgument(StringUtils.isNotBlank(details), "Invalid arguments");
+        checkArgument(StringUtils.isNotBlank(details), "Missing details");
         this.details = details;
     }
 
@@ -71,10 +71,5 @@ public class CatalogCount {
 
     public boolean isValidCatalogCountEnum() {
        return false;
-    }
-
-    public boolean isIncoming() {
-        //todo: implement logic to know if incoming or expense
-        return true;
     }
 }
