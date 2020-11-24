@@ -9,6 +9,7 @@ import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.mybatis.MyBatisCatalogCountRepository;
 
+
 public class ServerModule extends AbstractModule {
 
     @Override
@@ -24,7 +25,6 @@ public class ServerModule extends AbstractModule {
 
         bind(ObjectMapper.class).toInstance(objectMapper);
         bind(JacksonJsonProvider.class).toInstance(jsonProvider);
-
         bind(CatalogCountImpl.class);
         bind(CatalogCountRepository.class).to(MyBatisCatalogCountRepository.class);
     }

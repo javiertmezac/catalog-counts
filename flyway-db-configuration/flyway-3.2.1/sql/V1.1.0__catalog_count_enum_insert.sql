@@ -1,3 +1,4 @@
+
 -- INGRESOS
 INSERT INTO catalog_count_enum
 (

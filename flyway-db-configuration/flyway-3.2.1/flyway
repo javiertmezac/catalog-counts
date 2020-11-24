@@ -23,7 +23,6 @@ esac
 
 # resolve links - $0 may be a softlink
 PRG="$0"
-echo "PRG:" $PRG
 
 while [ -h "$PRG" ] ; do
   ls=`ls -ld "$PRG"`
@@ -37,7 +36,6 @@ done
 
 # Set the current directory to the installation directory
 INSTALLDIR=`dirname "$PRG"`
-echo "blah: " $INSTALLDIR
 
 if [ -x "$INSTALLDIR/jre/bin/java" ]; then
  JAVA_CMD=$INSTALLDIR/jre/bin/java
@@ -60,3 +58,4 @@ fi
 
 # Exit using the same code returned from Java
 exit $?
+
