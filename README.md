@@ -1,5 +1,6 @@
 # catalog-counts
 catalog-counts
+
 it seems we are missing 2 columns in CatalogCount table.
 1- we should identified to which church the "entry" belongs to
 2- who is using the application (user/profile Id)
@@ -20,6 +21,7 @@ the process should consider following scenario:
 2- addition and subtraction of current month's movements/entries (CatalogCount Table)
 3- inserting new value to MonthlyTotal Table
 4- repeat the same for each registered church?
+
 
 # Excel Import
 Documentation

@@ -8,7 +8,6 @@ import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.mybatis.MyBatisCatalogCountRepository;
 
-
 public class ServerModule extends AbstractModule {
 
     @Override
