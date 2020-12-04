@@ -29,8 +29,7 @@ public class ExcelImportService {
 
 
     //todo: get file name from storage service. Current local file: excel-import/example1.xlsx
-
-    private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
+private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
         File file = new File(getClass().getClassLoader().getResource(fileStorageKey).getFile());
         return new FileInputStream(file);
     }
@@ -43,7 +42,7 @@ public class ExcelImportService {
 
             ExcelSheet excelSheet = new ExcelSheet(wb, tabSheetName);
             if (!excelSheet.isValid()) {
-                throw new ExcelImportServiceSheetNotValidException(format("Excel '%s' on TabSheet '%s' didn't pass validations: ", fileStorageKey, tabSheetName));
+                throw new ExcelImportServiceSheetNotValidException(format("Excel '%s' on TabSheet '%s' didn't pass validations", fileStorageKey, tabSheetName));
             }
 
             XSSFSheet sheet = wb.getSheet(tabSheetName);
@@ -78,6 +77,7 @@ public class ExcelImportService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            throw new ExcelImportException("Something went wrong during ExcelImport", e);
         }
     }
 

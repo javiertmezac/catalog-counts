@@ -15,6 +15,7 @@ public interface ExcelImportApi {
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     Response startExcelImportProcess(ExcelImportProcessRequest importProcessRequest);
 
 }
