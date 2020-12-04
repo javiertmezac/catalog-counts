@@ -32,6 +32,7 @@ public class MyBatisConfigModule extends MyBatisModule {
 
         Names.bindProperties(binder(), setMyBatisProperties());
         bind(ICatalogCountEnumService.class).to(CatalogCountEnumMapperImpl.class);
+
     }
 
     /*

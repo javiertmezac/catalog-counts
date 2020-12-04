@@ -3,11 +3,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.inject.AbstractModule;
+import com.jtmc.apps.reforma.api.v1.exception.GenericResponseErrorMessage;
 import com.jtmc.apps.reforma.guice.MyBatisConfigModule;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.mybatis.MyBatisCatalogCountRepository;
-
 
 public class ServerModule extends AbstractModule {
 

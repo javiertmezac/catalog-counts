@@ -11,9 +11,8 @@ CREATE TABLE IF NOT EXISTS `catalog_count_enum` (
   DEFAULT CHARSET =utf8
   COLLATE =utf8_unicode_ci;
 
-
-
 CREATE TABLE IF NOT EXISTS `catalog_count` (
+
   `id`                  BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
   `registrationDate`    DATE               NOT NULL,
   `catalogCountEnumId`  BIGINT(8) UNSIGNED NOT NULL,

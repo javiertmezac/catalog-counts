@@ -12,6 +12,7 @@
     <properties>
         <mockito.version>3.2.4</mockito.version>
     </properties>
+
     <modules>
         <module>cc-service-impl</module>
         <module>cc-service-server</module>
@@ -89,7 +90,7 @@
         </dependencies>
 
     </dependencyManagement>
-  
+
     <build>
         <plugins>
             <plugin>
