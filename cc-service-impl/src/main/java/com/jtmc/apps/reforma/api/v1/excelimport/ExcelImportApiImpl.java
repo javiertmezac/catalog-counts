@@ -21,12 +21,13 @@ public class ExcelImportApiImpl implements ExcelImportApi {
     public Response startExcelImportProcess(ExcelImportProcessRequest importProcessRequest) {
 
         excelImportService.execute(importProcessRequest.getFileStorageKey(), importProcessRequest.getTabName());
+        return Response.noContent().build();
 
-
-        //personProfileId
-        //fileStorageKey
-
-//        handler.importRowsIntoDB();
-        return null;
+        /*
+        todo: (future)
+          who is doing the request?
+          validation to know is same request is being done? (who to validate data transferred?)
+          how is this affecting DB? maybe add a checksum per tab?, or have a pre-table for validation?
+         */
     }
 }

@@ -2,6 +2,7 @@ package com.jtmc.apps.reforma.api.v1.excelimport;
 
 import java.util.HashMap;
 
+//todo: for future use
 public class ExcelImportStatusResponse {
 
     private String fileStorageKey;

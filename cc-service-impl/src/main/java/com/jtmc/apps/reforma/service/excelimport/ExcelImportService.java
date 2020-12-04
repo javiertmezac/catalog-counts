@@ -52,6 +52,13 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
 
             list = ccEnumRepository.getList();
 
+            /*
+            todo:
+              in the future keep track of the "row" that is written as a new record,
+              if something goes wrong, process should be stopped and track of the
+              process should be stored for reference  (return ExcelImportStatusResponse)
+            */
+
             while (itr.hasNext()) {
                 Row row = itr.next();
                 if (skipFirstTwoRows(row) || row.getRowNum() == totalRowIndex) {
