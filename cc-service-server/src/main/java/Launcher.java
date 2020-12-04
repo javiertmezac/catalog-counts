@@ -3,6 +3,10 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApi;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApiImpl;
+import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApi;
+import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApiImpl;
+import com.jtmc.apps.reforma.api.v1.exception.ExcelImportGenericExceptionMapper;
+import com.jtmc.apps.reforma.api.v1.exception.GenericResponseErrorMessage;
 import com.jtmc.apps.reforma.api.v1.exception.RepositoryGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.exception.RuntimeGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
@@ -32,6 +36,7 @@ public class Launcher {
             install(new ServerModule());
             bind(HealthcheckApi.class).to(HealthcheckImpl.class);
             bind(CatalogCountApi.class).to(CatalogCountApiImpl.class);
+            bind(ExcelImportApi.class).to(ExcelImportApiImpl.class);
         }
     }
 
@@ -47,9 +52,11 @@ public class Launcher {
             return Sets.newHashSet(
                     injector.getInstance(HealthcheckApi.class),
                     injector.getInstance(CatalogCountApi.class),
+                    injector.getInstance(ExcelImportApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
-                    injector.getInstance(RepositoryGenericExceptionMapper.class)
+                    injector.getInstance(RepositoryGenericExceptionMapper.class),
+                    injector.getInstance(ExcelImportGenericExceptionMapper.class)
             );
         }
     }

@@ -58,4 +58,3 @@ fi
 
 # Exit using the same code returned from Java
 exit $?
-
