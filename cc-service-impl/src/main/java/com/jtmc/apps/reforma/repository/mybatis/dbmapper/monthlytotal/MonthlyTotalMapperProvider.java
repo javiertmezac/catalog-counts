@@ -15,4 +15,12 @@ public class MonthlyTotalMapperProvider {
                 .WHERE("MONTH(registrationDate) = #{currentDateMonth}")
                 .toString();
     }
+
+    public String selectTotalRecordSql() {
+        return new SQL()
+                .SELECT("*")
+                .FROM(tableName)
+                .WHERE("isActive = true")
+                .toString();
+    }
 }

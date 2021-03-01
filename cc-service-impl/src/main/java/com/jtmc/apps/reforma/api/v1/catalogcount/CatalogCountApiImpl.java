@@ -22,7 +22,8 @@ public class CatalogCountApiImpl implements CatalogCountApi {
     public CatalogCountResponseList getList() {
         CatalogCountResponseList responseList = new CatalogCountResponseList();
         responseList.setCatalogCountResponseCollection(new ArrayList<>());
-        responseList.setSaldoAnterior(catalogCountImpl.getCorrespondingMonthlyTotal());
+
+        responseList.setSaldoAnterior(catalogCountImpl.getCorrespondingTotal());
 
         double total = responseList.getSaldoAnterior();
         responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllRecordsWithTotalColumn(total));
