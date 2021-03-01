@@ -1,9 +1,14 @@
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider; import com.google.common.collect.Sets; import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.jtmc.apps.reforma.api.v1.GenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApi;
-import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountImpl;
+import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApiImpl;
+import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApi;
+import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApiImpl;
+import com.jtmc.apps.reforma.api.v1.exception.ExcelImportGenericExceptionMapper;
+import com.jtmc.apps.reforma.api.v1.exception.GenericResponseErrorMessage;
+import com.jtmc.apps.reforma.api.v1.exception.RepositoryGenericExceptionMapper;
+import com.jtmc.apps.reforma.api.v1.exception.RuntimeGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckImpl;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
@@ -30,7 +35,8 @@ public class Launcher {
         protected void configure() {
             install(new ServerModule());
             bind(HealthcheckApi.class).to(HealthcheckImpl.class);
-            bind(CatalogCountApi.class).to(CatalogCountImpl.class);
+            bind(CatalogCountApi.class).to(CatalogCountApiImpl.class);
+            bind(ExcelImportApi.class).to(ExcelImportApiImpl.class);
         }
     }
 
@@ -46,8 +52,11 @@ public class Launcher {
             return Sets.newHashSet(
                     injector.getInstance(HealthcheckApi.class),
                     injector.getInstance(CatalogCountApi.class),
+                    injector.getInstance(ExcelImportApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
-                    injector.getInstance(GenericExceptionMapper.class)
+                    injector.getInstance(RuntimeGenericExceptionMapper.class),
+                    injector.getInstance(RepositoryGenericExceptionMapper.class),
+                    injector.getInstance(ExcelImportGenericExceptionMapper.class)
             );
         }
     }
@@ -61,7 +70,7 @@ public class Launcher {
                 new CXFNonSpringJaxrsServlet(new CatalogCountsApplication()));
         ServletContextHandler servletContextHandler = new ServletContextHandler();
         servletContextHandler.setContextPath("/");
-        servletContextHandler.addServlet(servletHolder, "/api/*");
+        servletContextHandler.addServlet(servletHolder, "/cc-service/api/*");
 
         handlers.addHandler(servletContextHandler);
 

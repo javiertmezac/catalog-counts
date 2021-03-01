@@ -31,3 +31,11 @@ target/
 #maven
 pom.xml.releaseBackup
 pom.xml.versionsBackup
+
+#flyway
+/flyway-db-configuration/flyway-6.5.5/*
+!/flyway-db-configuration/flyway-6.5.5/conf/
+!/flyway-db-configuration/flyway-6.5.5/sql/
+
+#excel example file
+excel-import/

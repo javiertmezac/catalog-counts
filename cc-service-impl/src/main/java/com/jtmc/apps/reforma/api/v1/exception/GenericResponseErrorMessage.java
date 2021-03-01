@@ -1,11 +1,11 @@
-package com.jtmc.apps.reforma.api.v1;
+package com.jtmc.apps.reforma.api.v1.exception;
 
-public class GenericResponseMessage {
+public class GenericResponseErrorMessage {
     private int status;
     private String message;
     private String type;
 
-    public GenericResponseMessage(int status, String message, String type) {
+    public GenericResponseErrorMessage(int status, String message, String type) {
         this.status = status;
         this.message = message;
         this.type = type;
