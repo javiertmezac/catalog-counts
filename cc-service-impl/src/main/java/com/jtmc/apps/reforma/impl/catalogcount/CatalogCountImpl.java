@@ -56,6 +56,10 @@ public class CatalogCountImpl {
         return monthlyTotal.getTotal();
     }
 
+    public double getCorrespondingTotal() {
+        return monthlyTotalMapper.selectTotal().getTotal();
+    }
+
 
     public double calculateTotalColumn(CatalogCount catalogCount, double saldo) {
         //todo: this will only work if first 3 rows from CatalogCountEnum are "incoming values"

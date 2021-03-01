@@ -1,0 +1,246 @@
+_type: export
+__export_format: 4
+__export_date: 2021-03-01T02:49:18.182Z
+__export_source: insomnia.desktop.app:v2020.5.2
+resources:
+  - _id: req_078f66699a374e0a9f1cffadd05e8cb8
+    parentId: fld_7530baa285cd48108aca1f3277e0a979
+    modified: 1606196974096
+    created: 1606196596371
+    url: "{{ base_path }}/api/v1/excelimport"
+    name: start import process
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"personProfileId": "c70d4cfe-0f68-482d-8e82-5952fadba5e4",
+        	"fileStorageKey": "excel-import/example1.xlsx",
+        	"tabName": "Registros 2020"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_795f7404f5804ee7850a1052eea8a8b9
+    authentication: {}
+    metaSortKey: -1606196596371
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_7530baa285cd48108aca1f3277e0a979
+    parentId: wrk_0ff60db86f1248d4a239634df79ce75c
+    modified: 1606196587592
+    created: 1606196587592
+    name: excel import
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1606196587592
+    _type: request_group
+  - _id: wrk_0ff60db86f1248d4a239634df79ce75c
+    parentId: null
+    modified: 1586726477004
+    created: 1586726477004
+    name: CC-Service
+    description: ""
+    scope: null
+    _type: workspace
+  - _id: req_3834fbf57e4844e4bcdf289bd06c713a
+    parentId: wrk_0ff60db86f1248d4a239634df79ce75c
+    modified: 1586726771911
+    created: 1586726660791
+    url: "{{ base_path  }}{{ healthcheck  }}"
+    name: Healthcheck
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1586726660791
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_0269544880a24312a9f0877b011cc011
+    parentId: wrk_0ff60db86f1248d4a239634df79ce75c
+    modified: 1606191981738
+    created: 1586726517366
+    url: "{{ base_path  }}{{ catalog_count  }}"
+    name: CatalogCount
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"details": "something here",
+        	"amount": 1,
+        	"catalogCountEnumId": 9
+        }
+    parameters: []
+    headers:
+      - id: pair_b7dbe9924f5b48659a9e5fd3c42c8736
+        name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1586726517366
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_a812c48c23aa4da88d206442f69a57ec
+    parentId: wrk_0ff60db86f1248d4a239634df79ce75c
+    modified: 1587339947153
+    created: 1587339941861
+    url: "{{ base_path  }}{{ catalog_count  }}"
+    name: CatalogCount - list
+    description: ""
+    method: GET
+    body:
+      mimeType: application/json
+      text: ""
+    parameters: []
+    headers:
+      - id: pair_b7dbe9924f5b48659a9e5fd3c42c8736
+        name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1584484277572.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_44048b564f0e4bd6bc574da7cfe53f33
+    parentId: wrk_0ff60db86f1248d4a239634df79ce75c
+    modified: 1606192004793
+    created: 1587341249229
+    url: "{{ base_path  }}{{ catalog_count  }}/21"
+    name: CatalogCount - one
+    description: ""
+    method: GET
+    body:
+      mimeType: application/json
+      text: ""
+    parameters: []
+    headers:
+      - id: pair_b7dbe9924f5b48659a9e5fd3c42c8736
+        name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1583363157675.75
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_d71a782f31864a89814cd19aa5511a24
+    parentId: wrk_0ff60db86f1248d4a239634df79ce75c
+    modified: 1587345560914
+    created: 1587344861102
+    url: "{{ base_path  }}{{ catalog_count  }}/2345"
+    name: CatalogCount - logical delete
+    description: ""
+    method: DELETE
+    body:
+      mimeType: application/json
+      text: ""
+    parameters: []
+    headers:
+      - id: pair_b7dbe9924f5b48659a9e5fd3c42c8736
+        name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1582802597727.375
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_36384f44a81bdc2abdfa215237aa1ea3cc9e0cf7
+    parentId: wrk_0ff60db86f1248d4a239634df79ce75c
+    modified: 1586726477074
+    created: 1586726477074
+    name: Base Environment
+    data: {}
+    dataPropertyOrder: null
+    color: null
+    isPrivate: false
+    metaSortKey: 1586726477074
+    _type: environment
+  - _id: jar_36384f44a81bdc2abdfa215237aa1ea3cc9e0cf7
+    parentId: wrk_0ff60db86f1248d4a239634df79ce75c
+    modified: 1586726477077
+    created: 1586726477077
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_5095916063cb41afb065367a708073a1
+    parentId: wrk_0ff60db86f1248d4a239634df79ce75c
+    modified: 1591902142046
+    created: 1591902142046
+    fileName: CC-Service
+    contents: ""
+    contentType: yaml
+    _type: api_spec
+  - _id: env_0c2a0ddd0d3e4cdeaf40ce0c574c1ea5
+    parentId: env_36384f44a81bdc2abdfa215237aa1ea3cc9e0cf7
+    modified: 1600482652627
+    created: 1586726486830
+    name: Local
+    data:
+      base_path: http://localhost:8080/cc-service
+      healthcheck: /api/public/v1/status
+      catalog_count: /api/v1/catalog-count
+    dataPropertyOrder:
+      "&":
+        - base_path
+        - healthcheck
+        - catalog_count
+    color: null
+    isPrivate: false
+    metaSortKey: 1586726486830
+    _type: environment
+  - _id: env_882b48ea277147d3bac1105b0d1cb28a
+    parentId: env_36384f44a81bdc2abdfa215237aa1ea3cc9e0cf7
+    modified: 1603769693197
+    created: 1603769671167
+    name: Local Apache
+    data:
+      base_path: http://localhost:8888/cc-service
+      healthcheck: /api/public/v1/status
+      catalog_count: /api/v1/catalog-count
+    dataPropertyOrder:
+      "&":
+        - base_path
+        - healthcheck
+        - catalog_count
+    color: null
+    isPrivate: false
+    metaSortKey: 1603769671167
+    _type: environment
