@@ -23,8 +23,6 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         CatalogCountResponseList responseList = new CatalogCountResponseList();
         responseList.setCatalogCountResponseCollection(new ArrayList<>());
 
-        //todo: this list should get from where the "list" is requests (month and year)
-//        responseList.setSaldoAnterior(catalogCountImpl.getCorrespondingMonthlyTotal());
         responseList.setSaldoAnterior(catalogCountImpl.getCorrespondingTotal());
 
         double total = responseList.getSaldoAnterior();
