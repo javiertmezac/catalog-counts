@@ -12,4 +12,10 @@ public interface MonthlyTotalMapper {
     )
     MonthlyTotal selectMonthlyTotal(@Param("currentDateYear") int year,
                                     @Param("currentDateMonth") int month);
+
+    @SelectProvider(
+            type = MonthlyTotalMapperProvider.class,
+            method = "selectTotalRecordSql"
+    )
+    MonthlyTotal selectTotal();
 }

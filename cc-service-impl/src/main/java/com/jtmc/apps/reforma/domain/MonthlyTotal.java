@@ -6,7 +6,7 @@ public class MonthlyTotal {
     private int id;
     private double total;
     private Date registrationDate;
-    private boolean isDeleted;
+    private boolean isActive;
 
     public int getId() {
         return id;
@@ -32,11 +32,11 @@ public class MonthlyTotal {
         this.registrationDate = registrationDate;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }
