@@ -11,6 +11,8 @@ import com.jtmc.apps.reforma.api.v1.exception.RepositoryGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.exception.RuntimeGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckImpl;
+import com.jtmc.apps.reforma.api.v1.persona.PersonaApi;
+import com.jtmc.apps.reforma.api.v1.persona.PersonaApiImpl;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -37,6 +39,7 @@ public class Launcher {
             bind(HealthcheckApi.class).to(HealthcheckImpl.class);
             bind(CatalogCountApi.class).to(CatalogCountApiImpl.class);
             bind(ExcelImportApi.class).to(ExcelImportApiImpl.class);
+            bind(PersonaApi.class).to(PersonaApiImpl.class);
         }
     }
 
@@ -53,6 +56,7 @@ public class Launcher {
                     injector.getInstance(HealthcheckApi.class),
                     injector.getInstance(CatalogCountApi.class),
                     injector.getInstance(ExcelImportApi.class),
+                    injector.getInstance(PersonaApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),

@@ -6,6 +6,7 @@ import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumMapperImpl;
 import com.jtmc.apps.reforma.api.v1.catalogcountenum.ICatalogCountEnumService;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcount.CatalogCountMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.persona.PersonaMapper;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -29,6 +30,7 @@ public class MyBatisConfigModule extends MyBatisModule {
         addMapperClass(CatalogCountEnumMapper.class);
         addMapperClass(CatalogCountMapper.class);
         addMapperClass(MonthlyTotalMapper.class);
+        addMapperClass(PersonaMapper.class);
 
         Names.bindProperties(binder(), setMyBatisProperties());
         bind(ICatalogCountEnumService.class).to(CatalogCountEnumMapperImpl.class);
