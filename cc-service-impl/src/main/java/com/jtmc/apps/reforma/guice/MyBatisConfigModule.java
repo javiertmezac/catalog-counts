@@ -1,6 +1,7 @@
 package com.jtmc.apps.reforma.guice;
 
 import com.google.inject.name.Names;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum.CatalogCountEnumMapper;
 import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumMapperImpl;
 import com.jtmc.apps.reforma.api.v1.catalogcountenum.ICatalogCountEnumService;
@@ -31,6 +32,7 @@ public class MyBatisConfigModule extends MyBatisModule {
         addMapperClass(CatalogCountMapper.class);
         addMapperClass(MonthlyTotalMapper.class);
         addMapperClass(PersonaMapper.class);
+        addMapperClass(AttendanceMapper.class);
 
         Names.bindProperties(binder(), setMyBatisProperties());
         bind(ICatalogCountEnumService.class).to(CatalogCountEnumMapperImpl.class);

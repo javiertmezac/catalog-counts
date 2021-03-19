@@ -13,6 +13,8 @@ import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckImpl;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaApi;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaApiImpl;
+import com.jtmc.apps.reforma.api.v1.service.ServiceApi;
+import com.jtmc.apps.reforma.api.v1.service.ServiceApiImpl;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -22,6 +24,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.ws.Service;
 import java.util.Set;
 
 public class Launcher {
@@ -40,6 +43,7 @@ public class Launcher {
             bind(CatalogCountApi.class).to(CatalogCountApiImpl.class);
             bind(ExcelImportApi.class).to(ExcelImportApiImpl.class);
             bind(PersonaApi.class).to(PersonaApiImpl.class);
+            bind(ServiceApi.class).to(ServiceApiImpl.class);
         }
     }
 
@@ -57,6 +61,7 @@ public class Launcher {
                     injector.getInstance(CatalogCountApi.class),
                     injector.getInstance(ExcelImportApi.class),
                     injector.getInstance(PersonaApi.class),
+                    injector.getInstance(ServiceApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),
