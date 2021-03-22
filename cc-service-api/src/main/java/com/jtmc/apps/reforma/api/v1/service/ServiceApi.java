@@ -3,6 +3,7 @@ package com.jtmc.apps.reforma.api.v1.service;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 
 @Path("/v1/service")
 public interface ServiceApi {
@@ -11,6 +12,10 @@ public interface ServiceApi {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     Response createService(ServiceRequest request);
+
+    @GET
+    @Path("/{date}")
+    Response getServiceByDate(@PathParam("date") String date);
 
 
     @GET
