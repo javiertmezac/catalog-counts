@@ -13,4 +13,20 @@ public class AttendanceMapperProvider {
                 .WHERE("idService = #{idService}")
                 .toString();
     }
+
+    public String saveAttendance() {
+        return new SQL()
+                .INSERT_INTO(tableName)
+                .INTO_COLUMNS("idService, idPersona, attended")
+                .INTO_VALUES("#{serviceId}, #{attendance.persona.id}, #{attendance.attended}")
+                .toString();
+    }
+
+    public String updateAttendance() {
+        return new SQL()
+                .UPDATE(tableName)
+                .SET("attended = #{attendance.attended}")
+                .WHERE("id = #{attendance.id}")
+                .toString();
+    }
 }

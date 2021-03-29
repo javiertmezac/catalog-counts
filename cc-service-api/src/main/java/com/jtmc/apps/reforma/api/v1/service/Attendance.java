@@ -4,8 +4,17 @@ import com.jtmc.apps.reforma.api.v1.persona.PersonaResponse;
 
 public class Attendance {
 
+    private int id;
     private PersonaResponse persona;
     private boolean attended;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public PersonaResponse getPersona() {
         return persona;

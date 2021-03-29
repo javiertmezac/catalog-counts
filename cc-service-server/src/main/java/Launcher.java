@@ -1,4 +1,6 @@
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider; import com.google.common.collect.Sets; import com.google.inject.AbstractModule;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.google.common.collect.Sets;
+import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApi;
@@ -6,7 +8,6 @@ import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApiImpl;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApi;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApiImpl;
 import com.jtmc.apps.reforma.api.v1.exception.ExcelImportGenericExceptionMapper;
-import com.jtmc.apps.reforma.api.v1.exception.GenericResponseErrorMessage;
 import com.jtmc.apps.reforma.api.v1.exception.RepositoryGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.exception.RuntimeGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
@@ -24,7 +25,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.ws.Service;
 import java.util.Set;
 
 public class Launcher {

@@ -3,7 +3,10 @@ package com.jtmc.apps.reforma.api.v1.service;
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaResponse;
 import com.jtmc.apps.reforma.domain.Attendance;
+import com.jtmc.apps.reforma.domain.Persona;
+import com.jtmc.apps.reforma.domain.Service;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.service.ServiceMapper;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -14,10 +17,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ServiceApiImpl implements ServiceApi{
+public class ServiceApiImpl implements ServiceApi {
 
     @Inject
     private AttendanceMapper attendanceMapper;
+
+    @Inject
+    private ServiceMapper serviceMapper;
 
     @Override
     public Response createService(ServiceRequest request) {
@@ -25,17 +31,20 @@ public class ServiceApiImpl implements ServiceApi{
     }
 
     @Override
-    public Response getServiceByDate(String dateParam) {
+    public ServiceResponse getServiceByDate(String dateParam) {
 
         final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = dateFormat.parse(dateParam);
+            Service service = serviceMapper.getServiceByDate(dateParam);
+            ServiceResponse response = new ServiceResponse();
+            response.setId(service.getId());
+            return response;
         } catch (ParseException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                     .entity("Couldn't parse date string: " + e.getMessage())
                     .build());
         }
-        return null;
     }
 
     @Override
@@ -53,6 +62,7 @@ public class ServiceApiImpl implements ServiceApi{
                     new com.jtmc.apps.reforma.api.v1.service.Attendance();
             response.setPersona(p);
             response.setAttended(a.isAttended());
+            response.setId(a.getId());
            attendancesResponse.add(response);
         }
        AttendanceResponse actualResponse = new AttendanceResponse();
@@ -61,7 +71,38 @@ public class ServiceApiImpl implements ServiceApi{
     }
 
     @Override
-    public Response saveAttendanceList(int idService, AttendanceRequest request) {
-        return null;
+    public Response saveAttendanceList(int serviceId, AttendanceRequest request) {
+
+        // verify service Exist
+        Service service = serviceMapper.getServiceById(serviceId);
+
+        if(service == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).build());
+        }
+
+        //todo
+        // change insert/update approach
+        // to have a combined kwy of idService and idPersona
+        // and find a way to upsert in ibatis?
+
+        //convert
+        for (com.jtmc.apps.reforma.api.v1.service.Attendance a: request.getAttendanceList()) {
+
+            Persona p = new Persona();
+            p.setId(a.getPersona().getId());
+
+            Attendance attendance = new Attendance();
+            attendance.setId(a.getId());
+            attendance.setAttended(a.isAttended());
+            attendance.setPersona(p);
+
+            int firstInsertion = 0;
+            if (a.getId() != firstInsertion) {
+                attendanceMapper.updateAttendances(serviceId, attendance);
+            } else {
+                attendanceMapper.saveAttendances(serviceId, attendance);
+            }
+        }
+        return Response.noContent().build();
     }
 }

@@ -3,7 +3,6 @@ package com.jtmc.apps.reforma.api.v1.service;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Date;
 
 @Path("/v1/service")
 public interface ServiceApi {
@@ -15,7 +14,8 @@ public interface ServiceApi {
 
     @GET
     @Path("/{date}")
-    Response getServiceByDate(@PathParam("date") String date);
+    @Produces(MediaType.APPLICATION_JSON)
+    ServiceResponse getServiceByDate(@PathParam("date") String date);
 
 
     @GET
@@ -23,8 +23,9 @@ public interface ServiceApi {
     @Produces(MediaType.APPLICATION_JSON)
     AttendanceResponse getAttendanceList(@PathParam("idService") int idService);
 
-    @POST
+    @PUT
     @Path("/{idService}/attendance")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     Response saveAttendanceList(@PathParam("idService") int idService, AttendanceRequest request);
 }
