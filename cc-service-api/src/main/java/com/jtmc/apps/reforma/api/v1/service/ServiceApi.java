@@ -7,10 +7,12 @@ import javax.ws.rs.core.Response;
 @Path("/v1/service")
 public interface ServiceApi {
 
+    //todo: should this also be PUT?
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
-    Response createService(ServiceRequest request);
+    @Produces(MediaType.APPLICATION_JSON)
+    ServiceResponse createService(ServiceRequest request);
 
     @GET
     @Path("/{date}")

@@ -1,8 +1,7 @@
 package com.jtmc.apps.reforma.repository.mybatis.dbmapper.service;
 
 import com.jtmc.apps.reforma.domain.Service;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.*;
 
 public interface ServiceMapper {
 
@@ -17,4 +16,8 @@ public interface ServiceMapper {
             method = "getServiceById"
     )
     Service getServiceById(int serviceId);
+
+    //todo: problems getting last insert_id
+    @Insert({"insert into service (date) values(#{date})"})
+    void createService(String date);
 }

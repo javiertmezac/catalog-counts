@@ -29,9 +29,15 @@ public interface AttendanceMapper {
                          @Param("attendance") Attendance attendance);
 
     @UpdateProvider(
-             type = AttendanceMapperProvider.class,
+            type = AttendanceMapperProvider.class,
             method = "updateAttendance"
     )
     void updateAttendances(@Param("serviceId") int serviceId,
                            @Param("attendance") Attendance attendance);
+
+    @Insert("INSERT INTO attendance(idService, idPersona, attended) " +
+            "VALUES(#{serviceId},#{attendance.persona.id},#{attendance.attended}) " +
+            "ON DUPLICATE KEY UPDATE attended=VALUES(attendance.attended);")
+    void upsertAttendance(@Param("serviceId") int serviceId,
+                          @Param("attendance") Attendance attendance);
 }

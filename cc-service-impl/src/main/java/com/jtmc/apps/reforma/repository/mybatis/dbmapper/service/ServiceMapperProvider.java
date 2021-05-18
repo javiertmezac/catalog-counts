@@ -19,4 +19,12 @@ public class ServiceMapperProvider {
                 .WHERE("id = #{serviceId}")
                 .toString();
     }
+
+    public String createService() {
+        return new SQL()
+                .INSERT_INTO(tableName)
+                .INTO_COLUMNS("date")
+                .INTO_VALUES("#{date}")
+                .toString();
+    }
 }

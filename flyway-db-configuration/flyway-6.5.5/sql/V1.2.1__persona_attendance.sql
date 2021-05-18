@@ -7,11 +7,11 @@ CREATE TABLE IF NOT EXISTS `service` (
   COLLATE =utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `attendance` (
-  `id`                      BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+--   `id`                      BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
   `idService`               BIGINT(8) UNSIGNED NOT NULL,
   `idPersona`               BIGINT(8) UNSIGNED NOT NULL,
   `attended`                BOOLEAN DEFAULT FALSE,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`idService`, `idPersona`),
   CONSTRAINT `idService_FK` FOREIGN KEY (`idService`) REFERENCES `service` (`id`),
   CONSTRAINT `idPersona_FK` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`id`)
 )

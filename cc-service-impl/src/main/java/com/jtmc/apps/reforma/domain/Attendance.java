@@ -2,17 +2,8 @@ package com.jtmc.apps.reforma.domain;
 
 public class Attendance {
 
-    private int id;
     private Persona persona;
     private boolean attended;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public Persona getPersona() {
         return persona;

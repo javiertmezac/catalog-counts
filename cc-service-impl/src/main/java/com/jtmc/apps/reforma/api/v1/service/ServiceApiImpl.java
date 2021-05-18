@@ -1,11 +1,14 @@
 package com.jtmc.apps.reforma.api.v1.service;
 
 import com.google.inject.Inject;
+import com.jtmc.apps.reforma.api.v1.exception.GenericResponseErrorMessage;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaResponse;
 import com.jtmc.apps.reforma.domain.Attendance;
 import com.jtmc.apps.reforma.domain.Persona;
 import com.jtmc.apps.reforma.domain.Service;
+import com.jtmc.apps.reforma.impl.service.ServiceImpl;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.persona.PersonaMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.service.ServiceMapper;
 
 import javax.ws.rs.WebApplicationException;
@@ -25,9 +28,26 @@ public class ServiceApiImpl implements ServiceApi {
     @Inject
     private ServiceMapper serviceMapper;
 
+    @Inject
+    private ServiceImpl serviceImpl;
+
+    @Inject
+    private PersonaMapper personaMapper;
+
     @Override
-    public Response createService(ServiceRequest request) {
-        return null;
+    public ServiceResponse createService(ServiceRequest request) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String format = formatter.format(request.getDate());
+            serviceMapper.createService(format);
+            Service service = serviceMapper.getServiceByDate(format);
+
+            ServiceResponse response = new ServiceResponse();
+            response.setId(service.getId());
+            return response;
+        } catch (Exception ex) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
     }
 
     @Override
@@ -37,6 +57,19 @@ public class ServiceApiImpl implements ServiceApi {
         try {
             Date date = dateFormat.parse(dateParam);
             Service service = serviceMapper.getServiceByDate(dateParam);
+
+            if (service == null) {
+                GenericResponseErrorMessage errorMessage =
+                        new GenericResponseErrorMessage(
+                                400,
+                                "Service not Found",
+                                "ServiceNotFoundMessage"
+                        );
+                throw new WebApplicationException(
+                        Response.status(errorMessage.getStatus()).entity(errorMessage).build()
+                );
+            }
+
             ServiceResponse response = new ServiceResponse();
             response.setId(service.getId());
             return response;
@@ -53,17 +86,14 @@ public class ServiceApiImpl implements ServiceApi {
         List<com.jtmc.apps.reforma.api.v1.service.Attendance> attendancesResponse =
                 new ArrayList<>();
         for (Attendance a : attendances) {
-            PersonaResponse p = new PersonaResponse();
-            p.setId(a.getPersona().getId());
-            p.setCompleteName(
-                    String.format("%s %s", a.getPersona().getName(), a.getPersona().getLastname())
-            );
-            com.jtmc.apps.reforma.api.v1.service.Attendance response =
-                    new com.jtmc.apps.reforma.api.v1.service.Attendance();
-            response.setPersona(p);
-            response.setAttended(a.isAttended());
-            response.setId(a.getId());
-           attendancesResponse.add(response);
+           attendancesResponse.add(serviceImpl.populateAttendanceResponse(a.getPersona(), a.isAttended()));
+        }
+
+        if (attendancesResponse.size() == 0) {
+            List<Persona> personas = personaMapper.selectAllPersonas();
+            for (Persona p: personas) {
+                attendancesResponse.add(serviceImpl.populateAttendanceResponse(p, false));
+            }
         }
        AttendanceResponse actualResponse = new AttendanceResponse();
         actualResponse.setAttendanceList(attendancesResponse);
@@ -73,35 +103,22 @@ public class ServiceApiImpl implements ServiceApi {
     @Override
     public Response saveAttendanceList(int serviceId, AttendanceRequest request) {
 
-        // verify service Exist
         Service service = serviceMapper.getServiceById(serviceId);
 
         if(service == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).build());
         }
 
-        //todo
-        // change insert/update approach
-        // to have a combined kwy of idService and idPersona
-        // and find a way to upsert in ibatis?
-
-        //convert
         for (com.jtmc.apps.reforma.api.v1.service.Attendance a: request.getAttendanceList()) {
 
             Persona p = new Persona();
             p.setId(a.getPersona().getId());
 
             Attendance attendance = new Attendance();
-            attendance.setId(a.getId());
             attendance.setAttended(a.isAttended());
             attendance.setPersona(p);
 
-            int firstInsertion = 0;
-            if (a.getId() != firstInsertion) {
-                attendanceMapper.updateAttendances(serviceId, attendance);
-            } else {
-                attendanceMapper.saveAttendances(serviceId, attendance);
-            }
+            attendanceMapper.upsertAttendance(serviceId, attendance);
         }
         return Response.noContent().build();
     }
