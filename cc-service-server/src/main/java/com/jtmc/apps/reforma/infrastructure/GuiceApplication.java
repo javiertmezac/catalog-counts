@@ -1,3 +1,5 @@
+package com.jtmc.apps.reforma.infrastructure;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
