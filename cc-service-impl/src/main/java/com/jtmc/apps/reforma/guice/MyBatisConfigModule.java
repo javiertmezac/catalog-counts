@@ -1,11 +1,14 @@
 package com.jtmc.apps.reforma.guice;
 
 import com.google.inject.name.Names;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum.CatalogCountEnumMapper;
 import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumMapperImpl;
 import com.jtmc.apps.reforma.api.v1.catalogcountenum.ICatalogCountEnumService;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcount.CatalogCountMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.persona.PersonaMapper;
+import com.jtmc.apps.reforma.repository.mybatis.dbmapper.service.ServiceMapper;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -29,6 +32,9 @@ public class MyBatisConfigModule extends MyBatisModule {
         addMapperClass(CatalogCountEnumMapper.class);
         addMapperClass(CatalogCountMapper.class);
         addMapperClass(MonthlyTotalMapper.class);
+        addMapperClass(PersonaMapper.class);
+        addMapperClass(AttendanceMapper.class);
+        addMapperClass(ServiceMapper.class);
 
         Names.bindProperties(binder(), setMyBatisProperties());
         bind(ICatalogCountEnumService.class).to(CatalogCountEnumMapperImpl.class);
@@ -48,15 +54,22 @@ public class MyBatisConfigModule extends MyBatisModule {
 
         try {
             String systemEnv = getSystemEnvVariable();
-            Configuration config = propertiesConfiguration(systemEnv);
+//            Configuration config = propertiesConfiguration(systemEnv);
+
+            Logger.info(System.getenv("JDBC.url"));
 
             myBatisProperties.setProperty("mybatis.environment.id", systemEnv);
             myBatisProperties.setProperty("JDBC.driver", "com.mysql.jdbc.Driver");
-            myBatisProperties.setProperty("JDBC.url", config.getString("JDBC.url"));
-            myBatisProperties.setProperty("JDBC.username", config.getString("JDBC.username"));
-            myBatisProperties.setProperty("JDBC.password", config.getString("JDBC.password"));
+            myBatisProperties.setProperty("JDBC.url", System.getenv("JDBC_URL"));
+            myBatisProperties.setProperty("JDBC.username", System.getenv("JDBC_USERNAME"));
+            myBatisProperties.setProperty("JDBC.password", System.getenv("JDBC_PASSWORD"));
 
-        } catch (ConfigurationException ex) {
+
+//            myBatisProperties.setProperty("JDBC.url", config.getString("JDBC.url"));
+//            myBatisProperties.setProperty("JDBC.username", config.getString("JDBC.username"));
+//            myBatisProperties.setProperty("JDBC.password", config.getString("JDBC.password"));
+
+        } catch (Exception ex) {
             Logger.error("Couldn't set MyBatisProperties: ", ex);
         }
 
