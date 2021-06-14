@@ -4,13 +4,13 @@ services:
 - envs:
   - key: JDBC_URL
     scope: RUN_AND_BUILD_TIME
-    value: jdbc:mysql://db-mysql-sfo2-49321-do-user-9049702-0.b.db.ondigitalocean.com:25060/catalog_count?serverTimezone=UTC
+    value: jdbc:mysql://<value>/catalog_count?serverTimezone=UTC
   - key: JDBC_USERNAME
     scope: RUN_AND_BUILD_TIME
-    value: doadmin
+    value: <value>
   - key: JDBC_PASSWORD
     scope: RUN_AND_BUILD_TIME
-    value: rhj623khju2v4olg
+    value: <value>
   http_port: 8080
   image:
     registry_type: DOCR
