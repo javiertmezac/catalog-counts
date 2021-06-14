@@ -1,22 +1,21 @@
 name: catalog-counts
-name: catalog-counts
 region: nyc
 services:
 - envs:
   - key: JDBC_URL
     scope: RUN_AND_BUILD_TIME
-    value: something
+    value: jdbc:mysql://db-mysql-sfo2-49321-do-user-9049702-0.b.db.ondigitalocean.com:25060/catalog_count?serverTimezone=UTC
   - key: JDBC_USERNAME
     scope: RUN_AND_BUILD_TIME
-    value: root
+    value: doadmin
   - key: JDBC_PASSWORD
     scope: RUN_AND_BUILD_TIME
-    value: Password1
+    value: rhj623khju2v4olg
   http_port: 8080
   image:
     registry_type: DOCR
     repository: cc-service-image
-    tag: 0.1.0
+    tag: 0.1.1
   instance_count: 1
   instance_size_slug: basic-xxs
   name: cc-service-api
