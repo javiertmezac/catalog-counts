@@ -54,15 +54,22 @@ public class MyBatisConfigModule extends MyBatisModule {
 
         try {
             String systemEnv = getSystemEnvVariable();
-            Configuration config = propertiesConfiguration(systemEnv);
+//            Configuration config = propertiesConfiguration(systemEnv);
+
+            Logger.info(System.getenv("JDBC.url"));
 
             myBatisProperties.setProperty("mybatis.environment.id", systemEnv);
             myBatisProperties.setProperty("JDBC.driver", "com.mysql.jdbc.Driver");
-            myBatisProperties.setProperty("JDBC.url", config.getString("JDBC.url"));
-            myBatisProperties.setProperty("JDBC.username", config.getString("JDBC.username"));
-            myBatisProperties.setProperty("JDBC.password", config.getString("JDBC.password"));
+            myBatisProperties.setProperty("JDBC.url", System.getenv("JDBC_URL"));
+            myBatisProperties.setProperty("JDBC.username", System.getenv("JDBC_USERNAME"));
+            myBatisProperties.setProperty("JDBC.password", System.getenv("JDBC_PASSWORD"));
 
-        } catch (ConfigurationException ex) {
+
+//            myBatisProperties.setProperty("JDBC.url", config.getString("JDBC.url"));
+//            myBatisProperties.setProperty("JDBC.username", config.getString("JDBC.username"));
+//            myBatisProperties.setProperty("JDBC.password", config.getString("JDBC.password"));
+
+        } catch (Exception ex) {
             Logger.error("Couldn't set MyBatisProperties: ", ex);
         }
 
