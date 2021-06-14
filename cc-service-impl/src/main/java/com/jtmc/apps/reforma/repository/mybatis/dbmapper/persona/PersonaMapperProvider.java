@@ -12,4 +12,12 @@ public class PersonaMapperProvider {
                 .FROM(tableName)
                 .toString();
     }
+
+    public String insertPersona() {
+        return new SQL()
+                .INSERT_INTO(tableName)
+                .INTO_COLUMNS("name", "lastname")
+                .INTO_VALUES("#{persona.name}", "#{persona.lastname}")
+                .toString();
+    }
 }

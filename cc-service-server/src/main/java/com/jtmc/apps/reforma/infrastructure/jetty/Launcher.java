@@ -1,3 +1,5 @@
+package com.jtmc.apps.reforma.infrastructure.jetty;
+
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
@@ -16,6 +18,8 @@ import com.jtmc.apps.reforma.api.v1.persona.PersonaApi;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaApiImpl;
 import com.jtmc.apps.reforma.api.v1.service.ServiceApi;
 import com.jtmc.apps.reforma.api.v1.service.ServiceApiImpl;
+import com.jtmc.apps.reforma.infrastructure.GuiceApplication;
+import com.jtmc.apps.reforma.infrastructure.ServerModule;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;

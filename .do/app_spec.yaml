@@ -1,0 +1,24 @@
+name: catalog-counts
+region: nyc
+services:
+- envs:
+  - key: JDBC_URL
+    scope: RUN_AND_BUILD_TIME
+    value: jdbc:mysql://<value>/catalog_count?serverTimezone=UTC
+  - key: JDBC_USERNAME
+    scope: RUN_AND_BUILD_TIME
+    value: <value>
+  - key: JDBC_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    value: <value>
+  http_port: 8080
+  image:
+    registry_type: DOCR
+    repository: cc-service-image
+    tag: 0.1.1
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: cc-service-api
+  routes:
+  - path: /cc-service-api
+  source_dir: /

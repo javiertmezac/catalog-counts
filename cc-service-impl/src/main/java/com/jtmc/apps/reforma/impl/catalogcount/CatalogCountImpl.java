@@ -57,7 +57,13 @@ public class CatalogCountImpl {
     }
 
     public double getCorrespondingTotal() {
-        return monthlyTotalMapper.selectTotal().getTotal();
+        MonthlyTotal total = monthlyTotalMapper.selectTotal();
+
+        if (total == null) {
+            throw new RuntimeException("MonthlyTotal null");
+        }
+
+        return total.getTotal();
     }
 
 
