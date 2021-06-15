@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.jtmc.apps.reforma.api.filter.CorsFilter;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApi;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApiImpl;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApi;
@@ -61,6 +62,7 @@ public class Launcher {
         protected Set<Object> serviceInstances(Injector injector) {
 
             return Sets.newHashSet(
+                    injector.getInstance(CorsFilter.class),
                     injector.getInstance(HealthcheckApi.class),
                     injector.getInstance(CatalogCountApi.class),
                     injector.getInstance(ExcelImportApi.class),

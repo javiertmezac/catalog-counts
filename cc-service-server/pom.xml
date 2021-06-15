@@ -74,6 +74,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <finalName>cc-service</finalName>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <filters>
                                 <filter>
