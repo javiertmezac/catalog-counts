@@ -76,7 +76,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         return new CatalogCountResponse(
                 catalogCount.getId(),
                 catalogCount.getRegistrationDate(),
-                catalogCount.getCatalogCountEnumId(),
+//                catalogCount.getCatalogCountEnumId(),
                 catalogCount.getAmount(),
                 catalogCount.getDetails()
         );

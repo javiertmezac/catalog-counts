@@ -12,20 +12,20 @@ public class CatalogCountResponse {
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="UTC")
     private Date registrationDate;
 
-    private int catalogCountEnumId;
+    private String catalogCountEnum;
     private double amount;
     private String details;
     private double total;
 
     public CatalogCountResponse(int id,
                                 Date registrationDate,
-                                int catalogCountEnumId,
+                                String catalogCountEnum,
                                 double amount,
                                 String details,
                                 double total) {
         this.id = id;
         this.registrationDate = registrationDate;
-        this.catalogCountEnumId = catalogCountEnumId;
+        this.catalogCountEnum = catalogCountEnum;
         this.amount = amount;
         this.details = details;
         this.total = total;
@@ -34,12 +34,12 @@ public class CatalogCountResponse {
     //todo: should we have another Response Class for single CatalogCount ("no total column")?
     public CatalogCountResponse(int id,
                                 Date registrationDate,
-                                int catalogCountEnumId,
+//                                int catalogCountEnumId,
                                 double amount,
                                 String details) {
         this.id = id;
         this.registrationDate = registrationDate;
-        this.catalogCountEnumId = catalogCountEnumId;
+//        this.catalogCountEnum = catalogCountEnumId;
         this.amount = amount;
         this.details = details;
     }
@@ -60,12 +60,12 @@ public class CatalogCountResponse {
         this.registrationDate = registrationDate;
     }
 
-    public int getCatalogCountEnumId() {
-        return catalogCountEnumId;
+    public String getCatalogCountEnum() {
+        return catalogCountEnum;
     }
 
-    public void setCatalogCountEnumId(int catalogCountEnumId) {
-        this.catalogCountEnumId = catalogCountEnumId;
+    public void setCatalogCountEnum(String catalogCountEnum) {
+        this.catalogCountEnum = catalogCountEnum;
     }
 
     public double getAmount() {
