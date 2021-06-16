@@ -1,10 +1,17 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.util.Date;
 
 public class CatalogCountResponse {
     private int id;
+
+    @JsonSerialize(as = Date.class)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="UTC")
     private Date registrationDate;
+
     private int catalogCountEnumId;
     private double amount;
     private String details;

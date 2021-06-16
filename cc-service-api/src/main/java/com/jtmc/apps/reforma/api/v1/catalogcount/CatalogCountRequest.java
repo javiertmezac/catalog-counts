@@ -4,6 +4,7 @@ public class CatalogCountRequest {
     private int catalogCountEnumId;
     private double amount;
     private String details;
+    private String registrationDate;
 
     public int getCatalogCountEnumId() {
         return catalogCountEnumId;
@@ -27,5 +28,13 @@ public class CatalogCountRequest {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate;
     }
 }
