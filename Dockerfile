@@ -11,7 +11,7 @@ ENV JDBC.url=$JDBC_URL
 ENV JDBC.username=$JDBC_USERNAME
 ENV JDBC.password=$JDBC_PASSWORD
 
-COPY cc-service-server/target/cc-service-server-0.1.0-SNAPSHOT-shaded.jar /app/server.jar
+COPY cc-service-server/target/cc-service.jar /app/server.jar
 
 EXPOSE 8080
 

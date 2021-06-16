@@ -13,7 +13,7 @@
 ### Dockerized the service
 1. `mvn package` to generate .jar with latest changes
 2. `docker build -t cc-service-image:<tag> .`
-3. `docker tag cc-service-image:<tag> registry.digitalocean.com/cc-service/cc-service-image:<tag>`
+3. `docker tag cc-service-image:<tag> <repo>:<tag>`
 
 ### Deployment to ECS - Fargate
 1. Push image: `docker push public-repo:<tag>`
@@ -24,6 +24,7 @@
 
 ###Deployment (Manual) - deprecated
 > Digital Ocean App: docker image
+> registry.digitalocean.com/cc-service/cc-service-image
 1. Make sure you are login into registry: `doctl registry login`
 2. Push image: `docker push registry.digitalocean.com/cc-service/cc-service-image:<tag>`
 3. `doctl apps list` : and make sure to pick correct app id
