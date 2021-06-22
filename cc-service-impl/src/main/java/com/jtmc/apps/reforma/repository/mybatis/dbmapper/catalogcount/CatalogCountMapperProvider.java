@@ -18,9 +18,12 @@ public class CatalogCountMapperProvider {
 
     public String selectAllCatalogCountRecordsSql () {
         return new SQL()
-                .SELECT("*")
-                .FROM(tableName)
-                .WHERE("isDeleted = false")
+                .SELECT("cc.id as ccId , cc.registrationDate as ccRegistrationDate, cc.amount as ccAmount, " +
+                        "cc.details as ccDetails, cc.isDeleted as ccIsDeleted, cce.id as cceId, " +
+                        "cce.identifier as cceIdentifier, cce.name as cceName")
+                .FROM(tableName + " as cc ")
+                .INNER_JOIN("catalog_count_enum as cce on cc.catalogCountEnumId = cce.id")
+                .WHERE("cc.isDeleted = false")
                 .toString();
     }
 

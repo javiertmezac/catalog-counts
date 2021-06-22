@@ -17,7 +17,18 @@ public interface CatalogCountMapper {
             type = CatalogCountMapperProvider.class,
             method = "selectAllCatalogCountRecordsSql"
     )
+    @Results(value = {
+            @Result(property = "id", column = "ccId"),
+            @Result(property = "registrationDate", column = "ccRegistrationDate"),
+            @Result(property = "amount", column = "ccAmount"),
+            @Result(property = "details",column = "ccDetails"),
+            @Result(property = "isDeleted",column = "ccIsDeleted"),
+            @Result(property = "catalogCountEnum.id",column = "ccIed"),
+            @Result(property = "catalogCountEnum.identifier",column = "cceIdentifier"),
+            @Result(property = "catalogCountEnum.name",column = "cceName")
+    })
     Collection<CatalogCount> selectAllRecords();
+
 
     @SelectProvider(
             type = CatalogCountMapperProvider.class,
