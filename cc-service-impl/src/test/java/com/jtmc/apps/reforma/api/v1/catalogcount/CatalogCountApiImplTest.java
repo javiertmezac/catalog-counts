@@ -17,6 +17,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 
+@Ignore
 @RunWith(BlockJUnit4ClassRunner.class)
 public class CatalogCountApiImplTest {
 
