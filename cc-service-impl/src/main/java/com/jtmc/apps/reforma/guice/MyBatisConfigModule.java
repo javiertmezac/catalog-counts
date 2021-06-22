@@ -59,7 +59,7 @@ public class MyBatisConfigModule extends MyBatisModule {
             Logger.info(System.getenv("JDBC.url"));
 
             myBatisProperties.setProperty("mybatis.environment.id", systemEnv);
-            myBatisProperties.setProperty("JDBC.driver", "com.mysql.jdbc.Driver");
+            myBatisProperties.setProperty("JDBC.driver", "com.mysql.cj.jdbc.Driver");
             myBatisProperties.setProperty("JDBC.url", System.getenv("JDBC_URL"));
             myBatisProperties.setProperty("JDBC.username", System.getenv("JDBC_USERNAME"));
             myBatisProperties.setProperty("JDBC.password", System.getenv("JDBC_PASSWORD"));

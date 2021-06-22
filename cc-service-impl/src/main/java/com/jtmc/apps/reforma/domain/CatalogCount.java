@@ -10,6 +10,7 @@ public class CatalogCount {
     private int id;
     private Date registrationDate;
     private int catalogCountEnumId;
+    private CatalogCountEnum catalogCountEnum;
     private double amount;
     private String details;
     private boolean isDeleted;
@@ -71,5 +72,13 @@ public class CatalogCount {
 
     public boolean isValidCatalogCountEnum() {
        return false;
+    }
+
+    public CatalogCountEnum getCatalogCountEnum() {
+        return catalogCountEnum;
+    }
+
+    public void setCatalogCountEnum(CatalogCountEnum catalogCountEnum) {
+        this.catalogCountEnum = catalogCountEnum;
     }
 }
