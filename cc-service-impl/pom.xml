@@ -5,7 +5,7 @@
     <parent>
         <artifactId>catalog-counts-base-pom</artifactId>
         <groupId>com.jtmc.apps.reforma</groupId>
-        <version>0.3.1</version>
+        <version>0.4.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.jtmc.apps.reforma</groupId>
             <artifactId>cc-service-api</artifactId>
-            <version>0.3.1</version>
+            <version>0.4.0</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
