@@ -112,7 +112,7 @@ public class CatalogCountApiImplTest {
                 new CatalogCountResponse(
                         expectedId,
                         expectedDate,
-                        expectedCatalogCountEnumId,
+//                        expectedCatalogCountEnumId,
                         expectedAmount,
                         expectedDetails
                 );

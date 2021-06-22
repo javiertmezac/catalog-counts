@@ -33,7 +33,10 @@ public class CatalogCountImpl {
             responseList.add(new CatalogCountResponse(
                     next.getId(),
                     next.getRegistrationDate(),
-                    next.getCatalogCountEnumId(),
+                    String.format("%s - %s",
+                            next.getCatalogCountEnum().getIdentifier(),
+                            next.getCatalogCountEnum().getName()
+                    ),
                     next.getAmount(),
                     next.getDetails(),
                     total
