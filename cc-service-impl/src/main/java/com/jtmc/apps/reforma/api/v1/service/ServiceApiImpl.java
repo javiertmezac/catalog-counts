@@ -10,6 +10,8 @@ import com.jtmc.apps.reforma.impl.service.ServiceImpl;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.persona.PersonaMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.service.ServiceMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -21,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 
 public class ServiceApiImpl implements ServiceApi {
+
+    private Logger logger = LoggerFactory.getLogger(ServiceApiImpl.class);
 
     @Inject
     private AttendanceMapper attendanceMapper;
