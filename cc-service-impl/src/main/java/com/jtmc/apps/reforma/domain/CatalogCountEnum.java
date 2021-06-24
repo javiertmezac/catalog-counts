@@ -66,6 +66,10 @@ public class CatalogCountEnum {
         isDeleted = deleted;
     }
 
+    public String getCatalogCountEnumDisplay() {
+        return String.format("%s - %s", this.identifier, this.name);
+    }
+
     @Override
     public String toString() {
         return "CatalogCountEnum{" +

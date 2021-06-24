@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -66,7 +67,7 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
                 }
 
                 CatalogCount catalogCount = new CatalogCount();
-                catalogCount.setRegistrationDate(row.getCell(1).getDateCellValue());
+                catalogCount.setRegistrationDate(Instant.ofEpochMilli(row.getCell(1).getDateCellValue().getTime()));
 
                 CatalogCountEnum ccEnum = mapCatalogCountWithDB(row.getCell(2).getStringCellValue());
 

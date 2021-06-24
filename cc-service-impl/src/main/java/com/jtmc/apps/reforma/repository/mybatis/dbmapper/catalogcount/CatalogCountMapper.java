@@ -23,7 +23,7 @@ public interface CatalogCountMapper {
             @Result(property = "amount", column = "ccAmount"),
             @Result(property = "details",column = "ccDetails"),
             @Result(property = "isDeleted",column = "ccIsDeleted"),
-            @Result(property = "catalogCountEnum.id",column = "ccIed"),
+            @Result(property = "catalogCountEnum.id",column = "cceId"),
             @Result(property = "catalogCountEnum.identifier",column = "cceIdentifier"),
             @Result(property = "catalogCountEnum.name",column = "cceName")
     })
