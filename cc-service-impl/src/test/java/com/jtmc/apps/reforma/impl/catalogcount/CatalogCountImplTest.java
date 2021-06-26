@@ -12,8 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.Instant;
-import java.time.Period;
+import java.time.*;
 import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalField;
 import java.util.ArrayList;
@@ -69,6 +68,7 @@ class CatalogCountImplTest {
         catalogCount1.setCatalogCountEnum(enum1);
         catalogCount1.setRegistrationDate(Instant.now());
         double expectedTotalForCatalogCount1 = 1250.00;
+        LocalDate expectedLocalDate1 = convertToGMTMinus07Zone(catalogCount1.getRegistrationDate().getEpochSecond());
 
         CatalogCountEnum enum2 = new CatalogCountEnum();
         enum2.setId(5);
@@ -79,6 +79,7 @@ class CatalogCountImplTest {
         catalogCount2.setCatalogCountEnum(enum2);
         catalogCount2.setRegistrationDate(Instant.now().minus(Period.ofDays(3)));
         double expectedTotalForCatalogCount2 = 700.00;
+        LocalDate expectedLocalDate2 = convertToGMTMinus07Zone(catalogCount2.getRegistrationDate().getEpochSecond());
 
 
         CatalogCountEnum enum3 = new CatalogCountEnum();
@@ -90,6 +91,7 @@ class CatalogCountImplTest {
         catalogCount3.setCatalogCountEnum(enum3);
         catalogCount3.setRegistrationDate(Instant.now().minus(Period.ofDays(1)));
         double expectedTotalForCatalogCount3 = 750.00;
+        LocalDate expectedLocalDate3 = convertToGMTMinus07Zone(catalogCount3.getRegistrationDate().getEpochSecond());
 
         List<CatalogCount> catalogCounts = new ArrayList<>();
         catalogCounts.add(catalogCount1);
@@ -106,11 +108,43 @@ class CatalogCountImplTest {
         Assertions.assertEquals(expectedRecordsSize, actualResponse.size());
         Assertions.assertEquals(expectedTotalForCatalogCount1, actualResponse.get(0).getTotal());
         Assertions.assertEquals(catalogCount1.getId(), actualResponse.get(0).getId());
+        Assertions.assertEquals(expectedLocalDate1.toString(), actualResponse.get(0).getRegistrationDate());
 
         Assertions.assertEquals(expectedTotalForCatalogCount3, actualResponse.get(1).getTotal());
         Assertions.assertEquals(catalogCount3.getId(), actualResponse.get(1).getId());
+        Assertions.assertEquals(expectedLocalDate3.toString(), actualResponse.get(1).getRegistrationDate());
 
         Assertions.assertEquals(expectedTotalForCatalogCount2, actualResponse.get(2).getTotal());
         Assertions.assertEquals(catalogCount2.getId(), actualResponse.get(2).getId());
+        Assertions.assertEquals(expectedLocalDate2.toString(), actualResponse.get(2).getRegistrationDate());
+    }
+
+    private LocalDate convertToGMTMinus07Zone(long epochSec) {
+        ZoneId zoneId = ZoneId.of("-7");
+        ZonedDateTime zonedDateTime = Instant.ofEpochSecond(epochSec).atZone(zoneId);
+        return zonedDateTime.toLocalDate();
+    }
+
+    @Test
+    void name() {
+        long epochSec = 1624592577;
+        Instant instant = Instant.ofEpochSecond(epochSec);
+        System.out.println("UTC human date: " + instant);
+        System.out.println("Epoch Milli: " + instant.toEpochMilli());
+
+        ZoneId zoneId = ZoneId.of("-7");
+        ZonedDateTime zonedDateTime = instant.atZone(zoneId);
+        System.out.println(zonedDateTime);
+        System.out.println(zonedDateTime.toLocalDate());
+    }
+
+    @Test
+    void testReturnCorrectEpochMilliToLocalDate() {
+        long epochSec = 1624592577;
+        String expectedLocalDate = "2021-06-24";
+
+        LocalDate localDate =  convertToGMTMinus07Zone(epochSec);
+        Assertions.assertEquals(expectedLocalDate, localDate.toString());
+
     }
 }

@@ -8,9 +8,7 @@ import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
 import org.mybatis.guice.transactional.Transactional;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +33,7 @@ public class CatalogCountImpl {
             total = calculateTotalColumn(next, total);
             responseList.add(0, new CatalogCountResponse(
                     next.getId(),
-                    next.getRegistrationDate().toString(),
+                    convertToGMTMinus07Zone(next.getRegistrationDate().getEpochSecond()).toString(),
                     next.getCatalogCountEnum().getCatalogCountEnumDisplay(),
                     next.getAmount(),
                     next.getDetails(),
@@ -44,6 +42,12 @@ public class CatalogCountImpl {
         }
 
         return responseList;
+    }
+
+    private LocalDate convertToGMTMinus07Zone(long epochSec) {
+        ZoneId zoneId = ZoneId.of("-7");
+        ZonedDateTime zonedDateTime = Instant.ofEpochSecond(epochSec).atZone(zoneId);
+        return zonedDateTime.toLocalDate();
     }
 
     //todo: re-think if this method should be here
