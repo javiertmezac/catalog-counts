@@ -1,16 +1,16 @@
 package com.jtmc.apps.reforma.api.v1.service;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class ServiceRequest {
 
-    private String date;
+    private Instant date;
 
-    public String getDate() {
+    public Instant getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Instant date) {
         this.date = date;
     }
 }

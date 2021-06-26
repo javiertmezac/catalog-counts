@@ -41,9 +41,9 @@ public class ServiceApiImpl implements ServiceApi {
     @Override
     public ServiceResponse createService(ServiceRequest request) {
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String format = formatter.format(request.getDate());
-            serviceMapper.createService(format);
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//            String format = formatter.format(request.getDate());
+            serviceMapper.createService(request.getDate());
             Service service = serviceMapper.getServiceByDate(format);
 
             ServiceResponse response = new ServiceResponse();
