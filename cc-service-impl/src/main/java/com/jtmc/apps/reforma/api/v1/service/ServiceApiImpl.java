@@ -18,6 +18,10 @@ import javax.ws.rs.core.Response;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,18 +44,15 @@ public class ServiceApiImpl implements ServiceApi {
 
     @Override
     public ServiceResponse createService(ServiceRequest request) {
-        try {
-//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//            String format = formatter.format(request.getDate());
-            serviceMapper.createService(request.getDate());
-            Service service = serviceMapper.getServiceByDate(format);
+        //convert to localDate (PST)
+        // todo: would be necessary to customize this?
+        LocalDate localDate = request.getDate().atZone(ZoneId.of("-7")).toLocalDate();
+        serviceMapper.createService(localDate);
+        Service service = serviceMapper.getServiceByDate(localDate.toString());
 
-            ServiceResponse response = new ServiceResponse();
-            response.setId(service.getId());
-            return response;
-        } catch (Exception ex) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
+        ServiceResponse response = new ServiceResponse();
+        response.setId(service.getId());
+        return response;
     }
 
     @Override

@@ -2,8 +2,10 @@ package com.jtmc.apps.reforma.repository.mybatis.dbmapper.service;
 
 import com.jtmc.apps.reforma.domain.Service;
 import org.apache.ibatis.annotations.*;
+import org.mybatis.guice.transactional.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 public interface ServiceMapper {
 
@@ -19,7 +21,7 @@ public interface ServiceMapper {
     )
     Service getServiceById(int serviceId);
 
-    //todo: problems getting last insert_id
+    @Transactional
     @Insert({"insert into service (date) values(#{date})"})
-    void createService(Instant date);
+    void createService(LocalDate date);
 }
