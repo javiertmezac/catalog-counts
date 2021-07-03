@@ -22,6 +22,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalField;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,11 +45,11 @@ public class ServiceApiImpl implements ServiceApi {
 
     @Override
     public ServiceResponse createService(ServiceRequest request) {
-        //convert to localDate (PST)
-        // todo: would be necessary to customize this?
-        LocalDate localDate = request.getDate().atZone(ZoneId.of("-7")).toLocalDate();
-        serviceMapper.createService(localDate);
-        Service service = serviceMapper.getServiceByDate(localDate.toString());
+
+        validateDateFormat(request.getDate());
+
+        serviceMapper.createService(request.getDate());
+        Service service = serviceImpl.getServiceByDate(request.getDate());
 
         ServiceResponse response = new ServiceResponse();
         response.setId(service.getId());
@@ -58,48 +59,50 @@ public class ServiceApiImpl implements ServiceApi {
     @Override
     public ServiceResponse getServiceByDate(String dateParam) {
 
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        validateDateFormat(dateParam);
+
+        Service service = serviceImpl.getServiceByDate(dateParam);
+
+        ServiceResponse response = new ServiceResponse();
+        response.setId(service.getId());
+        return response;
+    }
+
+    private void validateDateFormat(String dateParam) {
         try {
-            Date date = dateFormat.parse(dateParam);
-            Service service = serviceMapper.getServiceByDate(dateParam);
-
-            if (service == null) {
-                GenericResponseErrorMessage errorMessage =
-                        new GenericResponseErrorMessage(
-                                400,
-                                "Service not Found",
-                                "ServiceNotFoundMessage"
-                        );
-                throw new WebApplicationException(
-                        Response.status(errorMessage.getStatus()).entity(errorMessage).build()
-                );
-            }
-
-            ServiceResponse response = new ServiceResponse();
-            response.setId(service.getId());
-            return response;
+            serviceImpl.validateDateFormat(dateParam);
         } catch (ParseException e) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Couldn't parse date string: " + e.getMessage())
-                    .build());
+            throw new WebApplicationException(e.getMessage(), Response.Status.BAD_REQUEST);
         }
     }
 
     @Override
     public AttendanceResponse getAttendanceList(int idService) {
+        /*
+          todo:
+           fix error:
+             after attendanceList is created, new members are not added into the list
+             as new members are picked from personaMapper and not from
+             attendanceMapper.
+         */
         List<Attendance> attendances = attendanceMapper.selectAttendanceByIdService(idService);
         List<com.jtmc.apps.reforma.api.v1.service.Attendance> attendancesResponse =
                 new ArrayList<>();
         for (Attendance a : attendances) {
-           attendancesResponse.add(serviceImpl.populateAttendanceResponse(a.getPersona(), a.isAttended()));
+           attendancesResponse.add(
+                   serviceImpl.populateAttendanceResponse(a.getPersona(), a.isAttended())
+           );
         }
 
         if (attendancesResponse.size() == 0) {
             List<Persona> personas = personaMapper.selectAllPersonas();
             for (Persona p: personas) {
-                attendancesResponse.add(serviceImpl.populateAttendanceResponse(p, false));
+                attendancesResponse.add(
+                        serviceImpl.populateAttendanceResponse(p, false)
+                );
             }
         }
+
        AttendanceResponse actualResponse = new AttendanceResponse();
         actualResponse.setAttendanceList(attendancesResponse);
         return actualResponse;

@@ -23,5 +23,5 @@ public interface ServiceMapper {
 
     @Transactional
     @Insert({"insert into service (date) values(#{date})"})
-    void createService(LocalDate date);
+    void createService(String date);
 }
