@@ -1,8 +1,6 @@
 package com.jtmc.apps.reforma.api.v1.service;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.api.v1.exception.GenericResponseErrorMessage;
-import com.jtmc.apps.reforma.api.v1.persona.PersonaResponse;
 import com.jtmc.apps.reforma.domain.Attendance;
 import com.jtmc.apps.reforma.domain.Persona;
 import com.jtmc.apps.reforma.domain.Service;
@@ -15,16 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.TemporalField;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 
 public class ServiceApiImpl implements ServiceApi {
@@ -77,33 +68,16 @@ public class ServiceApiImpl implements ServiceApi {
     }
 
     @Override
-    public AttendanceResponse getAttendanceList(int idService) {
-        /*
-          todo:
-           fix error:
-             after attendanceList is created, new members are not added into the list
-             as new members are picked from personaMapper and not from
-             attendanceMapper.
-         */
-        List<Attendance> attendances = attendanceMapper.selectAttendanceByIdService(idService);
-        List<com.jtmc.apps.reforma.api.v1.service.Attendance> attendancesResponse =
-                new ArrayList<>();
+    public AttendanceResponseList getAttendanceList(int idService) {
+        List<AttendanceResponse> attendancesResponse = new ArrayList<>();
+        Collection<Attendance> attendances = serviceImpl.getAttendanceListByServiceId(idService);
         for (Attendance a : attendances) {
            attendancesResponse.add(
-                   serviceImpl.populateAttendanceResponse(a.getPersona(), a.isAttended())
+                   serviceImpl.populateAttendanceResponse(a.getPersona(),a.isAttended())
            );
         }
 
-        if (attendancesResponse.size() == 0) {
-            List<Persona> personas = personaMapper.selectAllPersonas();
-            for (Persona p: personas) {
-                attendancesResponse.add(
-                        serviceImpl.populateAttendanceResponse(p, false)
-                );
-            }
-        }
-
-       AttendanceResponse actualResponse = new AttendanceResponse();
+       AttendanceResponseList actualResponse = new AttendanceResponseList();
         actualResponse.setAttendanceList(attendancesResponse);
         return actualResponse;
     }
@@ -117,7 +91,7 @@ public class ServiceApiImpl implements ServiceApi {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).build());
         }
 
-        for (com.jtmc.apps.reforma.api.v1.service.Attendance a: request.getAttendanceList()) {
+        for (AttendanceResponse a: request.getAttendanceResponseList()) {
 
             Persona p = new Persona();
             p.setId(a.getPersona().getId());

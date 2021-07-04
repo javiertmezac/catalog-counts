@@ -6,12 +6,23 @@ public class AttendanceMapperProvider {
     private String tableName = "attendance";
 
 //a.id as attendanceId,
-    public String selectAttendanceByIdService() {
+    public String attendanceInnerJoinPersonaByIdService() {
         return new SQL()
                 .SELECT("p.id as personaId, p.name, p.lastname, a.attended")
                 .FROM(" attendance as a")
                 .INNER_JOIN("persona as p on p.id = a.idPersona")
                 .WHERE("idService = #{idService}")
+                .toString();
+    }
+
+    public String selectAttendanceListWhereServiceIdAndAttendedTrue() {
+        return new SQL()
+                .SELECT("p.id as personaId, p.name, p.lastname, a.attended")
+                .FROM("attendance as a")
+                .INNER_JOIN("persona as p on p.id = a.idPersona")
+                .WHERE("idService = #{idService}")
+                .AND()
+                .WHERE("attended = true")
                 .toString();
     }
 
