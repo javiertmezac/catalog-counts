@@ -5,17 +5,7 @@ import org.apache.ibatis.jdbc.SQL;
 public class AttendanceMapperProvider {
     private String tableName = "attendance";
 
-//a.id as attendanceId,
-    public String attendanceInnerJoinPersonaByIdService() {
-        return new SQL()
-                .SELECT("p.id as personaId, p.name, p.lastname, a.attended")
-                .FROM(" attendance as a")
-                .INNER_JOIN("persona as p on p.id = a.idPersona")
-                .WHERE("idService = #{idService}")
-                .toString();
-    }
-
-    public String selectAttendanceListWhereServiceIdAndAttendedTrue() {
+    public String attendanceInnerJoinPersonaWhereIdServiceAndAttended() {
         return new SQL()
                 .SELECT("p.id as personaId, p.name, p.lastname, a.attended")
                 .FROM("attendance as a")
