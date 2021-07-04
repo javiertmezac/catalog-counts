@@ -1,10 +1,12 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
+import java.time.Instant;
+
 public class CatalogCountRequest {
     private int catalogCountEnumId;
     private double amount;
     private String details;
-    private String registrationDate;
+    private Instant registrationDate;
 
     public int getCatalogCountEnumId() {
         return catalogCountEnumId;
@@ -30,11 +32,11 @@ public class CatalogCountRequest {
         this.details = details;
     }
 
-    public String getRegistrationDate() {
+    public Instant getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(String registrationDate) {
+    public void setRegistrationDate(Instant registrationDate) {
         this.registrationDate = registrationDate;
     }
 }

@@ -1,16 +1,25 @@
 package com.jtmc.apps.reforma.api.v1.service;
 
-import java.util.List;
+import com.jtmc.apps.reforma.api.v1.persona.PersonaResponse;
 
 public class AttendanceResponse {
 
-    private List<Attendance> attendanceList;
+    private PersonaResponse persona;
+    private boolean attended;
 
-    public List<Attendance> getAttendanceList() {
-        return attendanceList;
+    public PersonaResponse getPersona() {
+        return persona;
     }
 
-    public void setAttendanceList(List<Attendance> attendanceList) {
-        this.attendanceList = attendanceList;
+    public void setPersona(PersonaResponse persona) {
+        this.persona = persona;
+    }
+
+    public boolean isAttended() {
+        return attended;
+    }
+
+    public void setAttended(boolean attended) {
+        this.attended = attended;
     }
 }

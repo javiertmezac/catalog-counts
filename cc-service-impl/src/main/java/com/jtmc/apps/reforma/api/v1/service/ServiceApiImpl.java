@@ -1,8 +1,6 @@
 package com.jtmc.apps.reforma.api.v1.service;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.api.v1.exception.GenericResponseErrorMessage;
-import com.jtmc.apps.reforma.api.v1.persona.PersonaResponse;
 import com.jtmc.apps.reforma.domain.Attendance;
 import com.jtmc.apps.reforma.domain.Persona;
 import com.jtmc.apps.reforma.domain.Service;
@@ -15,11 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 
 public class ServiceApiImpl implements ServiceApi {
@@ -40,66 +36,48 @@ public class ServiceApiImpl implements ServiceApi {
 
     @Override
     public ServiceResponse createService(ServiceRequest request) {
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String format = formatter.format(request.getDate());
-            serviceMapper.createService(format);
-            Service service = serviceMapper.getServiceByDate(format);
 
-            ServiceResponse response = new ServiceResponse();
-            response.setId(service.getId());
-            return response;
-        } catch (Exception ex) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
+        validateDateFormat(request.getDate());
+
+        serviceMapper.createService(request.getDate());
+        Service service = serviceImpl.getServiceByDate(request.getDate());
+
+        ServiceResponse response = new ServiceResponse();
+        response.setId(service.getId());
+        return response;
     }
 
     @Override
     public ServiceResponse getServiceByDate(String dateParam) {
 
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        validateDateFormat(dateParam);
+
+        Service service = serviceImpl.getServiceByDate(dateParam);
+
+        ServiceResponse response = new ServiceResponse();
+        response.setId(service.getId());
+        return response;
+    }
+
+    private void validateDateFormat(String dateParam) {
         try {
-            Date date = dateFormat.parse(dateParam);
-            Service service = serviceMapper.getServiceByDate(dateParam);
-
-            if (service == null) {
-                GenericResponseErrorMessage errorMessage =
-                        new GenericResponseErrorMessage(
-                                400,
-                                "Service not Found",
-                                "ServiceNotFoundMessage"
-                        );
-                throw new WebApplicationException(
-                        Response.status(errorMessage.getStatus()).entity(errorMessage).build()
-                );
-            }
-
-            ServiceResponse response = new ServiceResponse();
-            response.setId(service.getId());
-            return response;
+            serviceImpl.validateDateFormat(dateParam);
         } catch (ParseException e) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Couldn't parse date string: " + e.getMessage())
-                    .build());
+            throw new WebApplicationException(e.getMessage(), Response.Status.BAD_REQUEST);
         }
     }
 
     @Override
-    public AttendanceResponse getAttendanceList(int idService) {
-        List<Attendance> attendances = attendanceMapper.selectAttendanceByIdService(idService);
-        List<com.jtmc.apps.reforma.api.v1.service.Attendance> attendancesResponse =
-                new ArrayList<>();
+    public AttendanceResponseList getAttendanceList(int idService) {
+        List<AttendanceResponse> attendancesResponse = new ArrayList<>();
+        Collection<Attendance> attendances = serviceImpl.getAttendanceListByServiceId(idService);
         for (Attendance a : attendances) {
-           attendancesResponse.add(serviceImpl.populateAttendanceResponse(a.getPersona(), a.isAttended()));
+           attendancesResponse.add(
+                   serviceImpl.populateAttendanceResponse(a.getPersona(),a.isAttended())
+           );
         }
 
-        if (attendancesResponse.size() == 0) {
-            List<Persona> personas = personaMapper.selectAllPersonas();
-            for (Persona p: personas) {
-                attendancesResponse.add(serviceImpl.populateAttendanceResponse(p, false));
-            }
-        }
-       AttendanceResponse actualResponse = new AttendanceResponse();
+       AttendanceResponseList actualResponse = new AttendanceResponseList();
         actualResponse.setAttendanceList(attendancesResponse);
         return actualResponse;
     }
@@ -113,7 +91,7 @@ public class ServiceApiImpl implements ServiceApi {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).build());
         }
 
-        for (com.jtmc.apps.reforma.api.v1.service.Attendance a: request.getAttendanceList()) {
+        for (AttendanceResponse a: request.getAttendanceResponseList()) {
 
             Persona p = new Persona();
             p.setId(a.getPersona().getId());

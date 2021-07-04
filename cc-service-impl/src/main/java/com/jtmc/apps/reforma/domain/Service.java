@@ -1,12 +1,12 @@
 package com.jtmc.apps.reforma.domain;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class Service {
 
     private int id;
     private String idValue;
-    private Date date;
+    private String date;
 
     public String getIdValue() {
         return idValue;
@@ -24,11 +24,11 @@ public class Service {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }
