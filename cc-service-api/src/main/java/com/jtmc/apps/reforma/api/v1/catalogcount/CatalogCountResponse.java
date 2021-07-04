@@ -3,22 +3,19 @@ package com.jtmc.apps.reforma.api.v1.catalogcount;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.util.Date;
+import java.time.Instant;
 
-public class CatalogCountResponse {
+public class CatalogCountResponse  {
     private int id;
 
-    @JsonSerialize(as = Date.class)
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="UTC")
-    private Date registrationDate;
-
+    private String registrationDate;
     private String catalogCountEnum;
     private double amount;
     private String details;
     private double total;
 
     public CatalogCountResponse(int id,
-                                Date registrationDate,
+                                String registrationDate,
                                 String catalogCountEnum,
                                 double amount,
                                 String details,
@@ -33,13 +30,13 @@ public class CatalogCountResponse {
 
     //todo: should we have another Response Class for single CatalogCount ("no total column")?
     public CatalogCountResponse(int id,
-                                Date registrationDate,
-//                                int catalogCountEnumId,
+                                String registrationDate,
+                                String catalogCountEnum,
                                 double amount,
                                 String details) {
         this.id = id;
         this.registrationDate = registrationDate;
-//        this.catalogCountEnum = catalogCountEnumId;
+        this.catalogCountEnum = catalogCountEnum;
         this.amount = amount;
         this.details = details;
     }
@@ -52,11 +49,11 @@ public class CatalogCountResponse {
         this.id = id;
     }
 
-    public Date getRegistrationDate() {
+    public String getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
+    public void setRegistrationDate(String registrationDate) {
         this.registrationDate = registrationDate;
     }
 

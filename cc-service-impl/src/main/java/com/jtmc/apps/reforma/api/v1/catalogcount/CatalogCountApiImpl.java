@@ -7,13 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -45,23 +40,16 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         checkNotNull(catalogCountRequest.getRegistrationDate(), "registrationDate is not provided");
         checkArgument(StringUtils.isNotBlank(catalogCountRequest.getDetails()), "please provide some details");
 
-
         CatalogCount catalogCount = new CatalogCount();
         catalogCount.setAmount(catalogCountRequest.getAmount());
         catalogCount.setDetails(catalogCountRequest.getDetails());
         catalogCount.setCatalogCountEnumId(catalogCountRequest.getCatalogCountEnumId());
         catalogCount.setDeleted(false);
-
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            catalogCount.setRegistrationDate(simpleDateFormat.parse(catalogCountRequest.getRegistrationDate()));
-        } catch (ParseException exception) {
-           throw new WebApplicationException(exception.getCause().getMessage(), Response.Status.BAD_REQUEST);
-        }
+        catalogCount.setRegistrationDate(catalogCountRequest.getRegistrationDate());
 
         catalogCountImpl.insertIntoCatalogCount(catalogCount);
         //todo: this is not Json type
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
     public CatalogCountResponse getCatalogCount(int id) {
@@ -75,8 +63,8 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
         return new CatalogCountResponse(
                 catalogCount.getId(),
-                catalogCount.getRegistrationDate(),
-//                catalogCount.getCatalogCountEnumId(),
+                catalogCount.getRegistrationDate().toString(),
+                catalogCount.getCatalogCountEnum().getCatalogCountEnumDisplay(),
                 catalogCount.getAmount(),
                 catalogCount.getDetails()
         );

@@ -23,7 +23,7 @@ public interface ServiceApi {
     @GET
     @Path("/{idService}/attendance")
     @Produces(MediaType.APPLICATION_JSON)
-    AttendanceResponse getAttendanceList(@PathParam("idService") int idService);
+    AttendanceResponseList getAttendanceList(@PathParam("idService") int idService);
 
     @PUT
     @Path("/{idService}/attendance")
