@@ -2,13 +2,14 @@ package com.jtmc.apps.reforma.domain;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.Instant;
 import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class CatalogCount {
     private int id;
-    private Date registrationDate;
+    private Instant registrationDate;
     private int catalogCountEnumId;
     private CatalogCountEnum catalogCountEnum;
     private double amount;
@@ -23,11 +24,11 @@ public class CatalogCount {
         this.id = id;
     }
 
-    public Date getRegistrationDate() {
+    public Instant getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
+    public void setRegistrationDate(Instant registrationDate) {
         this.registrationDate = registrationDate;
     }
 

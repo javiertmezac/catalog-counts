@@ -5,7 +5,7 @@
     <parent>
         <artifactId>catalog-counts-base-pom</artifactId>
         <groupId>com.jtmc.apps.reforma</groupId>
-        <version>0.4.0</version>
+        <version>0.4.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,12 +42,12 @@
         <dependency>
             <groupId>com.jtmc.apps.reforma</groupId>
             <artifactId>catalog-counts-service-impl</artifactId>
-            <version>0.4.0</version>
+            <version>0.4.1</version>
         </dependency>
         <dependency>
             <groupId>com.jtmc.apps.reforma</groupId>
             <artifactId>cc-service-api</artifactId>
-            <version>0.4.0</version>
+            <version>0.4.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
@@ -58,6 +58,11 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxrs</artifactId>
             <version>3.1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.9.0</version>
         </dependency>
     </dependencies>
 

@@ -9,7 +9,7 @@ public interface AttendanceMapper {
 
     @SelectProvider(
             type = AttendanceMapperProvider.class,
-            method = "selectAttendanceByIdService"
+            method = "attendanceInnerJoinPersonaWhereIdServiceAndAttended"
     )
     @Results(value = {
             @Result(property = "id", column = "attendanceId"),
@@ -18,7 +18,7 @@ public interface AttendanceMapper {
             @Result(property = "persona.name",column = "name"),
             @Result(property = "persona.lastname",column = "lastname")
     })
-    List<Attendance> selectAttendanceByIdService(@Param("idService") int idService);
+    List<Attendance> selectWhereIdServiceAndAttendedTrue(@Param("idService") int idService);
 
 
     @InsertProvider(

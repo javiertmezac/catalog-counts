@@ -2,11 +2,11 @@ package com.jtmc.apps.reforma.api.v1.service;
 
 import java.util.List;
 
-public class AttendanceRequest {
+public class AttendanceResponseList {
 
     private List<AttendanceResponse> attendanceList;
 
-    public List<AttendanceResponse> getAttendanceResponseList() {
+    public List<AttendanceResponse> getAttendanceList() {
         return attendanceList;
     }
 
