@@ -1,10 +1,10 @@
 package com.jtmc.apps.reforma.guice;
 
 import com.google.inject.name.Names;
+import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum.CatalogCountEnumMapper;
-import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumMapperImpl;
-import com.jtmc.apps.reforma.api.v1.catalogcountenum.ICatalogCountEnumService;
+import com.jtmc.apps.reforma.repository.ICatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcount.CatalogCountMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.persona.PersonaMapper;
@@ -37,7 +37,7 @@ public class MyBatisConfigModule extends MyBatisModule {
         addMapperClass(ServiceMapper.class);
 
         Names.bindProperties(binder(), setMyBatisProperties());
-        bind(ICatalogCountEnumService.class).to(CatalogCountEnumMapperImpl.class);
+        bind(ICatalogCountEnumRepository.class).to(CatalogCountEnumRepository.class);
 
     }
 
@@ -54,7 +54,6 @@ public class MyBatisConfigModule extends MyBatisModule {
 
         try {
             String systemEnv = getSystemEnvVariable();
-//            Configuration config = propertiesConfiguration(systemEnv);
 
             Logger.info(System.getenv("JDBC.url"));
 
@@ -63,11 +62,6 @@ public class MyBatisConfigModule extends MyBatisModule {
             myBatisProperties.setProperty("JDBC.url", System.getenv("JDBC_URL"));
             myBatisProperties.setProperty("JDBC.username", System.getenv("JDBC_USERNAME"));
             myBatisProperties.setProperty("JDBC.password", System.getenv("JDBC_PASSWORD"));
-
-
-//            myBatisProperties.setProperty("JDBC.url", config.getString("JDBC.url"));
-//            myBatisProperties.setProperty("JDBC.username", config.getString("JDBC.username"));
-//            myBatisProperties.setProperty("JDBC.password", config.getString("JDBC.password"));
 
         } catch (Exception ex) {
             Logger.error("Couldn't set MyBatisProperties: ", ex);
