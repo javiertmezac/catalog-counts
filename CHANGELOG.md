@@ -1,5 +1,15 @@
 # Catalog Counts Service Changelog
 
+## 0.4.1
+release date: July 12, 2021
+
+### Internal changes
+- changed catalog_count registrationDate column to datetime
+- Refactored Service domain
+
+### Fixes
+- AttendanceList: return all list of personas even attendance list exist.
+
 ## 0.4.0
 release date: Jun 21, 2021
 
