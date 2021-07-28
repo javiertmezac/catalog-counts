@@ -8,6 +8,8 @@ import com.google.inject.Module;
 import com.jtmc.apps.reforma.api.filter.CorsFilter;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApi;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApiImpl;
+import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumApi;
+import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumApiImpl;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApi;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApiImpl;
 import com.jtmc.apps.reforma.api.v1.exception.ExcelImportGenericExceptionMapper;
@@ -49,6 +51,7 @@ public class Launcher {
             bind(ExcelImportApi.class).to(ExcelImportApiImpl.class);
             bind(PersonaApi.class).to(PersonaApiImpl.class);
             bind(ServiceApi.class).to(ServiceApiImpl.class);
+            bind(CatalogCountEnumApi.class).to(CatalogCountEnumApiImpl.class);
         }
     }
 
@@ -68,6 +71,7 @@ public class Launcher {
                     injector.getInstance(ExcelImportApi.class),
                     injector.getInstance(PersonaApi.class),
                     injector.getInstance(ServiceApi.class),
+                    injector.getInstance(CatalogCountEnumApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),
