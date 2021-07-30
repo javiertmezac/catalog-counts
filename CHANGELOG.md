@@ -1,5 +1,14 @@
 # Catalog Counts Service Changelog
 
+## 0.5.0
+release date: --
+
+### Features
+- Added CatalogCountEnum API - Get All
+
+### Internal changes
+- Refactored CatalogCountEnum Repository
+
 ## 0.4.1
 release date: July 12, 2021
 

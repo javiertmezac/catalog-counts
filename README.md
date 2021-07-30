@@ -29,3 +29,6 @@
 2. Push image: `docker push registry.digitalocean.com/cc-service/cc-service-image:<tag>`
 3. `doctl apps list` : and make sure to pick correct app id
 4. `doctl apps update <id> --spec /path/to/spec.yaml`
+
+## How to set CC-Service Version
+`mvn versions:set -DnewVersion= < version >`
