@@ -1,6 +1,7 @@
 package com.jtmc.apps.reforma.repository.mybatis;
 
 import com.jtmc.apps.reforma.domain.CatalogCount;
+import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.exception.RepositoryException;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcount.CatalogCountMapper;
 import org.junit.jupiter.api.Assertions;
@@ -14,10 +15,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
-class MyBatisCatalogCountRepositoryTest {
+class CatalogCountRepositoryTest {
 
     @InjectMocks
-    private MyBatisCatalogCountRepository myBatisRepository;
+    private CatalogCountRepository myBatisRepository;
 
     @Mock
     private CatalogCountMapper mapper;

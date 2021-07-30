@@ -3,8 +3,8 @@ package com.jtmc.apps.reforma.service.excelimport;
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
+import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
-import com.jtmc.apps.reforma.repository.mybatis.CatalogCountEnumRepository;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -51,7 +51,7 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
             Iterator<Row> itr = sheet.iterator();
             int totalRowIndex = sheet.getTables().get(0).getEndRowIndex();
 
-            list = ccEnumRepository.getList();
+            list = ccEnumRepository.selectAllCatalogCountEnum();
 
             /*
             todo:
