@@ -14,6 +14,7 @@
         <junit.version>5.6.2</junit.version>
         <junit-platform.version>1.6.2</junit-platform.version>
         <easy-random.version>4.2.0</easy-random.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
     </properties>
 
     <modules>
@@ -75,6 +76,12 @@
                 <groupId>org.jeasy</groupId>
                 <artifactId>easy-random-core</artifactId>
                 <version>${easy-random.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version</version>
             </dependency>
         </dependencies>
 
