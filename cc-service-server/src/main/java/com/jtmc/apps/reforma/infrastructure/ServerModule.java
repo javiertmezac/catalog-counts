@@ -6,11 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.inject.AbstractModule;
-import com.jtmc.apps.reforma.api.v1.exception.GenericResponseErrorMessage;
 import com.jtmc.apps.reforma.guice.MyBatisConfigModule;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
+import com.jtmc.apps.reforma.repository.ICatalogCountRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
-import com.jtmc.apps.reforma.repository.mybatis.MyBatisCatalogCountRepository;
 
 public class ServerModule extends AbstractModule {
 
@@ -29,6 +28,6 @@ public class ServerModule extends AbstractModule {
         bind(ObjectMapper.class).toInstance(objectMapper);
         bind(JacksonJsonProvider.class).toInstance(jsonProvider);
         bind(CatalogCountImpl.class);
-        bind(CatalogCountRepository.class).to(MyBatisCatalogCountRepository.class);
+        bind(ICatalogCountRepository.class).to(CatalogCountRepository.class);
     }
 }
