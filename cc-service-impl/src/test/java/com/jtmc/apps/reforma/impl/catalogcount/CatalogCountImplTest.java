@@ -3,6 +3,7 @@ package com.jtmc.apps.reforma.impl.catalogcount;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
+import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.ICatalogCountRepository;
 import com.jtmc.apps.reforma.repository.exception.RepositoryException;
 import org.junit.jupiter.api.Assertions;
@@ -25,7 +26,7 @@ class CatalogCountImplTest {
     private CatalogCountImpl catalogCountImpl;
 
     @Mock
-    private ICatalogCountRepository ICatalogCountRepository;
+    private CatalogCountRepository catalogCountRepository;
 
     private double expectedTotal;
 
@@ -39,16 +40,16 @@ class CatalogCountImplTest {
     @Test
     void testSelectAllRecords_callsRepository() {
        catalogCountImpl.selectAllRecordsWithTotalColumn(expectedTotal);
-       verify(ICatalogCountRepository).selectAll();
+       verify(catalogCountRepository).selectAll();
     }
 
     @Test
     void testSelectAllRecords_shouldPropagateException() {
 
-        when(ICatalogCountRepository.selectAll()).thenThrow(RepositoryException.class);
+        when(catalogCountRepository.selectAll()).thenThrow(RepositoryException.class);
 
         RepositoryException actualException = Assertions.assertThrows(RepositoryException.class,
-                () -> ICatalogCountRepository.selectAll());
+                () -> catalogCountRepository.selectAll());
 
         Assertions.assertNotNull(actualException);
     }
@@ -97,7 +98,7 @@ class CatalogCountImplTest {
         catalogCounts.add(catalogCount2);
         int expectedRecordsSize = catalogCounts.size();
 
-        when(ICatalogCountRepository.selectAll()).thenReturn(catalogCounts);
+        when(catalogCountRepository.selectAll()).thenReturn(catalogCounts);
 
         //todo: make sure which structure keeps order of the records
         List<CatalogCountResponse> actualResponse = catalogCountImpl.selectAllRecordsWithTotalColumn(initialTotal);

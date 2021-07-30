@@ -1,6 +1,6 @@
 # Catalog Counts Service Changelog
 
-## 0.5.0
+## 0.5.1
 release date: July 30, 2021
 
 ### Features
@@ -8,6 +8,9 @@ release date: July 30, 2021
 
 ### Internal changes
 - Refactored CatalogCountEnum Repository
+
+### Dependencies
+- bump commons-beanutils to 1.9.4
 
 ## 0.4.1
 release date: July 12, 2021
