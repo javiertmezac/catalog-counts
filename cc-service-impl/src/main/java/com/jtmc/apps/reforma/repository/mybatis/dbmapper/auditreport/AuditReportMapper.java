@@ -1,5 +1,6 @@
 package com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport;
 
+import com.jtmc.apps.reforma.domain.SumCatalogCountByFamily;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 
@@ -9,15 +10,15 @@ public interface AuditReportMapper {
 
     @SelectProvider(
            type = AuditReportMapperProvider.class,
-           method = "getSumCatalogCountSameFamily"
+           method = "getSumCatalogCountIncomes"
     )
-    void selectSumCatalogCountAmountFromFamily(@Param("dateFrom") String dateFrom,
-                                               @Param("dateTo") String dateTo,
-                                               @Param("cceIds") String cceIds);
+    List<SumCatalogCountByFamily> selectSumCatalogCountIncomes(@Param("dateFrom") String dateFrom,
+                                                               @Param("dateTo") String dateTo);
 
     @SelectProvider(
             type = AuditReportMapperProvider.class,
-            method = "selectCatalogCountEnumFamily"
+            method = "getSumCatalogCountExpenses"
     )
-    List<String> selectCatalogCountEnumFamily(@Param("cceFamily") String cceFamily);
+    List<SumCatalogCountByFamily> selectSumCatalogCountExpenses(@Param("dateFrom") String dateFrom,
+                                                                @Param("dateTo") String dateTo);
 }

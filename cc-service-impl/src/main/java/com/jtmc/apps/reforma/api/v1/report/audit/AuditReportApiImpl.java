@@ -1,6 +1,8 @@
 package com.jtmc.apps.reforma.api.v1.report.audit;
 
 import com.google.inject.Inject;
+import com.jtmc.apps.reforma.domain.Expenses;
+import com.jtmc.apps.reforma.domain.Incomes;
 import com.jtmc.apps.reforma.impl.report.audit.AuditReportImpl;
 
 public class AuditReportApiImpl implements AuditReportApi {
@@ -18,16 +20,28 @@ public class AuditReportApiImpl implements AuditReportApi {
         //todo: get previous Balance from DB
         response.setPreviousBalance(0.0);
 
-        //todo: get SumIncomes from DB
-       auditReport.selectSumIncomes();
+        //todo: set correct dates from Month
+       Incomes incomes = auditReport.getSumIncomes("2021-06-01", "2021-07-01");
 
         SumIncomes sumIncomes = new SumIncomes();
-        sumIncomes.setSumIncomesTotal(10355.60);
+        sumIncomes.setDonations(incomes.getDonations());
+        sumIncomes.setTithe(incomes.getTithe());
+        sumIncomes.setOffering(incomes.getOffering());
+        sumIncomes.setSumIncomesTotal(incomes.getTotal());
+
         response.setSumIncomes(sumIncomes);
 
-        //todo: get SumExpenses from DB
+        Expenses expenses = auditReport.getSumExpenses("2021-06-01", "2021-07-01");
         SumExpenses sumExpenses = new SumExpenses();
-        sumExpenses.setSumExpensesTotal(9345.98);
+        sumExpenses.setServices(expenses.getServices());
+        sumExpenses.setHelps(expenses.getHelps());
+        sumExpenses.setGeneral(expenses.getGeneral());
+        sumExpenses.setFood(expenses.getFood());
+        sumExpenses.setTraveling(expenses.getTraveling());
+        sumExpenses.setStationery(expenses.getStationery());
+        sumExpenses.setFees(expenses.getFees());
+        sumExpenses.setSumExpensesTotal(expenses.getTotal());
+
         response.setSumExpenses(sumExpenses);
 
         response.setUncheckedExpenses(0.0);
