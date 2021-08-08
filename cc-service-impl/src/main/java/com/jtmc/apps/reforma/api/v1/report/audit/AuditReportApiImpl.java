@@ -20,8 +20,12 @@ public class AuditReportApiImpl implements AuditReportApi {
         //todo: get previous Balance from DB
         response.setPreviousBalance(0.0);
 
-        //todo: set correct dates from Month
-       Incomes incomes = auditReport.getSumIncomes("2021-06-01", "2021-07-01");
+        String fromDate = buildFromDate(auditReportRequest.getFromMonth(),
+                auditReportRequest.getYear());
+        String toDate = buildToDate(auditReportRequest.getToMonth(),
+                auditReportRequest.getYear());
+
+       Incomes incomes = auditReport.getSumIncomes(fromDate, toDate);
 
         SumIncomes sumIncomes = new SumIncomes();
         sumIncomes.setDonations(incomes.getDonations());
@@ -31,7 +35,7 @@ public class AuditReportApiImpl implements AuditReportApi {
 
         response.setSumIncomes(sumIncomes);
 
-        Expenses expenses = auditReport.getSumExpenses("2021-06-01", "2021-07-01");
+        Expenses expenses = auditReport.getSumExpenses(fromDate, toDate);
         SumExpenses sumExpenses = new SumExpenses();
         sumExpenses.setServices(expenses.getServices());
         sumExpenses.setHelps(expenses.getHelps());
@@ -52,5 +56,24 @@ public class AuditReportApiImpl implements AuditReportApi {
         response.setTreasurer("Javier Trinidad Meza Cazarez");
         response.setSecretary("Mirna Mendoza");
         return response;
+    }
+
+    private String buildToDate(int toMonth, int year) {
+
+        final int december = 12;
+        final String day = "01";
+        String month = String.valueOf(toMonth + 1);
+
+        if(toMonth == december) {
+            year = year + 1;
+            month = "01";
+        }
+        return  String.format("%s-%s-%s",
+                year, month, day);
+    }
+
+    private String buildFromDate(int fromMonth, int year) {
+        return String.format("%s-%s-%s",
+                year, fromMonth, "01");
     }
 }
