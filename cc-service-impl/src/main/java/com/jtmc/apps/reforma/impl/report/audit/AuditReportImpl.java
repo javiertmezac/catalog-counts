@@ -111,4 +111,10 @@ public class AuditReportImpl {
         checkArgument(StringUtils.isNotBlank(toDate));
         checkArgument(validateDateRange(fromDate, toDate));
     }
+
+    public double getPreviousBalance(int fromMonth, int year) {
+        checkArgument(fromMonth > 12 , "fromMonth not valid");
+        checkArgument(fromMonth < 1 , "fromMonth not valid");
+        return 0;
+    }
 }

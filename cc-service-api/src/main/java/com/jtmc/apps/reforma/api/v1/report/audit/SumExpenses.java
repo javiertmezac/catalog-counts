@@ -8,6 +8,7 @@ public class SumExpenses {
     private double traveling;
     private double stationery;
     private double fees;
+    private double immovables;
     private double sumExpensesTotal;
 
     public double getServices() {
@@ -64,6 +65,14 @@ public class SumExpenses {
 
     public void setFees(double fees) {
         this.fees = fees;
+    }
+
+    public double getImmovables() {
+        return immovables;
+    }
+
+    public void setImmovables(double immovables) {
+        this.immovables = immovables;
     }
 
     public double getSumExpensesTotal() {

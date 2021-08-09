@@ -176,4 +176,16 @@ class AuditReportImplTest {
         }
         return actualAmount;
     }
+
+    @Test
+    void testGetPreviousBalance_returnsIllegalArgument_whenNoValid_fromMonth() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> auditReport.getPreviousBalance(0, 2021));
+    }
+
+    @Test
+    void testGetPreviousBalance_returnsIllegalArgument_whenNoValid_fromMonth_greaterDec() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> auditReport.getPreviousBalance(13, 2021));
+    }
 }

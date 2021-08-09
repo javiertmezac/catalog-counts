@@ -14,11 +14,15 @@ public class AuditReportApiImpl implements AuditReportApi {
     public AuditReportResponse createAuditReport(AuditReportRequest auditReportRequest) {
         AuditReportResponse response = new AuditReportResponse();
         response.setTitle("Informe de Auditoría");
+        //todo: this should change once "Misions / services is added into system"
         response.setMision("Reforma");
+
+        //todo: build correct period from given values
         response.setPeriod("Ene - May 2021");
 
-        //todo: get previous Balance from DB
-        response.setPreviousBalance(0.0);
+        double previousBalance = auditReport.getPreviousBalance(auditReportRequest.getFromMonth(),
+                auditReportRequest.getYear());
+        response.setPreviousBalance(previousBalance);
 
         String fromDate = buildFromDate(auditReportRequest.getFromMonth(),
                 auditReportRequest.getYear());
@@ -26,13 +30,11 @@ public class AuditReportApiImpl implements AuditReportApi {
                 auditReportRequest.getYear());
 
        Incomes incomes = auditReport.getSumIncomes(fromDate, toDate);
-
         SumIncomes sumIncomes = new SumIncomes();
         sumIncomes.setDonations(incomes.getDonations());
         sumIncomes.setTithe(incomes.getTithe());
         sumIncomes.setOffering(incomes.getOffering());
         sumIncomes.setSumIncomesTotal(incomes.getTotal());
-
         response.setSumIncomes(sumIncomes);
 
         Expenses expenses = auditReport.getSumExpenses(fromDate, toDate);
@@ -44,13 +46,20 @@ public class AuditReportApiImpl implements AuditReportApi {
         sumExpenses.setTraveling(expenses.getTraveling());
         sumExpenses.setStationery(expenses.getStationery());
         sumExpenses.setFees(expenses.getFees());
+        sumExpenses.setImmovables(expenses.getImmovables());
         sumExpenses.setSumExpensesTotal(expenses.getTotal());
-
         response.setSumExpenses(sumExpenses);
 
+        //todo: get uncheckedExpenses from DB
         response.setUncheckedExpenses(0.0);
+        //todo: get loans from DB
         response.setLoans(0.0);
 
+        //todo: uncheckedExpenses and loans are not considered yet
+        response.setTotal(incomes.getTotal() - expenses.getTotal());
+
+
+        //todo: change this part and get values from DB?
         response.setComments("This is an audit report");
         response.setAuditor("Ulises Cardenas");
         response.setTreasurer("Javier Trinidad Meza Cazarez");
