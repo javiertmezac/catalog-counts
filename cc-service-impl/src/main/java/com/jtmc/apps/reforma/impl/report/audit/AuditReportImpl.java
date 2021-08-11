@@ -3,7 +3,9 @@ package com.jtmc.apps.reforma.impl.report.audit;
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Expenses;
 import com.jtmc.apps.reforma.domain.Incomes;
+import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import com.jtmc.apps.reforma.domain.SumCatalogCountByFamily;
+import com.jtmc.apps.reforma.impl.exception.MonthlyTotalNotFoundException;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -109,12 +111,32 @@ public class AuditReportImpl {
     private void dateValidations(String fromDate, String toDate) {
         checkArgument(StringUtils.isNotBlank(fromDate));
         checkArgument(StringUtils.isNotBlank(toDate));
-        checkArgument(validateDateRange(fromDate, toDate));
+
+        String errorMessage = "FromMonth cannot be greater than ToMonth";
+        checkArgument(validateDateRange(fromDate, toDate), errorMessage);
+    }
+
+    public void areMonthsValid(int fromMonth, int toMonth) {
+        checkArgument(fromMonth >= 1 && fromMonth <= 12 ,
+                "fromMonth not valid");
+
+        checkArgument(toMonth >= 1 && toMonth <= 12 ,
+                "toMonth not valid");
     }
 
     public double getPreviousBalance(int fromMonth, int year) {
-        checkArgument(fromMonth > 12 , "fromMonth not valid");
-        checkArgument(fromMonth < 1 , "fromMonth not valid");
-        return 0;
+        checkArgument(fromMonth >= 1 && fromMonth <= 12 ,
+                "fromMonth not valid");
+        MonthlyTotal monthlyTotal =
+                auditReportMapper.getPreviousBalanceFromMonthAndYear(fromMonth, year);
+        if(monthlyTotal == null) {
+            String errorMessage =
+                    String.format(
+                            "MonthlyTotal - PreviousBalance not found for month %s and Year %s",
+                            fromMonth, year
+                    );
+            throw new MonthlyTotalNotFoundException(errorMessage, 404);
+        }
+        return monthlyTotal.getTotal();
     }
 }

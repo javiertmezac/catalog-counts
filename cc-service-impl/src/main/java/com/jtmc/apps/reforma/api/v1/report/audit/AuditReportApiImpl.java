@@ -3,6 +3,7 @@ package com.jtmc.apps.reforma.api.v1.report.audit;
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Expenses;
 import com.jtmc.apps.reforma.domain.Incomes;
+import com.jtmc.apps.reforma.domain.Months;
 import com.jtmc.apps.reforma.impl.report.audit.AuditReportImpl;
 
 public class AuditReportApiImpl implements AuditReportApi {
@@ -17,11 +18,20 @@ public class AuditReportApiImpl implements AuditReportApi {
         //todo: this should change once "Misions / services is added into system"
         response.setMision("Reforma");
 
-        //todo: build correct period from given values
-        response.setPeriod("Ene - May 2021");
+        auditReport.areMonthsValid(
+                auditReportRequest.getFromMonth(), auditReportRequest.getToMonth());
 
-        double previousBalance = auditReport.getPreviousBalance(auditReportRequest.getFromMonth(),
-                auditReportRequest.getYear());
+        String period = buildReportPeriod(
+                auditReportRequest.getFromMonth(),
+                auditReportRequest.getToMonth(),
+                auditReportRequest.getYear()
+        );
+        response.setPeriod(period);
+
+        double previousBalance = auditReport.getPreviousBalance(
+                auditReportRequest.getFromMonth(),
+                auditReportRequest.getYear()
+        );
         response.setPreviousBalance(previousBalance);
 
         String fromDate = buildFromDate(auditReportRequest.getFromMonth(),
@@ -56,7 +66,7 @@ public class AuditReportApiImpl implements AuditReportApi {
         response.setLoans(0.0);
 
         //todo: uncheckedExpenses and loans are not considered yet
-        response.setTotal(incomes.getTotal() - expenses.getTotal());
+        response.setTotal((previousBalance + incomes.getTotal()) - expenses.getTotal());
 
 
         //todo: change this part and get values from DB?
@@ -65,6 +75,13 @@ public class AuditReportApiImpl implements AuditReportApi {
         response.setTreasurer("Javier Trinidad Meza Cazarez");
         response.setSecretary("Mirna Mendoza");
         return response;
+    }
+
+    private String buildReportPeriod(int fromMonth, int toMonth, int year) {
+        return String.format("%s - %s %s",
+                Months.valueOfNumber(fromMonth),
+                Months.valueOfNumber(toMonth),
+                year);
     }
 
     private String buildToDate(int toMonth, int year) {

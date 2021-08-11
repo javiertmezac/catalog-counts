@@ -13,6 +13,7 @@ import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumApiImpl;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApi;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApiImpl;
 import com.jtmc.apps.reforma.api.v1.exception.ExcelImportGenericExceptionMapper;
+import com.jtmc.apps.reforma.api.v1.exception.ImplementationGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.exception.RepositoryGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.exception.RuntimeGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
@@ -79,7 +80,8 @@ public class Launcher {
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),
-                    injector.getInstance(ExcelImportGenericExceptionMapper.class)
+                    injector.getInstance(ExcelImportGenericExceptionMapper.class),
+                    injector.getInstance(ImplementationGenericExceptionMapper.class)
             );
         }
     }

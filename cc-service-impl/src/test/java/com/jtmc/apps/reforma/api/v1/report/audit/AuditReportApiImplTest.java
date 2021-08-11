@@ -2,6 +2,7 @@ package com.jtmc.apps.reforma.api.v1.report.audit;
 
 import com.jtmc.apps.reforma.domain.Expenses;
 import com.jtmc.apps.reforma.domain.Incomes;
+import com.jtmc.apps.reforma.domain.Months;
 import com.jtmc.apps.reforma.impl.report.audit.AuditReportImpl;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
@@ -12,11 +13,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.management.monitor.MonitorSettingException;
+import java.util.HashMap;
 import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 class AuditReportApiImplTest {
@@ -34,11 +38,13 @@ class AuditReportApiImplTest {
     private int expectedYear = 2021;
     private String expectedFromDate =  "2021-6-01";
     private String expectedToDate = "2021-11-01";
+    private String expectedPeriodLabel;
 
     private AuditReportRequest expectedAuditReportRequest;
     private Incomes expectedIncomes;
     private Expenses expectedExpenses;
     private EasyRandom easyRandom = new EasyRandom();
+    private double expectedPreviousBalance = easyRandom.nextDouble();
 
     @BeforeEach
     void setUp() {
@@ -51,6 +57,11 @@ class AuditReportApiImplTest {
         expectedAuditReportRequest.setToMonth(expectedToMonth);
         expectedAuditReportRequest.setYear(expectedYear);
 
+        expectedPeriodLabel = String.format("%s - %s %s",
+                Months.valueOfNumber(expectedFromMonth),
+                Months.valueOfNumber(expectedToMonth),
+                expectedYear);
+
         expectedIncomes = new Incomes();
         when(auditReportImpl.getSumIncomes(anyString(), anyString()))
                 .thenReturn(expectedIncomes);
@@ -60,7 +71,7 @@ class AuditReportApiImplTest {
                 .thenReturn(expectedExpenses);
 
         when(auditReportImpl.getPreviousBalance(anyInt(), anyInt()))
-                .thenReturn(new Random().nextDouble());
+                .thenReturn(expectedPreviousBalance);
     }
 
     @Test
@@ -81,6 +92,13 @@ class AuditReportApiImplTest {
         Assertions.assertTrue(StringUtils.isNotBlank(actualResponse.getMision()));
 
         Assertions.assertTrue(StringUtils.isNotBlank(actualResponse.getTreasurer()));
+    }
+
+    @Test
+    void testCreateAuditReport_shouldReturn_correctReportPeriod() {
+        AuditReportResponse actualResponse =
+                auditReportApi.createAuditReport(expectedAuditReportRequest);
+        Assertions.assertEquals(expectedPeriodLabel, actualResponse.getPeriod());
     }
 
     @Test
@@ -173,12 +191,14 @@ class AuditReportApiImplTest {
     void testCreateAuditReport_returnsCorrectTotal() {
         double expectedSumIncomes;
         double expectedSumExpenses;
+
         Incomes expectedIncomes = easyRandom.nextObject(Incomes.class);
         Expenses expectedExpenses = easyRandom.nextObject(Expenses.class);
 
         expectedSumIncomes = expectedIncomes.getTotal();
         expectedSumExpenses = expectedExpenses.getTotal();
-        double expectedTotal = expectedSumIncomes - expectedSumExpenses;
+        double expectedTotal =
+                (expectedPreviousBalance + expectedSumIncomes) - expectedSumExpenses;
 
         when(auditReportImpl.getSumIncomes(expectedFromDate, expectedToDate))
                 .thenReturn(expectedIncomes);
@@ -188,5 +208,11 @@ class AuditReportApiImplTest {
                auditReportApi.createAuditReport(expectedAuditReportRequest);
 
        Assertions.assertEquals(expectedTotal, actualResponse.getTotal());
+    }
+
+    @Test
+    void testCreateAuditReport_shouldCall_AreMonthsValid() {
+        auditReportApi.createAuditReport(expectedAuditReportRequest);
+        verify(auditReportImpl).areMonthsValid(expectedFromMonth, expectedToMonth);
     }
 }

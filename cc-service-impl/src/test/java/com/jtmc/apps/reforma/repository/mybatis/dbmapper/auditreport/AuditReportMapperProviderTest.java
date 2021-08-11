@@ -38,4 +38,14 @@ class AuditReportMapperProviderTest {
         Assertions.assertEquals(expectedSumIncomesQuery, provider.getSumCatalogCountExpenses());
     }
 
+    @Test
+    void testGetPreviousBalance_sqlStatement() {
+        String expectedPreviousBalanceQuery = "SELECT *\n" +
+                "FROM monthly_total\n" +
+                "WHERE (MONTH(registrationDate) = #{month}) \n" +
+                "AND (YEAR(registrationDate) = #{year})\n" +
+                "ORDER BY registrationDate ASC LIMIT 1";
+
+        Assertions.assertEquals(expectedPreviousBalanceQuery, provider.getPreviousBalance());
+    }
 }

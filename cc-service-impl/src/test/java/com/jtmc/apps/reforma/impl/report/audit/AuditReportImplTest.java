@@ -2,9 +2,12 @@ package com.jtmc.apps.reforma.impl.report.audit;
 
 import com.jtmc.apps.reforma.domain.Expenses;
 import com.jtmc.apps.reforma.domain.Incomes;
+import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import com.jtmc.apps.reforma.domain.SumCatalogCountByFamily;
+import com.jtmc.apps.reforma.impl.exception.MonthlyTotalNotFoundException;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum.CatalogCountEnumMapper;
+import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class AuditReportImplTest {
 
@@ -41,11 +43,10 @@ class AuditReportImplTest {
     @Mock
     private AuditReportMapper auditReportMapper;
 
-    @Mock
-    private CatalogCountEnumMapper catalogCountEnumMapper;
-
     private String fromDate;
     private String toDate;
+    int expectedMonth = 1;
+    int expectedYear = 2021;
 
     @BeforeEach
     void setUp() {
@@ -63,17 +64,24 @@ class AuditReportImplTest {
 
     @Test
     void testGetSumIncomes_shouldThrowIllegalException_whenDateFromNull() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> auditReport.getSumIncomes(null, toDate));
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                auditReport.getSumIncomes(null, toDate));
     }
 
     @Test
     void testGetSumIncomes_shouldThrowIllegalException_whenDateToNull() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> auditReport.getSumIncomes(fromDate, null));
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                auditReport.getSumIncomes(fromDate, null));
     }
 
     @Test
     void testGetSumIncomes_shouldValidate_toDateIsGreater_thanFromDate() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> auditReport.getSumIncomes(toDate, fromDate));
+        IllegalArgumentException actualException =
+                Assertions.assertThrows(IllegalArgumentException.class, () ->
+                        auditReport.getSumIncomes(toDate, fromDate));
+
+        String expectedMessage = String.format("FromMonth cannot be greater than ToMonth");
+        Assertions.assertEquals(expectedMessage, actualException.getMessage());
     }
 
     @Test
@@ -187,5 +195,70 @@ class AuditReportImplTest {
     void testGetPreviousBalance_returnsIllegalArgument_whenNoValid_fromMonth_greaterDec() {
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> auditReport.getPreviousBalance(13, 2021));
+    }
+
+    @Test
+    void testGetPreviousBalance_shouldCall_auditMapper() {
+        when(auditReportMapper.getPreviousBalanceFromMonthAndYear(anyInt(), anyInt()))
+                .thenReturn(new MonthlyTotal());
+        auditReport.getPreviousBalance(expectedMonth, expectedYear);
+        verify(auditReportMapper).getPreviousBalanceFromMonthAndYear(expectedMonth, expectedYear);
+    }
+
+    @Test
+    void testGetPreviousBalance_throwsException_fromAuditMapper() {
+        doThrow(RuntimeException.class)
+                .when(auditReportMapper)
+                .getPreviousBalanceFromMonthAndYear(expectedMonth, expectedYear);
+        Assertions.assertThrows(RuntimeException.class, () ->
+                auditReport.getPreviousBalance(expectedMonth, expectedYear));
+    }
+
+    @Test
+    void testGetPreviousBalance_throwsException_whenMonthlyTotal_Null() {
+        when(auditReportMapper.getPreviousBalanceFromMonthAndYear(expectedMonth, expectedYear))
+                .thenReturn(null);
+        MonthlyTotalNotFoundException actualException =
+                Assertions.assertThrows(MonthlyTotalNotFoundException.class, () ->
+                        auditReport.getPreviousBalance(expectedMonth, expectedYear));
+        String expectedErrorMessage =
+                String.format("MonthlyTotal - PreviousBalance not found for month %s and Year %s",
+                        expectedMonth, expectedYear);
+        Assertions.assertEquals(expectedErrorMessage,
+                actualException.getMessage());
+        Assertions.assertEquals(404, actualException.getStatusCode());
+    }
+
+    @Test
+    void testGetPreviousBalance_returnsCorrectValue() {
+        EasyRandom easyRandom = new EasyRandom();
+        MonthlyTotal expectedMonthlyTotal = easyRandom.nextObject(MonthlyTotal.class);
+        when(auditReportMapper.getPreviousBalanceFromMonthAndYear(expectedMonth, expectedYear))
+                .thenReturn(expectedMonthlyTotal);
+
+        double actualResult = auditReport.getPreviousBalance(expectedMonth, expectedYear);
+        Assertions.assertEquals(expectedMonthlyTotal.getTotal(), actualResult);
+    }
+
+    @Test
+    void testAreMonthsValid_throwsIllegalException_whenFromMonth_notValid() {
+        int notValidFromMonth = 13;
+
+        //checkArgument is static, easiest way to test is through real class
+        AuditReportImpl realImpl = new AuditReportImpl();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            realImpl.areMonthsValid(notValidFromMonth, expectedMonth);
+        });
+    }
+
+    @Test
+    void testAreMonthsValid_throwsIllegalException_whenToMonth_notValid() {
+        int notValidToMonth = 13;
+
+        //checkArgument is static, easiest way to test is through real class
+        AuditReportImpl realImpl = new AuditReportImpl();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            realImpl.areMonthsValid(expectedMonth, notValidToMonth);
+        });
     }
 }
