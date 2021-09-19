@@ -60,6 +60,8 @@ public class ServiceImpl {
     }
 
     public Collection<Attendance> getAttendanceListByServiceId(int idService) {
+        //todo: validate service exists
+
         //get/select all personas and set attendance false
         List<Persona> personas = personaMapper.selectAllPersonas();
 

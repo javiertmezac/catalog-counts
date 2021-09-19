@@ -13,12 +13,15 @@ import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumApiImpl;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApi;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApiImpl;
 import com.jtmc.apps.reforma.api.v1.exception.ExcelImportGenericExceptionMapper;
+import com.jtmc.apps.reforma.api.v1.exception.ImplementationGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.exception.RepositoryGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.exception.RuntimeGenericExceptionMapper;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckImpl;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaApi;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaApiImpl;
+import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApi;
+import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApiImpl;
 import com.jtmc.apps.reforma.api.v1.service.ServiceApi;
 import com.jtmc.apps.reforma.api.v1.service.ServiceApiImpl;
 import com.jtmc.apps.reforma.infrastructure.GuiceApplication;
@@ -52,6 +55,7 @@ public class Launcher {
             bind(PersonaApi.class).to(PersonaApiImpl.class);
             bind(ServiceApi.class).to(ServiceApiImpl.class);
             bind(CatalogCountEnumApi.class).to(CatalogCountEnumApiImpl.class);
+            bind(AuditReportApi.class).to(AuditReportApiImpl.class);
         }
     }
 
@@ -72,10 +76,12 @@ public class Launcher {
                     injector.getInstance(PersonaApi.class),
                     injector.getInstance(ServiceApi.class),
                     injector.getInstance(CatalogCountEnumApi.class),
+                    injector.getInstance(AuditReportApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),
-                    injector.getInstance(ExcelImportGenericExceptionMapper.class)
+                    injector.getInstance(ExcelImportGenericExceptionMapper.class),
+                    injector.getInstance(ImplementationGenericExceptionMapper.class)
             );
         }
     }
