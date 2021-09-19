@@ -71,9 +71,9 @@ public class AuditReportApiImpl implements AuditReportApi {
 
         //todo: change this part and get values from DB?
         response.setComments("This is an audit report");
-        response.setAuditor("Ulises Cardenas");
+        response.setAuditor("[placeholder]");
         response.setTreasurer("Javier Trinidad Meza Cazarez");
-        response.setSecretary("Mirna Mendoza");
+        response.setSecretary("[placeholder]");
         return response;
     }
 
