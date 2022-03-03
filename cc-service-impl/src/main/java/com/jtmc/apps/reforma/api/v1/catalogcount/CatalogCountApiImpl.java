@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CatalogCountApiImpl implements CatalogCountApi {
-    private Logger LOGGER = LoggerFactory.getLogger(CatalogCountApiImpl.class);
+    final private Logger LOGGER = LoggerFactory.getLogger(CatalogCountApiImpl.class);
 
     @Inject
     private CatalogCountImpl catalogCountImpl;
@@ -27,7 +27,8 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         responseList.setSaldoAnterior(catalogCountImpl.getCorrespondingTotal());
 
         double total = responseList.getSaldoAnterior();
-        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllRecordsWithTotalColumn(total));
+//        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllRecordsWithTotalColumn(total));
+        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumn());
 
         return responseList;
     }
