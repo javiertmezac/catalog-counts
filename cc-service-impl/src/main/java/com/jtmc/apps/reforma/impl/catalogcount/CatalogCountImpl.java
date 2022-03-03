@@ -69,6 +69,7 @@ public class CatalogCountImpl {
         return responseList;
     }
 
+    //todo: this convertMethod should not be happening in backend.. remove it and use date pipe in frontend
     private LocalDate convertToGMTMinus07Zone(long epochSec) {
         ZoneId zoneId = ZoneId.of("-7");
         ZonedDateTime zonedDateTime = Instant.ofEpochSecond(epochSec).atZone(zoneId);
