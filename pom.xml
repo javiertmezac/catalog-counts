@@ -21,6 +21,7 @@
         <module>cc-service-impl</module>
         <module>cc-service-server</module>
         <module>cc-service-api</module>
+        <module>cc-service-mybatis-dynamic-sql</module>
     </modules>
 
     <dependencies>
