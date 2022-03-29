@@ -24,7 +24,7 @@ public class CatalogCountMapperProvider {
                 .FROM(tableName + " as cc ")
                 .INNER_JOIN("catalog_count_enum as cce on cc.catalogCountEnumId = cce.id")
                 .WHERE("cc.isDeleted = false")
-                .ORDER_BY("registrationDate desc")
+                .ORDER_BY("registrationDate asc")
                 .toString();
     }
 

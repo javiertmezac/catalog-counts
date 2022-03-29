@@ -32,3 +32,11 @@
 
 ## How to set CC-Service Version
 `mvn versions:set -DnewVersion= < version >`
+
+## Local Development
+`mysql.server start`
+
+### Environment Variables
+```text
+JDBC_USERNAME=root; JDBC_PASSWORD=Password1; JDBC_URL=jdbc:mysql://localhost:3306/catalog_count?serverTimezone\=UTC
+```

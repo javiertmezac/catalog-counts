@@ -7,13 +7,19 @@ import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
 import org.mybatis.guice.transactional.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CatalogCountImpl {
+    final private Logger LOGGER = LoggerFactory.getLogger(CatalogCountImpl.class);
 
     @Inject
     private MonthlyTotalMapper monthlyTotalMapper;
@@ -40,10 +46,30 @@ public class CatalogCountImpl {
                     total
             ));
         }
-
         return responseList;
     }
 
+    public List<CatalogCountResponse> selectAllWithTotalColumn() {
+        Collection<CatalogCount> catalogCounts = catalogCountRepository.selectAll();
+        final double[] total = {0};
+        Stream<CatalogCountResponse> catalogCountResponseStream = catalogCounts.stream().map((cc) -> {
+            total[0] = calculateTotalColumn(cc, total[0]);
+            return new CatalogCountResponse(
+                    cc.getId(),
+                    convertToGMTMinus07Zone(cc.getRegistrationDate().getEpochSecond()).toString(),
+                    cc.getCatalogCountEnum().getCatalogCountEnumDisplay(),
+                    cc.getAmount(),
+                    cc.getDetails(),
+                    total[0]
+            );
+        });
+
+        List<CatalogCountResponse> responseList = catalogCountResponseStream.collect(Collectors.toList());
+        Collections.reverse(responseList);
+        return responseList;
+    }
+
+    //todo: this convertMethod should not be happening in backend.. remove it and use date pipe in frontend
     private LocalDate convertToGMTMinus07Zone(long epochSec) {
         ZoneId zoneId = ZoneId.of("-7");
         ZonedDateTime zonedDateTime = Instant.ofEpochSecond(epochSec).atZone(zoneId);

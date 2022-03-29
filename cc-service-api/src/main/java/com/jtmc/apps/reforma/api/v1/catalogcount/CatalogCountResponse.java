@@ -1,10 +1,5 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import java.time.Instant;
-
 public class CatalogCountResponse  {
     private int id;
 
