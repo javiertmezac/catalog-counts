@@ -21,5 +21,9 @@
             <property name="virtualKeyColumns" value="id"/>
             <columnOverride column="registrationDate" javaType="java.time.Instant" />
         </table>
+        <table tableName="login" >
+            <property name="virtualKeyColumns" value="id"/>
+            <columnOverride column="registration" javaType="java.time.Instant" />
+        </table>
     </context>
 </generatorConfiguration>
