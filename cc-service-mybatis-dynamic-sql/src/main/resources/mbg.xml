@@ -1,0 +1,29 @@
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!--    MyBatis3DynamicSql-->
+    <context id="CatalogCountTables" targetRuntime="MyBatis3DynamicSql">
+
+        <plugin type="org.mybatis.generator.plugins.VirtualPrimaryKeyPlugin" />
+
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/catalog_count"
+                        userId="root"
+                        password="Password1"
+        />
+
+        <javaModelGenerator targetPackage="com.jtmc.apps.reforma.domain" targetProject="src/main/java"/>
+
+        <javaClientGenerator targetPackage="com.jtmc.apps.reforma.repository.mapper" targetProject="src/main/java"/>
+
+        <table tableName="catalog_count" >
+            <property name="virtualKeyColumns" value="id"/>
+            <columnOverride column="registrationDate" javaType="java.time.Instant" />
+        </table>
+        <table tableName="login" >
+            <property name="virtualKeyColumns" value="id"/>
+            <columnOverride column="registration" javaType="java.time.Instant" />
+        </table>
+    </context>
+</generatorConfiguration>
