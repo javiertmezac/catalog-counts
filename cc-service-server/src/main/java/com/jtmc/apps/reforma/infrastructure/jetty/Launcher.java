@@ -55,8 +55,8 @@ public class Launcher {
         @Override
         protected void configure() {
             install(new ServerModule());
-            install(new CCMybatisModule());
-            install(JdbcHelper.MySQL);
+//            install(new CCMybatisModule());
+//            install(JdbcHelper.MySQL);
 
             bind(HealthcheckApi.class).to(HealthcheckImpl.class);
             bind(CatalogCountApi.class).to(CatalogCountApiImpl.class);

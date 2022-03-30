@@ -1,4 +1,9 @@
 package com.jtmc.apps.reforma.impl.exception;
 
-public class UserNotFoundException extends RuntimeException {
+import com.jtmc.apps.reforma.repository.exception.RepositoryException;
+
+public class UserNotFoundException extends RepositoryException {
+    public UserNotFoundException(String message, int statusCode) {
+        super(message, statusCode);
+    }
 }
