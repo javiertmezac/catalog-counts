@@ -7,6 +7,8 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
 import com.jtmc.apps.reforma.api.filter.CorsFilter;
+import com.jtmc.apps.reforma.api.filter.JwtRequiredFilter;
+import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApi;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApiImpl;
 import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumApi;
@@ -84,6 +86,7 @@ public class Launcher {
 
             return Sets.newHashSet(
                     injector.getInstance(CorsFilter.class),
+                    injector.getInstance(JwtRequiredFilter.class),
                     injector.getInstance(HealthcheckApi.class),
                     injector.getInstance(CatalogCountApi.class),
                     injector.getInstance(ExcelImportApi.class),
