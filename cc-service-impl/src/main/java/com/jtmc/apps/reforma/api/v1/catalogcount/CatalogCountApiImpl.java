@@ -1,6 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 import com.google.inject.Inject;
+import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@JwtRequired
 public class CatalogCountApiImpl implements CatalogCountApi {
     final private Logger LOGGER = LoggerFactory.getLogger(CatalogCountApiImpl.class);
 
