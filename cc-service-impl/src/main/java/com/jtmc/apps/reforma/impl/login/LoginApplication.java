@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.domain.Login;
 import com.jtmc.apps.reforma.impl.exception.UserNotFoundException;
-import com.jtmc.apps.reforma.repository.mapper.LoginRepositoryImpl;
+import com.jtmc.apps.reforma.repository.LoginRepositoryImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.jackson.io.JacksonSerializer;
 import io.jsonwebtoken.security.Keys;

@@ -34,34 +34,34 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 @Mapper
 public interface BranchMapper {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.610051-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.065063-07:00", comments="Source Table: branch")
     BasicColumn[] selectList = BasicColumn.columnList(id, address, name, registration, status);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.602634-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.056095-07:00", comments="Source Table: branch")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     long count(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.603349-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.057185-07:00", comments="Source Table: branch")
     @DeleteProvider(type=SqlProviderAdapter.class, method="delete")
     int delete(DeleteStatementProvider deleteStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.603712-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.057716-07:00", comments="Source Table: branch")
     @InsertProvider(type=SqlProviderAdapter.class, method="insert")
     int insert(InsertStatementProvider<Branch> insertStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.604252-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.058569-07:00", comments="Source Table: branch")
     @InsertProvider(type=SqlProviderAdapter.class, method="insertMultiple")
     int insertMultiple(MultiRowInsertStatementProvider<Branch> multipleInsertStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.604679-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.059092-07:00", comments="Source Table: branch")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @ResultMap("BranchResult")
     Optional<Branch> selectOne(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.605137-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.059539-07:00", comments="Source Table: branch")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @Results(id="BranchResult", value = {
-        @Result(column="id", property="id", jdbcType=JdbcType.BIGINT, id=true),
+        @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
         @Result(column="address", property="address", jdbcType=JdbcType.VARCHAR),
         @Result(column="name", property="name", jdbcType=JdbcType.VARCHAR),
         @Result(column="registration", property="registration", jdbcType=JdbcType.TIMESTAMP),
@@ -69,28 +69,28 @@ public interface BranchMapper {
     })
     List<Branch> selectMany(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.606373-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.061037-07:00", comments="Source Table: branch")
     @UpdateProvider(type=SqlProviderAdapter.class, method="update")
     int update(UpdateStatementProvider updateStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.606668-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.061364-07:00", comments="Source Table: branch")
     default long count(CountDSLCompleter completer) {
         return MyBatis3Utils.countFrom(this::count, branch, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.606956-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.061686-07:00", comments="Source Table: branch")
     default int delete(DeleteDSLCompleter completer) {
         return MyBatis3Utils.deleteFrom(this::delete, branch, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.607264-07:00", comments="Source Table: branch")
-    default int deleteByPrimaryKey(Long id_) {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.062025-07:00", comments="Source Table: branch")
+    default int deleteByPrimaryKey(Integer id_) {
         return delete(c -> 
             c.where(id, isEqualTo(id_))
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.607667-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.062492-07:00", comments="Source Table: branch")
     default int insert(Branch record) {
         return MyBatis3Utils.insert(this::insert, record, branch, c ->
             c.map(id).toProperty("id")
@@ -101,7 +101,7 @@ public interface BranchMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.60858-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.063505-07:00", comments="Source Table: branch")
     default int insertMultiple(Collection<Branch> records) {
         return MyBatis3Utils.insertMultiple(this::insertMultiple, records, branch, c ->
             c.map(id).toProperty("id")
@@ -112,7 +112,7 @@ public interface BranchMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.609015-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.06396-07:00", comments="Source Table: branch")
     default int insertSelective(Branch record) {
         return MyBatis3Utils.insert(this::insert, record, branch, c ->
             c.map(id).toPropertyWhenPresent("id", record::getId)
@@ -123,34 +123,34 @@ public interface BranchMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.610819-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.066193-07:00", comments="Source Table: branch")
     default Optional<Branch> selectOne(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectOne(this::selectOne, selectList, branch, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.611444-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.066572-07:00", comments="Source Table: branch")
     default List<Branch> select(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectList(this::selectMany, selectList, branch, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.611933-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.067006-07:00", comments="Source Table: branch")
     default List<Branch> selectDistinct(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectDistinct(this::selectMany, selectList, branch, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.612305-07:00", comments="Source Table: branch")
-    default Optional<Branch> selectByPrimaryKey(Long id_) {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.067389-07:00", comments="Source Table: branch")
+    default Optional<Branch> selectByPrimaryKey(Integer id_) {
         return selectOne(c ->
             c.where(id, isEqualTo(id_))
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.612632-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.067707-07:00", comments="Source Table: branch")
     default int update(UpdateDSLCompleter completer) {
         return MyBatis3Utils.update(this::update, branch, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.612991-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.068059-07:00", comments="Source Table: branch")
     static UpdateDSL<UpdateModel> updateAllColumns(Branch record, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalTo(record::getId)
                 .set(address).equalTo(record::getAddress)
@@ -159,7 +159,7 @@ public interface BranchMapper {
                 .set(status).equalTo(record::getStatus);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.613449-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.068498-07:00", comments="Source Table: branch")
     static UpdateDSL<UpdateModel> updateSelectiveColumns(Branch record, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalToWhenPresent(record::getId)
                 .set(address).equalToWhenPresent(record::getAddress)
@@ -168,7 +168,7 @@ public interface BranchMapper {
                 .set(status).equalToWhenPresent(record::getStatus);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.614203-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.069183-07:00", comments="Source Table: branch")
     default int updateByPrimaryKey(Branch record) {
         return update(c ->
             c.set(address).equalTo(record::getAddress)
@@ -179,7 +179,7 @@ public interface BranchMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.614663-07:00", comments="Source Table: branch")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.069603-07:00", comments="Source Table: branch")
     default int updateByPrimaryKeySelective(Branch record) {
         return update(c ->
             c.set(address).equalToWhenPresent(record::getAddress)

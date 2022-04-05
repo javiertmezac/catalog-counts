@@ -4,67 +4,67 @@ import java.time.Instant;
 import javax.annotation.Generated;
 
 public class Persona {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.626998-07:00", comments="Source field: persona.id")
-    private Long id;
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.081891-07:00", comments="Source field: persona.id")
+    private Integer id;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627109-07:00", comments="Source field: persona.name")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.081994-07:00", comments="Source field: persona.name")
     private String name;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627209-07:00", comments="Source field: persona.lastname")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082102-07:00", comments="Source field: persona.lastname")
     private String lastname;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627311-07:00", comments="Source field: persona.registration")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082217-07:00", comments="Source field: persona.registration")
     private Instant registration;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627413-07:00", comments="Source field: persona.status")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082323-07:00", comments="Source field: persona.status")
     private Boolean status;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627038-07:00", comments="Source field: persona.id")
-    public Long getId() {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.081928-07:00", comments="Source field: persona.id")
+    public Integer getId() {
         return id;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627077-07:00", comments="Source field: persona.id")
-    public void setId(Long id) {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.081963-07:00", comments="Source field: persona.id")
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627142-07:00", comments="Source field: persona.name")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.08203-07:00", comments="Source field: persona.name")
     public String getName() {
         return name;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627179-07:00", comments="Source field: persona.name")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082069-07:00", comments="Source field: persona.name")
     public void setName(String name) {
         this.name = name;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627243-07:00", comments="Source field: persona.lastname")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082138-07:00", comments="Source field: persona.lastname")
     public String getLastname() {
         return lastname;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627281-07:00", comments="Source field: persona.lastname")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082176-07:00", comments="Source field: persona.lastname")
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627347-07:00", comments="Source field: persona.registration")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082254-07:00", comments="Source field: persona.registration")
     public Instant getRegistration() {
         return registration;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627381-07:00", comments="Source field: persona.registration")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082291-07:00", comments="Source field: persona.registration")
     public void setRegistration(Instant registration) {
         this.registration = registration;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627447-07:00", comments="Source field: persona.status")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082359-07:00", comments="Source field: persona.status")
     public Boolean getStatus() {
         return status;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.627488-07:00", comments="Source field: persona.status")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.082416-07:00", comments="Source field: persona.status")
     public void setStatus(Boolean status) {
         this.status = status;
     }

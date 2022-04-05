@@ -34,62 +34,62 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 @Mapper
 public interface RoleMapper {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634264-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089379-07:00", comments="Source Table: role")
     BasicColumn[] selectList = BasicColumn.columnList(id, description, registration, status);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633557-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.088583-07:00", comments="Source Table: role")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     long count(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633601-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.088633-07:00", comments="Source Table: role")
     @DeleteProvider(type=SqlProviderAdapter.class, method="delete")
     int delete(DeleteStatementProvider deleteStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633643-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.088701-07:00", comments="Source Table: role")
     @InsertProvider(type=SqlProviderAdapter.class, method="insert")
     int insert(InsertStatementProvider<Role> insertStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633684-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.088749-07:00", comments="Source Table: role")
     @InsertProvider(type=SqlProviderAdapter.class, method="insertMultiple")
     int insertMultiple(MultiRowInsertStatementProvider<Role> multipleInsertStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633725-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.088796-07:00", comments="Source Table: role")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @ResultMap("RoleResult")
     Optional<Role> selectOne(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633771-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.088845-07:00", comments="Source Table: role")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @Results(id="RoleResult", value = {
-        @Result(column="id", property="id", jdbcType=JdbcType.BIGINT, id=true),
+        @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
         @Result(column="description", property="description", jdbcType=JdbcType.VARCHAR),
         @Result(column="registration", property="registration", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="status", property="status", jdbcType=JdbcType.BIT)
     })
     List<Role> selectMany(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633852-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.088937-07:00", comments="Source Table: role")
     @UpdateProvider(type=SqlProviderAdapter.class, method="update")
     int update(UpdateStatementProvider updateStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633899-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.088991-07:00", comments="Source Table: role")
     default long count(CountDSLCompleter completer) {
         return MyBatis3Utils.countFrom(this::count, role, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633942-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089035-07:00", comments="Source Table: role")
     default int delete(DeleteDSLCompleter completer) {
         return MyBatis3Utils.deleteFrom(this::delete, role, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.633979-07:00", comments="Source Table: role")
-    default int deleteByPrimaryKey(Long id_) {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089073-07:00", comments="Source Table: role")
+    default int deleteByPrimaryKey(Integer id_) {
         return delete(c -> 
             c.where(id, isEqualTo(id_))
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634021-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089115-07:00", comments="Source Table: role")
     default int insert(Role record) {
         return MyBatis3Utils.insert(this::insert, record, role, c ->
             c.map(id).toProperty("id")
@@ -99,7 +99,7 @@ public interface RoleMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634084-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089182-07:00", comments="Source Table: role")
     default int insertMultiple(Collection<Role> records) {
         return MyBatis3Utils.insertMultiple(this::insertMultiple, records, role, c ->
             c.map(id).toProperty("id")
@@ -109,7 +109,7 @@ public interface RoleMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634148-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.08925-07:00", comments="Source Table: role")
     default int insertSelective(Role record) {
         return MyBatis3Utils.insert(this::insert, record, role, c ->
             c.map(id).toPropertyWhenPresent("id", record::getId)
@@ -119,34 +119,34 @@ public interface RoleMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634307-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089421-07:00", comments="Source Table: role")
     default Optional<Role> selectOne(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectOne(this::selectOne, selectList, role, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634348-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089462-07:00", comments="Source Table: role")
     default List<Role> select(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectList(this::selectMany, selectList, role, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634388-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.0895-07:00", comments="Source Table: role")
     default List<Role> selectDistinct(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectDistinct(this::selectMany, selectList, role, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634428-07:00", comments="Source Table: role")
-    default Optional<Role> selectByPrimaryKey(Long id_) {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089541-07:00", comments="Source Table: role")
+    default Optional<Role> selectByPrimaryKey(Integer id_) {
         return selectOne(c ->
             c.where(id, isEqualTo(id_))
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634473-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089584-07:00", comments="Source Table: role")
     default int update(UpdateDSLCompleter completer) {
         return MyBatis3Utils.update(this::update, role, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634511-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089623-07:00", comments="Source Table: role")
     static UpdateDSL<UpdateModel> updateAllColumns(Role record, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalTo(record::getId)
                 .set(description).equalTo(record::getDescription)
@@ -154,7 +154,7 @@ public interface RoleMapper {
                 .set(status).equalTo(record::getStatus);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634646-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.0897-07:00", comments="Source Table: role")
     static UpdateDSL<UpdateModel> updateSelectiveColumns(Role record, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalToWhenPresent(record::getId)
                 .set(description).equalToWhenPresent(record::getDescription)
@@ -162,7 +162,7 @@ public interface RoleMapper {
                 .set(status).equalToWhenPresent(record::getStatus);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634804-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.08981-07:00", comments="Source Table: role")
     default int updateByPrimaryKey(Role record) {
         return update(c ->
             c.set(description).equalTo(record::getDescription)
@@ -172,7 +172,7 @@ public interface RoleMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.634955-07:00", comments="Source Table: role")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.089926-07:00", comments="Source Table: role")
     default int updateByPrimaryKeySelective(Role record) {
         return update(c ->
             c.set(description).equalToWhenPresent(record::getDescription)

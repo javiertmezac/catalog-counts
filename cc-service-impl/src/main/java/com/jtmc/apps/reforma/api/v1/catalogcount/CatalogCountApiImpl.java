@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,12 +23,6 @@ public class CatalogCountApiImpl implements CatalogCountApi {
     @Override
     public CatalogCountResponseList getList() {
         CatalogCountResponseList responseList = new CatalogCountResponseList();
-        responseList.setCatalogCountResponseCollection(new ArrayList<>());
-
-        responseList.setSaldoAnterior(catalogCountImpl.getCorrespondingTotal());
-
-        double total = responseList.getSaldoAnterior();
-//        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllRecordsWithTotalColumn(total));
         responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumn());
 
         return responseList;
@@ -46,9 +39,9 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         CatalogCount catalogCount = new CatalogCount();
         catalogCount.setAmount(catalogCountRequest.getAmount());
         catalogCount.setDetails(catalogCountRequest.getDetails());
-        catalogCount.setCatalogCountEnumId(catalogCountRequest.getCatalogCountEnumId());
-        catalogCount.setDeleted(false);
-        catalogCount.setRegistrationDate(catalogCountRequest.getRegistrationDate());
+        catalogCount.setCatalogcountenumid(catalogCountRequest.getCatalogCountEnumId());
+        catalogCount.setIsdeleted(false);
+        catalogCount.setRegistration(catalogCountRequest.getRegistrationDate());
 
         catalogCountImpl.insertIntoCatalogCount(catalogCount);
         //todo: this is not Json type
@@ -66,8 +59,9 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
         return new CatalogCountResponse(
                 catalogCount.getId(),
-                catalogCount.getRegistrationDate().toString(),
-                catalogCount.getCatalogCountEnum().getCatalogCountEnumDisplay(),
+                catalogCount.getRegistration().toString(),
+                catalogCount.getCatalogcountenumid().toString(),
+//                catalogCount.getCatalogCountEnum().getCatalogCountEnumDisplay(),
                 catalogCount.getAmount(),
                 catalogCount.getDetails()
         );

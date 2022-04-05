@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS `persona_details` (
-  `id`              BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `personaId`       BIGINT(8) UNSIGNED NOT NULL,
-  `branchId`        BIGINT(8) UNSIGNED NOT NULL,
-  `roleId`          BIGINT(8) UNSIGNED NOT NULL,
+  `id`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `personaId`       INT UNSIGNED NOT NULL,
+  `branchId`        INT UNSIGNED NOT NULL,
+  `roleId`          INT UNSIGNED NOT NULL,
   `registration`    DATETIME NOT NULL,
   `status`          BOOLEAN NOT NULL,
   PRIMARY KEY (`id`),

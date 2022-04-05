@@ -34,65 +34,65 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 @Mapper
 public interface CatalogCountMapper {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.619065-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.074183-07:00", comments="Source Table: catalog_count")
     BasicColumn[] selectList = BasicColumn.columnList(id, registration, catalogcountenumid, amount, details, isdeleted, branchid);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.618083-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073121-07:00", comments="Source Table: catalog_count")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     long count(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.61814-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073174-07:00", comments="Source Table: catalog_count")
     @DeleteProvider(type=SqlProviderAdapter.class, method="delete")
     int delete(DeleteStatementProvider deleteStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.618202-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073228-07:00", comments="Source Table: catalog_count")
     @InsertProvider(type=SqlProviderAdapter.class, method="insert")
     int insert(InsertStatementProvider<CatalogCount> insertStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.618263-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.07328-07:00", comments="Source Table: catalog_count")
     @InsertProvider(type=SqlProviderAdapter.class, method="insertMultiple")
     int insertMultiple(MultiRowInsertStatementProvider<CatalogCount> multipleInsertStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.61832-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073333-07:00", comments="Source Table: catalog_count")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @ResultMap("CatalogCountResult")
     Optional<CatalogCount> selectOne(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.618383-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073394-07:00", comments="Source Table: catalog_count")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @Results(id="CatalogCountResult", value = {
-        @Result(column="id", property="id", jdbcType=JdbcType.BIGINT, id=true),
+        @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
         @Result(column="registration", property="registration", jdbcType=JdbcType.TIMESTAMP),
-        @Result(column="catalogCountEnumId", property="catalogcountenumid", jdbcType=JdbcType.BIGINT),
+        @Result(column="catalogCountEnumId", property="catalogcountenumid", jdbcType=JdbcType.INTEGER),
         @Result(column="amount", property="amount", jdbcType=JdbcType.DOUBLE),
         @Result(column="details", property="details", jdbcType=JdbcType.VARCHAR),
         @Result(column="isDeleted", property="isdeleted", jdbcType=JdbcType.BIT),
-        @Result(column="branchId", property="branchid", jdbcType=JdbcType.BIGINT)
+        @Result(column="branchId", property="branchid", jdbcType=JdbcType.INTEGER)
     })
     List<CatalogCount> selectMany(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.618497-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073494-07:00", comments="Source Table: catalog_count")
     @UpdateProvider(type=SqlProviderAdapter.class, method="update")
     int update(UpdateStatementProvider updateStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.618549-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073544-07:00", comments="Source Table: catalog_count")
     default long count(CountDSLCompleter completer) {
         return MyBatis3Utils.countFrom(this::count, catalogCount, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.618601-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073598-07:00", comments="Source Table: catalog_count")
     default int delete(DeleteDSLCompleter completer) {
         return MyBatis3Utils.deleteFrom(this::delete, catalogCount, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.61865-07:00", comments="Source Table: catalog_count")
-    default int deleteByPrimaryKey(Long id_) {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073648-07:00", comments="Source Table: catalog_count")
+    default int deleteByPrimaryKey(Integer id_) {
         return delete(c -> 
             c.where(id, isEqualTo(id_))
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.618703-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.0737-07:00", comments="Source Table: catalog_count")
     default int insert(CatalogCount record) {
         return MyBatis3Utils.insert(this::insert, record, catalogCount, c ->
             c.map(id).toProperty("id")
@@ -105,7 +105,7 @@ public interface CatalogCountMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.618791-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073821-07:00", comments="Source Table: catalog_count")
     default int insertMultiple(Collection<CatalogCount> records) {
         return MyBatis3Utils.insertMultiple(this::insertMultiple, records, catalogCount, c ->
             c.map(id).toProperty("id")
@@ -118,7 +118,7 @@ public interface CatalogCountMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.61889-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.073932-07:00", comments="Source Table: catalog_count")
     default int insertSelective(CatalogCount record) {
         return MyBatis3Utils.insert(this::insert, record, catalogCount, c ->
             c.map(id).toPropertyWhenPresent("id", record::getId)
@@ -131,34 +131,34 @@ public interface CatalogCountMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.61912-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.07426-07:00", comments="Source Table: catalog_count")
     default Optional<CatalogCount> selectOne(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectOne(this::selectOne, selectList, catalogCount, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.619237-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.074316-07:00", comments="Source Table: catalog_count")
     default List<CatalogCount> select(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectList(this::selectMany, selectList, catalogCount, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.619296-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.074371-07:00", comments="Source Table: catalog_count")
     default List<CatalogCount> selectDistinct(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectDistinct(this::selectMany, selectList, catalogCount, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.619362-07:00", comments="Source Table: catalog_count")
-    default Optional<CatalogCount> selectByPrimaryKey(Long id_) {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.074424-07:00", comments="Source Table: catalog_count")
+    default Optional<CatalogCount> selectByPrimaryKey(Integer id_) {
         return selectOne(c ->
             c.where(id, isEqualTo(id_))
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.619426-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.07448-07:00", comments="Source Table: catalog_count")
     default int update(UpdateDSLCompleter completer) {
         return MyBatis3Utils.update(this::update, catalogCount, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.619484-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.074534-07:00", comments="Source Table: catalog_count")
     static UpdateDSL<UpdateModel> updateAllColumns(CatalogCount record, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalTo(record::getId)
                 .set(registration).equalTo(record::getRegistration)
@@ -169,7 +169,7 @@ public interface CatalogCountMapper {
                 .set(branchid).equalTo(record::getBranchid);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.619611-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.074647-07:00", comments="Source Table: catalog_count")
     static UpdateDSL<UpdateModel> updateSelectiveColumns(CatalogCount record, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalToWhenPresent(record::getId)
                 .set(registration).equalToWhenPresent(record::getRegistration)
@@ -180,7 +180,7 @@ public interface CatalogCountMapper {
                 .set(branchid).equalToWhenPresent(record::getBranchid);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.619757-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.074778-07:00", comments="Source Table: catalog_count")
     default int updateByPrimaryKey(CatalogCount record) {
         return update(c ->
             c.set(registration).equalTo(record::getRegistration)
@@ -193,7 +193,7 @@ public interface CatalogCountMapper {
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.619884-07:00", comments="Source Table: catalog_count")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.07491-07:00", comments="Source Table: catalog_count")
     default int updateByPrimaryKeySelective(CatalogCount record) {
         return update(c ->
             c.set(registration).equalToWhenPresent(record::getRegistration)

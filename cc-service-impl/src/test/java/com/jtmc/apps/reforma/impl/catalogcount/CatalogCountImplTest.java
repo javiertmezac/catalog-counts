@@ -4,7 +4,6 @@ import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
-import com.jtmc.apps.reforma.repository.ICatalogCountRepository;
 import com.jtmc.apps.reforma.repository.exception.RepositoryException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +16,7 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,17 +39,17 @@ class CatalogCountImplTest {
 
     @Test
     void testSelectAllRecords_callsRepository() {
-       catalogCountImpl.selectAllRecordsWithTotalColumn(expectedTotal);
-       verify(catalogCountRepository).selectAll();
+       catalogCountImpl.selectAllWithTotalColumn();
+       verify(catalogCountRepository).selectAllByBranch(anyInt());
     }
 
     @Test
     void testSelectAllRecords_shouldPropagateException() {
 
-        when(catalogCountRepository.selectAll()).thenThrow(RepositoryException.class);
+        when(catalogCountRepository.selectAllByBranch(anyInt())).thenThrow(RepositoryException.class);
 
         RepositoryException actualException = Assertions.assertThrows(RepositoryException.class,
-                () -> catalogCountRepository.selectAll());
+                () -> catalogCountRepository.selectAllByBranch(0));
 
         Assertions.assertNotNull(actualException);
     }
@@ -58,39 +58,34 @@ class CatalogCountImplTest {
     void testSelectAllRecords_returnsCorrectList_withCorrectTotalColumn() {
         double initialTotal = 1000.50;
         //todo: easyRandom
-        CatalogCountEnum enum1 = new CatalogCountEnum();
-        enum1.setId(1);
+        Integer enum1 = 1;
 
         CatalogCount catalogCount1 = new CatalogCount();
         catalogCount1.setId(1);
-        catalogCount1.setAmount(500);
-        catalogCount1.setCatalogCountEnum(enum1);
-        catalogCount1.setRegistrationDate(Instant.now());
+        catalogCount1.setAmount(500.00);
+        catalogCount1.setCatalogcountenumid(enum1);
+        catalogCount1.setRegistration(Instant.now());
         double expectedTotalForCatalogCount1 = 1250.00;
-        LocalDate expectedLocalDate1 = convertToGMTMinus07Zone(catalogCount1.getRegistrationDate().getEpochSecond());
+        LocalDate expectedLocalDate1 = convertToGMTMinus07Zone(catalogCount1.getRegistration().getEpochSecond());
 
-        CatalogCountEnum enum2 = new CatalogCountEnum();
-        enum2.setId(5);
+        Integer  enum2 = 5;
 
         CatalogCount catalogCount2 = new CatalogCount();
         catalogCount2.setId(2);
         catalogCount2.setAmount(300.50);
-        catalogCount2.setCatalogCountEnum(enum2);
-        catalogCount2.setRegistrationDate(Instant.now().minus(Period.ofDays(3)));
+        catalogCount2.setCatalogcountenumid(enum2);
+        catalogCount2.setRegistration(Instant.now().minus(Period.ofDays(3)));
         double expectedTotalForCatalogCount2 = 700.00;
-        LocalDate expectedLocalDate2 = convertToGMTMinus07Zone(catalogCount2.getRegistrationDate().getEpochSecond());
+        LocalDate expectedLocalDate2 = convertToGMTMinus07Zone(catalogCount2.getRegistration().getEpochSecond());
 
-
-        CatalogCountEnum enum3 = new CatalogCountEnum();
-        enum3.setId(3);
-
+        Integer enum3 = 3;
         CatalogCount catalogCount3 = new CatalogCount();
         catalogCount3.setId(3);
-        catalogCount3.setAmount(50);
-        catalogCount3.setCatalogCountEnum(enum3);
-        catalogCount3.setRegistrationDate(Instant.now().minus(Period.ofDays(1)));
+        catalogCount3.setAmount(50.00);
+        catalogCount3.setCatalogcountenumid(enum3);
+        catalogCount3.setRegistration(Instant.now().minus(Period.ofDays(1)));
         double expectedTotalForCatalogCount3 = 750.00;
-        LocalDate expectedLocalDate3 = convertToGMTMinus07Zone(catalogCount3.getRegistrationDate().getEpochSecond());
+        LocalDate expectedLocalDate3 = convertToGMTMinus07Zone(catalogCount3.getRegistration().getEpochSecond());
 
         List<CatalogCount> catalogCounts = new ArrayList<>();
         catalogCounts.add(catalogCount1);
@@ -98,10 +93,10 @@ class CatalogCountImplTest {
         catalogCounts.add(catalogCount2);
         int expectedRecordsSize = catalogCounts.size();
 
-        when(catalogCountRepository.selectAll()).thenReturn(catalogCounts);
+        when(catalogCountRepository.selectAllByBranch(anyInt())).thenReturn(catalogCounts);
 
         //todo: make sure which structure keeps order of the records
-        List<CatalogCountResponse> actualResponse = catalogCountImpl.selectAllRecordsWithTotalColumn(initialTotal);
+        List<CatalogCountResponse> actualResponse = catalogCountImpl.selectAllWithTotalColumn();
 
         Assertions.assertNotNull(actualResponse);
         Assertions.assertEquals(expectedRecordsSize, actualResponse.size());

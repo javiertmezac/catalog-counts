@@ -57,14 +57,14 @@ public class Launcher {
         @Override
         protected void configure() {
             install(new ServerModule());
-//            install(new CCMybatisModule());
+            install(new CCMybatisModule());
 //            install(JdbcHelper.MySQL);
 
             bind(HealthcheckApi.class).to(HealthcheckImpl.class);
             bind(CatalogCountApi.class).to(CatalogCountApiImpl.class);
             bind(ExcelImportApi.class).to(ExcelImportApiImpl.class);
-            bind(PersonaApi.class).to(PersonaApiImpl.class);
-            bind(ServiceApi.class).to(ServiceApiImpl.class);
+//            bind(PersonaApi.class).to(PersonaApiImpl.class);
+//            bind(ServiceApi.class).to(ServiceApiImpl.class);
             bind(CatalogCountEnumApi.class).to(CatalogCountEnumApiImpl.class);
             bind(AuditReportApi.class).to(AuditReportApiImpl.class);
             bind(LoginApi.class).to(LoginApiImpl.class);
@@ -90,8 +90,8 @@ public class Launcher {
                     injector.getInstance(HealthcheckApi.class),
                     injector.getInstance(CatalogCountApi.class),
                     injector.getInstance(ExcelImportApi.class),
-                    injector.getInstance(PersonaApi.class),
-                    injector.getInstance(ServiceApi.class),
+//                    injector.getInstance(PersonaApi.class),
+//                    injector.getInstance(ServiceApi.class),
                     injector.getInstance(CatalogCountEnumApi.class),
                     injector.getInstance(AuditReportApi.class),
                     injector.getInstance(LoginApi.class),
