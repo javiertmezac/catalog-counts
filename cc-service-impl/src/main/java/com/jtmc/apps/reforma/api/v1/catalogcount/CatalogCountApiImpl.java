@@ -21,7 +21,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
     private CatalogCountImpl catalogCountImpl;
 
     @Override
-    public CatalogCountResponseList getList() {
+    public CatalogCountResponseList getList(Integer branchId) {
         CatalogCountResponseList responseList = new CatalogCountResponseList();
         responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumn());
 
@@ -30,10 +30,11 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
 
     @Override
-    public Response insert(CatalogCountRequest catalogCountRequest) {
+    public Response insert(Integer branchId, CatalogCountRequest catalogCountRequest) {
 
         checkNotNull(catalogCountRequest, "request object cannot be null");
-        checkNotNull(catalogCountRequest.getRegistrationDate(), "registrationDate is not provided");
+        checkNotNull(catalogCountRequest.getRegistrationDate(), "registration is not provided");
+        checkNotNull(branchId, "branch is not provided");
         checkArgument(StringUtils.isNotBlank(catalogCountRequest.getDetails()), "please provide some details");
 
         CatalogCount catalogCount = new CatalogCount();
@@ -42,13 +43,13 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         catalogCount.setCatalogcountenumid(catalogCountRequest.getCatalogCountEnumId());
         catalogCount.setIsdeleted(false);
         catalogCount.setRegistration(catalogCountRequest.getRegistrationDate());
+        catalogCount.setBranchid(branchId);
 
         catalogCountImpl.insertIntoCatalogCount(catalogCount);
-        //todo: this is not Json type
         return Response.noContent().build();
     }
 
-    public CatalogCountResponse getCatalogCount(int id) {
+    public CatalogCountResponse getCatalogCount(Integer branchId, int id) {
         LOGGER.info("CatalogCountId payload: {} ", id);
 
         CatalogCount catalogCount = catalogCountImpl.selectOneRecord(id);
@@ -68,7 +69,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
     }
 
     //todo: should have a test to verify logicalDelete was done correctly
-    public Response logicalDeleteRecord(int id) {
+    public Response logicalDeleteRecord(Integer branchId, int id) {
         LOGGER.info("CatalogCountId to be deleted: {}", id);
 
         catalogCountImpl.logicalDeleteRecord(id);
