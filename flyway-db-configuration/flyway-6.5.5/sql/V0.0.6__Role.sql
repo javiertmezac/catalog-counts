@@ -1,7 +1,6 @@
-CREATE TABLE IF NOT EXISTS `persona` (
+CREATE TABLE IF NOT EXISTS `role` (
   `id`              BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name`            VARCHAR(64) NOT NULL,
-  `lastname`        VARCHAR(64) NOT NULL,
+  `description`     VARCHAR(64) NOT NULL,
   `registration`    DATETIME NOT NULL,
   `status`          BOOLEAN NOT NULL,
   PRIMARY KEY (`id`)

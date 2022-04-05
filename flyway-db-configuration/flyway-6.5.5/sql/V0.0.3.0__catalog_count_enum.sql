@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `catalog_count_enum` (
   `id`                  BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
   `identifier`          VARCHAR(64)        NOT NULL,
+  `family`              VARCHAR(64)        NULL,
   `name`                VARCHAR(64)        NOT NULL,
   `description`         VARCHAR(150),
   `type`                BOOLEAN DEFAULT FALSE,
