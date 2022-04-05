@@ -1,6 +1,4 @@
 
-alter table catalog_count_enum add column family varchar(30) after identifier;
-
  update catalog_count_enum set family = "tithes" where identifier = ('1.1');
  update catalog_count_enum set family = "donations" where identifier = ('1.2');
  update catalog_count_enum set family = "offerings" where identifier = ('1.3');

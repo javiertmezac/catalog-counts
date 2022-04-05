@@ -1,3 +1,16 @@
+CREATE TABLE IF NOT EXISTS `catalog_count_enum` (
+  `id`                  BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `identifier`          VARCHAR(64)        NOT NULL,
+  `family`              VARCHAR(64)        NULL,
+  `name`                VARCHAR(64)        NOT NULL,
+  `description`         VARCHAR(150),
+  `type`                BOOLEAN DEFAULT FALSE,
+  `isDeleted`           BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY (`id`)
+)
+  DEFAULT CHARSET =utf8
+  COLLATE =utf8_unicode_ci;
+
 -- INGRESOS
 INSERT INTO catalog_count_enum
 (
