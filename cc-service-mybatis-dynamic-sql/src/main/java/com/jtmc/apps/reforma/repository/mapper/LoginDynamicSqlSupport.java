@@ -7,30 +7,30 @@ import org.mybatis.dynamic.sql.SqlColumn;
 import org.mybatis.dynamic.sql.SqlTable;
 
 public final class LoginDynamicSqlSupport {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-03-28T19:02:13.291235-07:00", comments="Source Table: login")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.624411-07:00", comments="Source Table: login")
     public static final Login login = new Login();
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-03-28T19:02:13.291685-07:00", comments="Source field: login.id")
-    public static final SqlColumn<Integer> id = login.id;
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.624582-07:00", comments="Source field: login.id")
+    public static final SqlColumn<Long> id = login.id;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-03-28T19:02:13.29206-07:00", comments="Source field: login.password")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.624659-07:00", comments="Source field: login.password")
     public static final SqlColumn<String> password = login.password;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-03-28T19:02:13.292182-07:00", comments="Source field: login.username")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.624727-07:00", comments="Source field: login.username")
     public static final SqlColumn<String> username = login.username;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-03-28T19:02:13.292274-07:00", comments="Source field: login.status")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.624828-07:00", comments="Source field: login.status")
     public static final SqlColumn<Boolean> status = login.status;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-03-28T19:02:13.292365-07:00", comments="Source field: login.registration")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.624909-07:00", comments="Source field: login.registration")
     public static final SqlColumn<Instant> registration = login.registration;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-03-28T19:02:13.29245-07:00", comments="Source field: login.personaId")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.624995-07:00", comments="Source field: login.personaId")
     public static final SqlColumn<Long> personaid = login.personaid;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-03-28T19:02:13.29152-07:00", comments="Source Table: login")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T19:57:38.62448-07:00", comments="Source Table: login")
     public static final class Login extends SqlTable {
-        public final SqlColumn<Integer> id = column("id", JDBCType.INTEGER);
+        public final SqlColumn<Long> id = column("id", JDBCType.BIGINT);
 
         public final SqlColumn<String> password = column("password", JDBCType.VARCHAR);
 

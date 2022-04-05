@@ -8,7 +8,7 @@
         <plugin type="org.mybatis.generator.plugins.VirtualPrimaryKeyPlugin" />
 
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/catalog_count"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/catalog_count?serverTimezone=UTC"
                         userId="root"
                         password="Password1"
         />
@@ -17,11 +17,30 @@
 
         <javaClientGenerator targetPackage="com.jtmc.apps.reforma.repository.mapper" targetProject="src/main/java"/>
 
+        <table tableName="branch" >
+            <property name="virtualKeyColumns" value="id"/>
+            <columnOverride column="registration" javaType="java.time.Instant" />
+        </table>
         <table tableName="catalog_count" >
             <property name="virtualKeyColumns" value="id"/>
-            <columnOverride column="registrationDate" javaType="java.time.Instant" />
+            <columnOverride column="registration" javaType="java.time.Instant" />
+        </table>
+        <table tableName="catalog_count_enum" >
+            <property name="virtualKeyColumns" value="id"/>
         </table>
         <table tableName="login" >
+            <property name="virtualKeyColumns" value="id"/>
+            <columnOverride column="registration" javaType="java.time.Instant" />
+        </table>
+        <table tableName="persona" >
+            <property name="virtualKeyColumns" value="id"/>
+            <columnOverride column="registration" javaType="java.time.Instant" />
+        </table>
+        <table tableName="persona_details" >
+            <property name="virtualKeyColumns" value="id"/>
+            <columnOverride column="registration" javaType="java.time.Instant" />
+        </table>
+        <table tableName="role" >
             <property name="virtualKeyColumns" value="id"/>
             <columnOverride column="registration" javaType="java.time.Instant" />
         </table>

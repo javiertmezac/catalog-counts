@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `catalog_count` (
   `id`                  BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `registrationDate`    DATETIME               NOT NULL,
+  `registration`    DATETIME               NOT NULL,
   `catalogCountEnumId`  BIGINT(8) UNSIGNED NOT NULL,
   `amount`              DOUBLE             NOT NULL,
   `details`             VARCHAR(250)        NOT NULL,
