@@ -6,7 +6,6 @@ import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import com.jtmc.apps.reforma.domain.SumCatalogCountByFamily;
 import com.jtmc.apps.reforma.impl.exception.MonthlyTotalNotFoundException;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum.CatalogCountEnumMapper;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

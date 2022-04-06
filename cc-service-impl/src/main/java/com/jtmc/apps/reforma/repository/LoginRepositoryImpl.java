@@ -1,7 +1,8 @@
-package com.jtmc.apps.reforma.repository.mapper;
+package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Login;
+import com.jtmc.apps.reforma.repository.mapper.LoginMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
@@ -24,7 +25,6 @@ public class LoginRepositoryImpl {
                             c -> c.where(username, isEqualTo(inputUsername))
                                     .and(password, isEqualTo(inputPassword))
                     );
-
             return mapper.selectOne(statementProvider);
         }
     }

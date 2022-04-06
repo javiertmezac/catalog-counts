@@ -2,8 +2,7 @@ package com.jtmc.apps.reforma.guice;
 
 import com.google.inject.name.Names;
 import com.jtmc.apps.reforma.domain.CatalogCount;
-import com.jtmc.apps.reforma.repository.mapper.CatalogCountMapper;
-import com.jtmc.apps.reforma.repository.mapper.LoginMapper;
+import com.jtmc.apps.reforma.repository.mapper.*;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.guice.MyBatisModule;
 import org.mybatis.guice.datasource.builtin.PooledDataSourceProvider;
@@ -27,7 +26,12 @@ public class CCMybatisModule extends MyBatisModule {
 //
 //        Names.bindProperties(binder(), myBatisProperties);
 
+        addMapperClass(BranchMapper.class);
         addMapperClass(CatalogCountMapper.class);
+        addMapperClass(CatalogCountEnumMapper.class);
         addMapperClass(LoginMapper.class);
+        addMapperClass(PersonaMapper.class);
+        addMapperClass(PersonaDetailsMapper.class);
+        addMapperClass(RoleMapper.class);
     }
 }

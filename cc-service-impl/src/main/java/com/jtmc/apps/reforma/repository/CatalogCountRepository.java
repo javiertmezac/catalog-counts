@@ -1,37 +1,52 @@
 package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcount.CatalogCountMapper;
 import com.jtmc.apps.reforma.domain.CatalogCount;
-import com.jtmc.apps.reforma.repository.mybatis.exception.MyBatisRepositoryMapperException;
+import com.jtmc.apps.reforma.repository.mapper.CatalogCountDynamicSqlSupport;
+import com.jtmc.apps.reforma.repository.mapper.CatalogCountMapper;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.dynamic.sql.SqlBuilder;
 
 import java.util.Collection;
+import java.util.Optional;
+
 
 public class CatalogCountRepository implements ICatalogCountRepository {
 
     @Inject
-    private CatalogCountMapper mapper;
+    SqlSessionFactory sqlSessionFactory;
 
     @Override
-    public void insert(CatalogCount catalogCount) {
-        if(catalogCount == null) {
-            throw new MyBatisRepositoryMapperException("CatalogCount should not be null", 500);
+    public int insert(CatalogCount catalogCount) {
+        try(SqlSession session = sqlSessionFactory.openSession(true)) {
+            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
+            return mapper.insert(catalogCount);
         }
-        mapper.insertIntoCatalogCount(catalogCount);
     }
 
     @Override
-    public Collection<CatalogCount> selectAll() {
-        return mapper.selectAllRecords();
+    public Collection<CatalogCount> selectAllByBranch(Integer branchId) {
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
+            return mapper.select(c -> c.where(CatalogCountDynamicSqlSupport.branchid, SqlBuilder.isEqualTo(branchId)));
+        }
     }
 
     @Override
-    public void logicalDelete(int id) {
-        mapper.logicalDeleteRecord(id);
+    public int logicalDelete(CatalogCount catalogCount) {
+        try(SqlSession session = sqlSessionFactory.openSession(true)) {
+            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
+            catalogCount.setIsdeleted(true);
+            return mapper.updateByPrimaryKeySelective(catalogCount);
+        }
     }
 
     @Override
-    public CatalogCount selectOneRecord(int id) {
-        return mapper.selectOneRecord(id);
+    public Optional<CatalogCount> selectOneRecord(Integer catalogCountId) {
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
+            return mapper.selectByPrimaryKey(catalogCountId);
+        }
     }
 }

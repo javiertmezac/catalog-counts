@@ -3,13 +3,14 @@ package com.jtmc.apps.reforma.repository.mybatis;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.exception.RepositoryException;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcount.CatalogCountMapper;
+import com.jtmc.apps.reforma.repository.mapper.CatalogCountMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -31,7 +32,7 @@ class CatalogCountRepositoryTest {
     @Test
     void testInsert_shouldCall_myBatisInsertRepo() {
         myBatisRepository.insert(new CatalogCount());
-        verify(mapper).insertIntoCatalogCount(any(CatalogCount.class));
+        verify(mapper).insert(any(CatalogCount.class));
     }
 
     @Test
@@ -42,22 +43,24 @@ class CatalogCountRepositoryTest {
 
     @Test
     void selectAll() {
-        myBatisRepository.selectAll();
-        verify(mapper).selectAllRecords();
+        myBatisRepository.selectAllByBranch(0);
+        verify(mapper).select(SelectDSLCompleter.allRows());
     }
 
     @Test
     void logicalDelete() {
         int expectedValue = 9;
-        myBatisRepository.logicalDelete(expectedValue);
-        verify(mapper).logicalDeleteRecord(expectedValue);
+        CatalogCount cc = new CatalogCount();
+        cc.setId(expectedValue);
+        myBatisRepository.logicalDelete(cc);
+        verify(mapper).updateByPrimaryKeySelective(cc);
     }
 
     @Test
     void selectOneRecord() {
         int expectedValue = 4;
         myBatisRepository.selectOneRecord(expectedValue);
-        verify(mapper).selectOneRecord(expectedValue);
+        verify(mapper).selectByPrimaryKey(expectedValue);
     }
 
 }

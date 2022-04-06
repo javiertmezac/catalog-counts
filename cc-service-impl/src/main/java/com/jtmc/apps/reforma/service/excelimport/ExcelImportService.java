@@ -67,11 +67,11 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
                 }
 
                 CatalogCount catalogCount = new CatalogCount();
-                catalogCount.setRegistrationDate(Instant.ofEpochMilli(row.getCell(1).getDateCellValue().getTime()));
+                catalogCount.setRegistration(Instant.ofEpochMilli(row.getCell(1).getDateCellValue().getTime()));
 
                 CatalogCountEnum ccEnum = mapCatalogCountWithDB(row.getCell(2).getStringCellValue());
 
-                catalogCount.setCatalogCountEnumId(ccEnum.getId());
+                catalogCount.setCatalogcountenumid(ccEnum.getId());
                 catalogCount.setDetails(row.getCell(3).getStringCellValue());
 
                 if (ccEnum.isType()) {
@@ -79,7 +79,7 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
                 } else {
                     catalogCount.setAmount(row.getCell(5).getNumericCellValue());
                 }
-                catalogCount.setDeleted(false);
+                catalogCount.setIsdeleted(false);
 
                repository.insert(catalogCount);
             }

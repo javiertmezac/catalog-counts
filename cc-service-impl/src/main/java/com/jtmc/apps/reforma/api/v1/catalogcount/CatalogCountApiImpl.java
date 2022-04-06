@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -22,14 +21,8 @@ public class CatalogCountApiImpl implements CatalogCountApi {
     private CatalogCountImpl catalogCountImpl;
 
     @Override
-    public CatalogCountResponseList getList() {
+    public CatalogCountResponseList getList(Integer branchId) {
         CatalogCountResponseList responseList = new CatalogCountResponseList();
-        responseList.setCatalogCountResponseCollection(new ArrayList<>());
-
-        responseList.setSaldoAnterior(catalogCountImpl.getCorrespondingTotal());
-
-        double total = responseList.getSaldoAnterior();
-//        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllRecordsWithTotalColumn(total));
         responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumn());
 
         return responseList;
@@ -37,25 +30,26 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
 
     @Override
-    public Response insert(CatalogCountRequest catalogCountRequest) {
+    public Response insert(Integer branchId, CatalogCountRequest catalogCountRequest) {
 
         checkNotNull(catalogCountRequest, "request object cannot be null");
-        checkNotNull(catalogCountRequest.getRegistrationDate(), "registrationDate is not provided");
+        checkNotNull(catalogCountRequest.getRegistrationDate(), "registration is not provided");
+        checkNotNull(branchId, "branch is not provided");
         checkArgument(StringUtils.isNotBlank(catalogCountRequest.getDetails()), "please provide some details");
 
         CatalogCount catalogCount = new CatalogCount();
         catalogCount.setAmount(catalogCountRequest.getAmount());
         catalogCount.setDetails(catalogCountRequest.getDetails());
-        catalogCount.setCatalogCountEnumId(catalogCountRequest.getCatalogCountEnumId());
-        catalogCount.setDeleted(false);
-        catalogCount.setRegistrationDate(catalogCountRequest.getRegistrationDate());
+        catalogCount.setCatalogcountenumid(catalogCountRequest.getCatalogCountEnumId());
+        catalogCount.setIsdeleted(false);
+        catalogCount.setRegistration(catalogCountRequest.getRegistrationDate());
+        catalogCount.setBranchid(branchId);
 
         catalogCountImpl.insertIntoCatalogCount(catalogCount);
-        //todo: this is not Json type
         return Response.noContent().build();
     }
 
-    public CatalogCountResponse getCatalogCount(int id) {
+    public CatalogCountResponse getCatalogCount(Integer branchId, int id) {
         LOGGER.info("CatalogCountId payload: {} ", id);
 
         CatalogCount catalogCount = catalogCountImpl.selectOneRecord(id);
@@ -66,15 +60,16 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
         return new CatalogCountResponse(
                 catalogCount.getId(),
-                catalogCount.getRegistrationDate().toString(),
-                catalogCount.getCatalogCountEnum().getCatalogCountEnumDisplay(),
+                catalogCount.getRegistration().toString(),
+                catalogCount.getCatalogcountenumid().toString(),
+//                catalogCount.getCatalogCountEnum().getCatalogCountEnumDisplay(),
                 catalogCount.getAmount(),
                 catalogCount.getDetails()
         );
     }
 
     //todo: should have a test to verify logicalDelete was done correctly
-    public Response logicalDeleteRecord(int id) {
+    public Response logicalDeleteRecord(Integer branchId, int id) {
         LOGGER.info("CatalogCountId to be deleted: {}", id);
 
         catalogCountImpl.logicalDeleteRecord(id);

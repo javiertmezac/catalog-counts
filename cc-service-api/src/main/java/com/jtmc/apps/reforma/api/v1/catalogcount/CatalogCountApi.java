@@ -4,26 +4,26 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v1/catalog-count")
+@Path("/v1/branch")
 public interface CatalogCountApi {
 
     @GET
-    @Path("/")
+    @Path("/{branchId}/catalog-count")
     @Produces(MediaType.APPLICATION_JSON)
-    CatalogCountResponseList getList();
+    CatalogCountResponseList getList(@PathParam("branchId") Integer branchId);
 
     @POST
-    @Path("/")
+    @Path("/{branchId}/catalog-count")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insert(CatalogCountRequest catalogCountRequest);
+    Response insert(@PathParam("branchId") Integer branchId, CatalogCountRequest catalogCountRequest);
 
     @GET
-    @Path("/{catalogCountId}")
+    @Path("/{branchId}/catalog-count/{catalogCountId}")
     @Produces(MediaType.APPLICATION_JSON)
-    CatalogCountResponse getCatalogCount(@PathParam("catalogCountId") int id);
+    CatalogCountResponse getCatalogCount(@PathParam("branchId") Integer branchId, @PathParam("catalogCountId") int id);
 
     @DELETE
-    @Path("/{catalogCountId}")
-    Response logicalDeleteRecord(@PathParam("catalogCountId") int id);
+    @Path("/{branchId}/catalog-count/{catalogCountId}")
+    Response logicalDeleteRecord(@PathParam("branchId") Integer branchId, @PathParam("catalogCountId") int id);
 }

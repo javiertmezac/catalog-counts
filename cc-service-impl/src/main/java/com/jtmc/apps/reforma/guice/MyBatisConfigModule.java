@@ -2,14 +2,11 @@ package com.jtmc.apps.reforma.guice;
 
 import com.google.inject.name.Names;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
-import com.jtmc.apps.reforma.repository.mapper.LoginMapper;
+import com.jtmc.apps.reforma.repository.ICatalogCountEnumRepository;
+import com.jtmc.apps.reforma.repository.mapper.*;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcountenum.CatalogCountEnumMapper;
-import com.jtmc.apps.reforma.repository.ICatalogCountEnumRepository;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.catalogcount.CatalogCountMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.persona.PersonaMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.service.ServiceMapper;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
@@ -31,16 +28,18 @@ public class MyBatisConfigModule extends MyBatisModule {
         bindDataSourceProviderType(PooledDataSourceProvider.class);
         bindTransactionFactoryType(JdbcTransactionFactory.class);
 
-        addMapperClass(CatalogCountEnumMapper.class);
-        addMapperClass(CatalogCountMapper.class);
         addMapperClass(MonthlyTotalMapper.class);
-        addMapperClass(PersonaMapper.class);
         addMapperClass(AttendanceMapper.class);
         addMapperClass(ServiceMapper.class);
         addMapperClass(AuditReportMapper.class);
 
-        addMapperClass(com.jtmc.apps.reforma.repository.mapper.CatalogCountMapper.class);
-        addMapperClass(LoginMapper.class);
+//        addMapperClass(BranchMapper.class);
+//        addMapperClass(CatalogCountMapper.class);
+//        addMapperClass(CatalogCountEnumMapper.class);
+//        addMapperClass(LoginMapper.class);
+//        addMapperClass(PersonaMapper.class);
+//        addMapperClass(PersonaDetailsMapper.class);
+//        addMapperClass(RoleMapper.class);
 
         Names.bindProperties(binder(), setMyBatisProperties());
         bind(ICatalogCountEnumRepository.class).to(CatalogCountEnumRepository.class);
