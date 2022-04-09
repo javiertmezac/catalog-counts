@@ -1,6 +1,7 @@
 package com.jtmc.apps.reforma.domain;
 
 import com.google.gson.Gson;
+import com.jtmc.apps.reforma.domain.legacy.CatalogCountEnum;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,7 @@ public class CatalogCounts {
 
     private double amount;
     private String details;
-    private CatalogCountEnum countsEnum;
+    private com.jtmc.apps.reforma.domain.legacy.CatalogCountEnum countsEnum;
     private LocalDateTime registrationDateTime;
 
     public CatalogCounts() {
@@ -27,7 +28,7 @@ public class CatalogCounts {
         this.amount = amount;
     }
 
-    public CatalogCountEnum getCountsEnum() {
+    public com.jtmc.apps.reforma.domain.legacy.CatalogCountEnum getCountsEnum() {
         return countsEnum;
     }
 

@@ -1,6 +1,5 @@
 package com.jtmc.apps.reforma.api.v1.catalogcountenum;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import org.jeasy.random.EasyRandom;
@@ -14,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

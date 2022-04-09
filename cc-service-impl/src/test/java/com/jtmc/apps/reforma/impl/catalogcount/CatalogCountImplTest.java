@@ -2,7 +2,6 @@ package com.jtmc.apps.reforma.impl.catalogcount;
 
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.CatalogCount;
-import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.exception.RepositoryException;
 import org.junit.jupiter.api.Assertions;

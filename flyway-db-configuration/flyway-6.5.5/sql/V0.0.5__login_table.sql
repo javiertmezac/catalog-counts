@@ -10,5 +10,3 @@ CREATE TABLE IF NOT EXISTS `catalog_count`.`login` (
  )
   DEFAULT CHARSET =utf8
   COLLATE =utf8_unicode_ci;
-
--- insert into login(password, username, status, registration, personaId) values('Password1', 'jmeza', 1, current_timestamp(), 1)

@@ -1,7 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 import com.jtmc.apps.reforma.domain.CatalogCount;
-import com.jtmc.apps.reforma.domain.CatalogCountEnum;
+import com.jtmc.apps.reforma.domain.legacy.CatalogCountEnum;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import org.junit.Assert;
 import org.junit.Before;

@@ -30,10 +30,23 @@ public class CatalogCountRepository implements ICatalogCountRepository {
         try(SqlSession session = sqlSessionFactory.openSession()) {
             CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
             return mapper.select(c -> c.where(CatalogCountDynamicSqlSupport.branchid, SqlBuilder.isEqualTo(branchId))
-                    .and(CatalogCountDynamicSqlSupport.isdeleted, SqlBuilder.isFalse())
+                    .and(CatalogCountDynamicSqlSupport.isdeleted, SqlBuilder.isFalse()).orderBy(CatalogCountDynamicSqlSupport.registration)
             );
         }
     }
+
+
+//    public String selectAllCatalogCountRecordsSql () {
+//        return new SQL()
+//                .SELECT("cc.id as ccId , cc.registrationDate as ccRegistrationDate, cc.amount as ccAmount, " +
+//                        "cc.details as ccDetails, cc.isDeleted as ccIsDeleted, cce.id as cceId, " +
+//                        "cce.identifier as cceIdentifier, cce.name as cceName")
+//                .FROM(tableName + " as cc ")
+//                .INNER_JOIN("catalog_count_enum as cce on cc.catalogCountEnumId = cce.id")
+//                .WHERE("cc.isDeleted = false")
+//                .ORDER_BY("registrationDate asc")
+//                .toString();
+//    }
 
     @Override
     public int logicalDelete(CatalogCount catalogCount) {

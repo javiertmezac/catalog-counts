@@ -39,3 +39,5 @@ pom.xml.versionsBackup
 
 #excel example file
 excel-import/
+
+custom-sql-scripts.sql

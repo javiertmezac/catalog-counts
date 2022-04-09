@@ -1,7 +1,6 @@
 package com.jtmc.apps.reforma.api.v1.catalogcountenum;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 
