@@ -12,5 +12,3 @@ CREATE TABLE IF NOT EXISTS `persona_details` (
 )
   DEFAULT CHARSET =utf8
   COLLATE =utf8_unicode_ci;
-
---  insert into persona_details (personaId, branchId, roleId, registration, status) values(1,1,1,current_timestamp(), 1);

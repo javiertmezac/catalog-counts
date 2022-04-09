@@ -7,5 +7,3 @@ CREATE TABLE IF NOT EXISTS `role` (
 )
   DEFAULT CHARSET =utf8
   COLLATE =utf8_unicode_ci;
-
---  insert into role(description, registration, status) values('Tesorero Financiero', current_timestamp(), 1);
