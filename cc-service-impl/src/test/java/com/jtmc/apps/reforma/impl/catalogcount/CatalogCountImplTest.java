@@ -39,7 +39,7 @@ class CatalogCountImplTest {
 
     @Test
     void testSelectAllRecords_callsRepository() {
-       catalogCountImpl.selectAllWithTotalColumn();
+       catalogCountImpl.selectAllWithTotalColumn(0);
        verify(catalogCountRepository).selectAllByBranch(anyInt());
     }
 
@@ -96,7 +96,7 @@ class CatalogCountImplTest {
         when(catalogCountRepository.selectAllByBranch(anyInt())).thenReturn(catalogCounts);
 
         //todo: make sure which structure keeps order of the records
-        List<CatalogCountResponse> actualResponse = catalogCountImpl.selectAllWithTotalColumn();
+        List<CatalogCountResponse> actualResponse = catalogCountImpl.selectAllWithTotalColumn(0);
 
         Assertions.assertNotNull(actualResponse);
         Assertions.assertEquals(expectedRecordsSize, actualResponse.size());

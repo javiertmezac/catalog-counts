@@ -26,8 +26,7 @@ public class CatalogCountImpl {
     @Inject
     private CatalogCountRepository catalogCountRepository;
 
-    public List<CatalogCountResponse> selectAllWithTotalColumn() {
-        Integer branchId = 0;
+    public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
         Collection<CatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
         final double[] total = {0};
         Stream<CatalogCountResponse> catalogCountResponseStream = catalogCounts.stream().map((cc) -> {

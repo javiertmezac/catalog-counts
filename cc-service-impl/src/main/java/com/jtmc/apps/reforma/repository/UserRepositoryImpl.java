@@ -37,6 +37,12 @@ public class UserRepositoryImpl {
         Stream<Integer> rolesId = personaDetails.stream().map(PersonaDetails::getPersonaid);
         List<Integer> roles = rolesId.collect(Collectors.toList());
         userDetails.setRoles(roles);
+
+        //todo: for know default branch will be the first value
+        // for sure I know only one row per user will be registered in persona_details
+        // version 0.5.0
+        Optional<PersonaDetails> selectingBranch = personaDetails.stream().findFirst();
+        userDetails.setDefaultBranch(selectingBranch.isPresent() ? selectingBranch.get().getBranchid() : 0);
         return userDetails;
     }
 

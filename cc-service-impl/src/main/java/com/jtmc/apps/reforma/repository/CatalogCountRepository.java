@@ -29,7 +29,9 @@ public class CatalogCountRepository implements ICatalogCountRepository {
     public Collection<CatalogCount> selectAllByBranch(Integer branchId) {
         try(SqlSession session = sqlSessionFactory.openSession()) {
             CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
-            return mapper.select(c -> c.where(CatalogCountDynamicSqlSupport.branchid, SqlBuilder.isEqualTo(branchId)));
+            return mapper.select(c -> c.where(CatalogCountDynamicSqlSupport.branchid, SqlBuilder.isEqualTo(branchId))
+                    .and(CatalogCountDynamicSqlSupport.isdeleted, SqlBuilder.isFalse())
+            );
         }
     }
 

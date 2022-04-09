@@ -1,15 +1,17 @@
 package com.jtmc.apps.reforma.api.v1.user;
 
+import java.util.List;
+
 public class UserResponse {
-    private String[] roles;
+    private List<Integer> roles;
     private int defaultBranch;
     private String username;
 
-    public String[] getRoles() {
+    public List<Integer> getRoles() {
         return roles;
     }
 
-    public void setRoles(String[] roles) {
+    public void setRoles(List<Integer> roles) {
         this.roles = roles;
     }
 
