@@ -36,7 +36,7 @@ public class UserRepositoryImpl {
 
         //todo: what to return when no role is assigned?
         Collection<PersonaDetails> personaDetails = this.selectUserRoles(loggedInUser.get().getPersonaid());
-        Stream<Integer> rolesId = personaDetails.stream().map(PersonaDetails::getPersonaid);
+        Stream<Integer> rolesId = personaDetails.stream().map(PersonaDetails::getRoleid);
         List<Integer> roles = rolesId.collect(Collectors.toList());
         userDetails.setRoles(roles);
 
