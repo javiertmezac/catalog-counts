@@ -3,6 +3,7 @@ package com.jtmc.apps.reforma.impl.catalogcount;
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.CatalogCount;
+import com.jtmc.apps.reforma.domain.CustomCatalogCount;
 import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
@@ -26,9 +27,8 @@ public class CatalogCountImpl {
     @Inject
     private CatalogCountRepository catalogCountRepository;
 
-    public List<CatalogCountResponse> selectAllWithTotalColumn() {
-        Integer branchId = 0;
-        Collection<CatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
+    public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
+        Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
         final double[] total = {0};
         Stream<CatalogCountResponse> catalogCountResponseStream = catalogCounts.stream().map((cc) -> {
             total[0] = calculateTotalColumn(cc, total[0]);
@@ -36,7 +36,8 @@ public class CatalogCountImpl {
                     cc.getId(),
                     convertToGMTMinus07Zone(cc.getRegistration().getEpochSecond()).toString(),
 //                    cc.getCatalogCountEnum().getCatalogCountEnumDisplay(),
-                    cc.getCatalogcountenumid().toString(),
+//                    cc.getCatalogcountenumid().toString(),
+                    String.format("%s - %s", cc.getIdentifier(), cc.getName()),
                     cc.getAmount(),
                     cc.getDetails(),
                     total[0]

@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.domain;
+package com.jtmc.apps.reforma.domain.legacy;
 
 public class CatalogCountEnum {
     private int id;

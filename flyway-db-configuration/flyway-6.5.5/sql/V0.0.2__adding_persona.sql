@@ -8,5 +8,3 @@ CREATE TABLE IF NOT EXISTS `persona` (
 )
   DEFAULT CHARSET =utf8
   COLLATE =utf8_unicode_ci;
-
-  -- insert into persona(name, lastname, registration, status) values('Javier', 'Meza', current_timestamp(), 1)

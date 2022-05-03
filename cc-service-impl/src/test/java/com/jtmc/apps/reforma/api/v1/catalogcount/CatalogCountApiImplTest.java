@@ -1,7 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 import com.jtmc.apps.reforma.domain.CatalogCount;
-import com.jtmc.apps.reforma.domain.CatalogCountEnum;
+import com.jtmc.apps.reforma.domain.legacy.CatalogCountEnum;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -109,7 +109,7 @@ public class CatalogCountApiImplTest {
     @Test
     public void testGetList_shouldCall_catalogCountImpl_selectAllMethod() throws Exception {
         catalogCountApiImpl.getList(0);
-        verify(catalogCountImpl, times(1)).selectAllWithTotalColumn();
+        verify(catalogCountImpl, times(1)).selectAllWithTotalColumn(0);
     }
 
     @Test
@@ -133,7 +133,7 @@ public class CatalogCountApiImplTest {
 
         List<CatalogCountResponse> listOfCatalogCount = new ArrayList<>();
         listOfCatalogCount.add(expectedCatalogCountResponse);
-        when(catalogCountImpl.selectAllWithTotalColumn()).thenReturn(listOfCatalogCount);
+        when(catalogCountImpl.selectAllWithTotalColumn(0)).thenReturn(listOfCatalogCount);
 
         CatalogCountResponseList actualList = catalogCountApiImpl.getList(0);
 
@@ -144,7 +144,7 @@ public class CatalogCountApiImplTest {
         Assert.assertEquals(expectedDate.toString(), actualCatalogCountResponse.getRegistrationDate());
 
         verify(catalogCountImpl).getCorrespondingTotal();
-        verify(catalogCountImpl).selectAllWithTotalColumn();
+        verify(catalogCountImpl).selectAllWithTotalColumn(0);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class CatalogCountApiImplTest {
        doThrow(RuntimeException.class).when(catalogCountImpl).getCorrespondingTotal();
        Assertions.assertThrows(RuntimeException.class, () -> catalogCountApiImpl.getList(0));
 
-       verify(catalogCountImpl, never()).selectAllWithTotalColumn();
+       verify(catalogCountImpl, never()).selectAllWithTotalColumn(0);
     }
 
     /*

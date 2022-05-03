@@ -8,5 +8,3 @@ CREATE TABLE IF NOT EXISTS `catalog_count`.`branch` (
  )
   DEFAULT CHARSET =utf8
   COLLATE =utf8_unicode_ci;
-
---  insert into branch (address, name, registration, status) values('Alvaro Galvez', 'Reforma', current_timestamp(), true)

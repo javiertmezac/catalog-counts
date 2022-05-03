@@ -74,11 +74,12 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
                 catalogCount.setCatalogcountenumid(ccEnum.getId());
                 catalogCount.setDetails(row.getCell(3).getStringCellValue());
 
-                if (ccEnum.isType()) {
-                    catalogCount.setAmount(row.getCell(4).getNumericCellValue());
-                } else {
-                    catalogCount.setAmount(row.getCell(5).getNumericCellValue());
-                }
+                //todo: fix this isType().. what is the use of this?
+//                if (ccEnum.isType()) {
+//                    catalogCount.setAmount(row.getCell(4).getNumericCellValue());
+//                } else {
+//                    catalogCount.setAmount(row.getCell(5).getNumericCellValue());
+//                }
                 catalogCount.setIsdeleted(false);
 
                repository.insert(catalogCount);

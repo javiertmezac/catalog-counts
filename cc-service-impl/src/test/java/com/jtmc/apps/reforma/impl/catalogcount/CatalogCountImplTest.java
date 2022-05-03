@@ -2,7 +2,7 @@ package com.jtmc.apps.reforma.impl.catalogcount;
 
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.CatalogCount;
-import com.jtmc.apps.reforma.domain.CatalogCountEnum;
+import com.jtmc.apps.reforma.domain.CustomCatalogCount;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.exception.RepositoryException;
 import org.junit.jupiter.api.Assertions;
@@ -39,7 +39,7 @@ class CatalogCountImplTest {
 
     @Test
     void testSelectAllRecords_callsRepository() {
-       catalogCountImpl.selectAllWithTotalColumn();
+       catalogCountImpl.selectAllWithTotalColumn(0);
        verify(catalogCountRepository).selectAllByBranch(anyInt());
     }
 
@@ -60,7 +60,7 @@ class CatalogCountImplTest {
         //todo: easyRandom
         Integer enum1 = 1;
 
-        CatalogCount catalogCount1 = new CatalogCount();
+        CustomCatalogCount catalogCount1 = new CustomCatalogCount();
         catalogCount1.setId(1);
         catalogCount1.setAmount(500.00);
         catalogCount1.setCatalogcountenumid(enum1);
@@ -70,7 +70,7 @@ class CatalogCountImplTest {
 
         Integer  enum2 = 5;
 
-        CatalogCount catalogCount2 = new CatalogCount();
+        CustomCatalogCount catalogCount2 = new CustomCatalogCount();
         catalogCount2.setId(2);
         catalogCount2.setAmount(300.50);
         catalogCount2.setCatalogcountenumid(enum2);
@@ -79,7 +79,7 @@ class CatalogCountImplTest {
         LocalDate expectedLocalDate2 = convertToGMTMinus07Zone(catalogCount2.getRegistration().getEpochSecond());
 
         Integer enum3 = 3;
-        CatalogCount catalogCount3 = new CatalogCount();
+        CustomCatalogCount catalogCount3 = new CustomCatalogCount();
         catalogCount3.setId(3);
         catalogCount3.setAmount(50.00);
         catalogCount3.setCatalogcountenumid(enum3);
@@ -87,7 +87,7 @@ class CatalogCountImplTest {
         double expectedTotalForCatalogCount3 = 750.00;
         LocalDate expectedLocalDate3 = convertToGMTMinus07Zone(catalogCount3.getRegistration().getEpochSecond());
 
-        List<CatalogCount> catalogCounts = new ArrayList<>();
+        List<CustomCatalogCount> catalogCounts = new ArrayList<>();
         catalogCounts.add(catalogCount1);
         catalogCounts.add(catalogCount3);
         catalogCounts.add(catalogCount2);
@@ -96,7 +96,7 @@ class CatalogCountImplTest {
         when(catalogCountRepository.selectAllByBranch(anyInt())).thenReturn(catalogCounts);
 
         //todo: make sure which structure keeps order of the records
-        List<CatalogCountResponse> actualResponse = catalogCountImpl.selectAllWithTotalColumn();
+        List<CatalogCountResponse> actualResponse = catalogCountImpl.selectAllWithTotalColumn(0);
 
         Assertions.assertNotNull(actualResponse);
         Assertions.assertEquals(expectedRecordsSize, actualResponse.size());

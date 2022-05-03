@@ -18,6 +18,7 @@ public class LoginRepositoryImpl {
     private SqlSessionFactory sqlSessionFactory;
 
     public Optional<Login> selectUser(String inputUsername, String inputPassword){
+        //todo: both login and persona should be active
         try(SqlSession session = sqlSessionFactory.openSession()) {
             LoginMapper mapper = session.getMapper(LoginMapper.class);
             SelectStatementProvider statementProvider =

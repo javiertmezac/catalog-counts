@@ -22,8 +22,11 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
     @Override
     public CatalogCountResponseList getList(Integer branchId) {
+        checkNotNull(branchId);
+        checkArgument(branchId > 0, "Invalid BranchId");
+
         CatalogCountResponseList responseList = new CatalogCountResponseList();
-        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumn());
+        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumn(branchId));
 
         return responseList;
     }
