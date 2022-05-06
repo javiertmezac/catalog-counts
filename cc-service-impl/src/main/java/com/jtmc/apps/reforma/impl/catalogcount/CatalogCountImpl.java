@@ -4,25 +4,20 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
-import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
-import javassist.NotFoundException;
-import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CatalogCountImpl {
-    final private Logger LOGGER = LoggerFactory.getLogger(CatalogCountImpl.class);
-
-    @Inject
-    private MonthlyTotalMapper monthlyTotalMapper;
+    final private Logger logger = LoggerFactory.getLogger(CatalogCountImpl.class);
 
     @Inject
     private CatalogCountRepository catalogCountRepository;
@@ -34,9 +29,7 @@ public class CatalogCountImpl {
             total[0] = calculateTotalColumn(cc, total[0]);
             return new CatalogCountResponse(
                     cc.getId(),
-                    convertToGMTMinus07Zone(cc.getRegistration().getEpochSecond()).toString(),
-//                    cc.getCatalogCountEnum().getCatalogCountEnumDisplay(),
-//                    cc.getCatalogcountenumid().toString(),
+                    cc.getRegistration().toString(),
                     String.format("%s - %s", cc.getIdentifier(), cc.getName()),
                     cc.getAmount(),
                     cc.getDetails(),
@@ -49,39 +42,7 @@ public class CatalogCountImpl {
         return responseList;
     }
 
-    //todo: this convertMethod should not be happening in backend.. remove it and use date pipe in frontend
-    private LocalDate convertToGMTMinus07Zone(long epochSec) {
-        ZoneId zoneId = ZoneId.of("-7");
-        ZonedDateTime zonedDateTime = Instant.ofEpochSecond(epochSec).atZone(zoneId);
-        return zonedDateTime.toLocalDate();
-    }
-
-    //todo: re-think if this method should be here
-    public double getCorrespondingMonthlyTotal() {
-        int year = Year.now().getValue();
-        int month = Month.from(LocalDate.now()).getValue();
-        //todo: exception when sever is not available
-
-        MonthlyTotal monthlyTotal = monthlyTotalMapper.selectMonthlyTotal(year, month - 1);
-        if (monthlyTotal == null) {
-            //todo: find appropriate exception. Consider corresponding layer
-            throw new RuntimeException("MonthlyTotal null");
-        }
-        return monthlyTotal.getTotal();
-    }
-
-    public double getCorrespondingTotal() {
-        MonthlyTotal total = monthlyTotalMapper.selectTotal();
-
-        if (total == null) {
-            throw new RuntimeException("MonthlyTotal null");
-        }
-
-        return total.getTotal();
-    }
-
-
-    public double calculateTotalColumn(CatalogCount catalogCount, double saldo) {
+    private double calculateTotalColumn(CatalogCount catalogCount, double saldo) {
         //todo: this will only work if first 3 rows from CatalogCountEnum are "incoming values"
         int incomingEnums = 3;
         if (catalogCount.getCatalogcountenumid() <= incomingEnums)  {
@@ -95,6 +56,11 @@ public class CatalogCountImpl {
     @Transactional
     public void insertIntoCatalogCount(CatalogCount catalogCount) {
         catalogCountRepository.insert(catalogCount);
+    }
+
+    @Transactional
+    public void updateCatalogCount(CatalogCount catalogCount) {
+        catalogCountRepository.update(catalogCount);
     }
 
     public CatalogCount selectOneRecord(int id) {

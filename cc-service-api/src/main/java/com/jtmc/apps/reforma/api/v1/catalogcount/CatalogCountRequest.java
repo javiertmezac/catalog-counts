@@ -3,10 +3,19 @@ package com.jtmc.apps.reforma.api.v1.catalogcount;
 import java.time.Instant;
 
 public class CatalogCountRequest {
+    private int id;
     private int catalogCountEnumId;
     private double amount;
     private String details;
     private Instant registrationDate;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getCatalogCountEnumId() {
         return catalogCountEnumId;

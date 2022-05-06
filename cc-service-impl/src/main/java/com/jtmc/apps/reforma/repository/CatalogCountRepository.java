@@ -13,6 +13,8 @@ import org.mybatis.dynamic.sql.BasicColumn;
 import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +23,7 @@ import java.util.Optional;
 
 
 public class CatalogCountRepository implements ICatalogCountRepository {
+    private final Logger logger = LoggerFactory.getLogger(CatalogCountRepository.class);
 
     @Inject
     SqlSessionFactory sqlSessionFactory;
@@ -30,6 +33,17 @@ public class CatalogCountRepository implements ICatalogCountRepository {
         try(SqlSession session = sqlSessionFactory.openSession(true)) {
             CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
             return mapper.insert(catalogCount);
+        }
+    }
+
+    @Override
+    public int update(CatalogCount catalogCount) {
+        try(SqlSession session = sqlSessionFactory.openSession(true)) {
+            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
+            return mapper.updateByPrimaryKeySelective(catalogCount);
+        } catch (Exception ex) {
+            logger.error("{}", ex);
+            throw ex;
         }
     }
 
@@ -52,19 +66,6 @@ public class CatalogCountRepository implements ICatalogCountRepository {
             return mapper.selectMany(statementProvider);
         }
     }
-
-
-//    public String selectAllCatalogCountRecordsSql () {
-//        return new SQL()
-//                .SELECT("cc.id as ccId , cc.registrationDate as ccRegistrationDate, cc.amount as ccAmount, " +
-//                        "cc.details as ccDetails, cc.isDeleted as ccIsDeleted, cce.id as cceId, " +
-//                        "cce.identifier as cceIdentifier, cce.name as cceName")
-//                .FROM(tableName + " as cc ")
-//                .INNER_JOIN("catalog_count_enum as cce on cc.catalogCountEnumId = cce.id")
-//                .WHERE("cc.isDeleted = false")
-//                .ORDER_BY("registrationDate asc")
-//                .toString();
-//    }
 
     @Override
     public int logicalDelete(CatalogCount catalogCount) {

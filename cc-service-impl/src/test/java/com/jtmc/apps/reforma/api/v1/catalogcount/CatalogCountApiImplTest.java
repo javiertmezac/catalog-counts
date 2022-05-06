@@ -115,9 +115,6 @@ public class CatalogCountApiImplTest {
     @Test
     public void testGetList_shouldReturn_ExpectedValues_whenSelectAllRecords(){
 
-        double expectedSaldoAnterior = 0.0;
-        when(catalogCountImpl.getCorrespondingTotal()).thenReturn(expectedSaldoAnterior);
-
         Instant expectedDate = Instant.now();
         int expectedId = 3;
         String expectedCatalogCountEnumDescription = "random-value";
@@ -143,13 +140,11 @@ public class CatalogCountApiImplTest {
         Assert.assertEquals(expectedCatalogCountResponse.getDetails(), actualCatalogCountResponse.getDetails());
         Assert.assertEquals(expectedDate.toString(), actualCatalogCountResponse.getRegistrationDate());
 
-        verify(catalogCountImpl).getCorrespondingTotal();
         verify(catalogCountImpl).selectAllWithTotalColumn(0);
     }
 
     @Test
     public void testGetList_throwsException_whenNotAbleToGet_MonthlyTotal() throws Exception {
-       doThrow(RuntimeException.class).when(catalogCountImpl).getCorrespondingTotal();
        Assertions.assertThrows(RuntimeException.class, () -> catalogCountApiImpl.getList(0));
 
        verify(catalogCountImpl, never()).selectAllWithTotalColumn(0);
