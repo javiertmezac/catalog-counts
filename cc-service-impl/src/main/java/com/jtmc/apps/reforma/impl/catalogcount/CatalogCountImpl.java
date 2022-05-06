@@ -76,6 +76,9 @@ public class CatalogCountImpl {
     public void logicalDeleteRecord(int id) {
         CatalogCount cc = new CatalogCount();
         cc.setId(id);
-        catalogCountRepository.logicalDelete(cc);
+        if (catalogCountRepository.logicalDelete(cc) != 1) {
+            logger.error("logicalDelete for record catalog-count {} was not successfully done", id);
+            throw new RuntimeException("something wrong happened on deletion for catalog-count");
+        }
     }
 }

@@ -92,8 +92,10 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
     //todo: should have a test to verify logicalDelete was done correctly
     public Response logicalDeleteRecord(Integer branchId, int id) {
-        LOGGER.info("CatalogCountId to be deleted: {}", id);
+        checkArgument(branchId > 0);
+        checkArgument(id > 0);
 
+        LOGGER.info("CatalogCountId #{} to be deleted", id);
         catalogCountImpl.logicalDeleteRecord(id);
         return Response.noContent().build();
     }
