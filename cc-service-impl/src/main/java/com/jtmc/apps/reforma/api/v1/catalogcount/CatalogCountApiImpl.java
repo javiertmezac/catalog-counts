@@ -52,11 +52,31 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         return Response.noContent().build();
     }
 
+    @Override
+    public Response updateCatalogCount(Integer branchId, CatalogCountRequest catalogCountRequest) {
+        checkNotNull(catalogCountRequest, "invalid Catalog Count payload");
+        checkArgument(branchId > 0, "invalid branchId");
+
+        CatalogCount catalogCount = new CatalogCount();
+        catalogCount.setId(catalogCountRequest.getId());
+        catalogCount.setAmount(catalogCountRequest.getAmount());
+        catalogCount.setDetails(catalogCountRequest.getDetails());
+        catalogCount.setCatalogcountenumid(catalogCountRequest.getCatalogCountEnumId());
+        catalogCount.setRegistration(catalogCountRequest.getRegistrationDate());
+        //todo: maybe first to select existing item, then "update"?
+        // make sure branchId and id are equals to provided values
+//        catalogCount.setBranchid(branchId);
+
+        catalogCountImpl.updateCatalogCount(catalogCount);
+        return Response.noContent().build();
+    }
+
     public CatalogCountResponse getCatalogCount(Integer branchId, int id) {
-        LOGGER.info("CatalogCountId payload: {} ", id);
+        checkArgument(id > 0, "CatalogCountId not valid");
+        checkArgument(branchId > 0, "branchId not valid");
 
         CatalogCount catalogCount = catalogCountImpl.selectOneRecord(id);
-        if (catalogCount == null) {
+        if (catalogCount == null || !catalogCount.getBranchid().equals(branchId)) {
             //todo: bad exception handling here
            throw new RuntimeException("Catalog Count id: " + id + " not found");
         }
@@ -65,7 +85,6 @@ public class CatalogCountApiImpl implements CatalogCountApi {
                 catalogCount.getId(),
                 catalogCount.getRegistration().toString(),
                 catalogCount.getCatalogcountenumid().toString(),
-//                catalogCount.getCatalogCountEnum().getCatalogCountEnumDisplay(),
                 catalogCount.getAmount(),
                 catalogCount.getDetails()
         );
@@ -73,8 +92,10 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
     //todo: should have a test to verify logicalDelete was done correctly
     public Response logicalDeleteRecord(Integer branchId, int id) {
-        LOGGER.info("CatalogCountId to be deleted: {}", id);
+        checkArgument(branchId > 0);
+        checkArgument(id > 0);
 
+        LOGGER.info("CatalogCountId #{} to be deleted", id);
         catalogCountImpl.logicalDeleteRecord(id);
         return Response.noContent().build();
     }

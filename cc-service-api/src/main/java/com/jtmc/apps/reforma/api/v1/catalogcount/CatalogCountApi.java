@@ -18,6 +18,12 @@ public interface CatalogCountApi {
     @Produces(MediaType.APPLICATION_JSON)
     Response insert(@PathParam("branchId") Integer branchId, CatalogCountRequest catalogCountRequest);
 
+    @PUT
+    @Path("/{branchId}/catalog-count")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response updateCatalogCount(@PathParam("branchId") Integer branchId, CatalogCountRequest catalogCountRequest);
+
     @GET
     @Path("/{branchId}/catalog-count/{catalogCountId}")
     @Produces(MediaType.APPLICATION_JSON)

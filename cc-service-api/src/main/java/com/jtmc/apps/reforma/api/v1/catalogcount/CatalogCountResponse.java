@@ -2,7 +2,6 @@ package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 public class CatalogCountResponse  {
     private int id;
-
     private String registrationDate;
     private String catalogCountEnum;
     private double amount;
