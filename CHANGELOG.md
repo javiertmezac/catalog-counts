@@ -1,5 +1,16 @@
 # Catalog Counts Service Changelog
 
+## 1.0.0
+release date: May 9, 2022
+
+### What's Changed
+* Feature/login api by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/35
+* Feature/refactor tables by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/37
+* Feature/refactor by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/38
+* Feature/get user data by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/39
+* update catalog-count endpoint by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/43
+* Develop by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/44
+
 ## 0.5.1
 release date: July 30, 2021
 
