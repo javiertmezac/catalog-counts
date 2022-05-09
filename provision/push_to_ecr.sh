@@ -12,8 +12,8 @@
   #docker push public.ecr.aws/c5b3a9t9/catalog-counts:0.4.1
 
 tag=$1
-PUBLIC_REPO="public.ecr.aws/c5b3a9t9"
-IMAGE_TAGGED=$PUBLIC_REPO"/catalog-counts":$tag
+ECR_REPO="251143205581.dkr.ecr.us-west-1.amazonaws.com"
+IMAGE_TAGGED=$ECR_REPO"/catalog-counts":$tag
 
 if [[ -z "$tag" ]]; then
   echo "please specify tag version"
@@ -35,17 +35,16 @@ echo "TAGGING IMAGE......"
 docker tag cc-service-image:$tag $IMAGE_TAGGED
 
 echo "IMAGE TAGGED.... SEARCHING IMAGE!!"
-docker images | grep "public.ecr.aws/c5b3a9t9/catalog-counts"
+docker images | grep $ECR_REPO"/catalog-counts"
 
 echo
-echo "Would you like to continue pushing the image? [Y/N]"
+echo "Would you like to continue pushing the image? [Y/N]" $tag
 read varanswer
 
 if [[ "$varanswer" == "Y" ]]; then
-  echo "LOGGING INTO PUBLIC REPO...."
-  aws ecr-public get-login-password \
-    --region us-east-1 --profile javier.meza | docker login --username AWS --password-stdin $PUBLIC_REPO
-
+  echo "LOGGING INTO ECR REPO...."
+  aws ecr get-login-password --profile javier.meza \
+    --region us-west-1 | docker login --username AWS --password-stdin $ECR_REPO
   echo
   echo "PUSHING IMAGE.... $IMAGE_TAGGED"
   docker push $IMAGE_TAGGED
