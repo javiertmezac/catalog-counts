@@ -214,7 +214,9 @@ public class CatalogCountApiImplTest {
     @Test
     public void testLogicalDelete_shouldCall_MapperLogicalDelete() {
         int expectedId = 1;
+        CatalogCount cc = new CatalogCount();
+        cc.setId(expectedId);
         catalogCountApiImpl.logicalDeleteRecord(defaultBranchId, expectedId);
-        verify(catalogCountImpl, times(1)).logicalDeleteRecord(expectedId);
+        verify(catalogCountImpl, times(1)).logicalDeleteRecord(cc);
     }
 }

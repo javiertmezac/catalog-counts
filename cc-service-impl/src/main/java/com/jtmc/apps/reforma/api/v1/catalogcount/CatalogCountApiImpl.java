@@ -63,9 +63,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         catalogCount.setDetails(catalogCountRequest.getDetails());
         catalogCount.setCatalogcountenumid(catalogCountRequest.getCatalogCountEnumId());
         catalogCount.setRegistration(catalogCountRequest.getRegistrationDate());
-        //todo: maybe first to select existing item, then "update"?
-        // make sure branchId and id are equals to provided values
-//        catalogCount.setBranchid(branchId);
+        catalogCount.setBranchid(branchId);
 
         catalogCountImpl.updateCatalogCount(catalogCount);
         return Response.noContent().build();
@@ -76,11 +74,6 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         checkArgument(branchId > 0, "branchId not valid");
 
         CatalogCount catalogCount = catalogCountImpl.selectOneRecord(id);
-        if (catalogCount == null || !catalogCount.getBranchid().equals(branchId)) {
-            //todo: bad exception handling here
-           throw new RuntimeException("Catalog Count id: " + id + " not found");
-        }
-
         return new CatalogCountResponse(
                 catalogCount.getId(),
                 catalogCount.getRegistration().toString(),
@@ -92,11 +85,13 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
     //todo: should have a test to verify logicalDelete was done correctly
     public Response logicalDeleteRecord(Integer branchId, int id) {
-        checkArgument(branchId > 0);
-        checkArgument(id > 0);
+        checkArgument(branchId > 0, "invalid branch");
+        checkArgument(id > 0, "invalid catalog count id");
 
         logger.info("CatalogCountId #{} to be deleted", id);
-        catalogCountImpl.logicalDeleteRecord(id);
+        CatalogCount cc = new CatalogCount();
+        cc.setId(id);
+        catalogCountImpl.logicalDeleteRecord(cc);
         return Response.noContent().build();
     }
 }
