@@ -26,7 +26,7 @@ public class ServerModule extends AbstractModule {
 
         bind(ObjectMapper.class).toInstance(objectMapper);
         bind(JacksonJsonProvider.class).toInstance(jsonProvider);
-        bind(CatalogCountImpl.class);
+//        bind(CatalogCountImpl.class);
         bind(ICatalogCountRepository.class).to(CatalogCountRepository.class);
     }
 }

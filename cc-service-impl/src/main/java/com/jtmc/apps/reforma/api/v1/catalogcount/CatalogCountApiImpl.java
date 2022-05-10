@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @JwtRequired
 public class CatalogCountApiImpl implements CatalogCountApi {
-    final private Logger LOGGER = LoggerFactory.getLogger(CatalogCountApiImpl.class);
+    final private Logger logger = LoggerFactory.getLogger(CatalogCountApiImpl.class);
 
     @Inject
     private CatalogCountImpl catalogCountImpl;
@@ -95,7 +95,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         checkArgument(branchId > 0);
         checkArgument(id > 0);
 
-        LOGGER.info("CatalogCountId #{} to be deleted", id);
+        logger.info("CatalogCountId #{} to be deleted", id);
         catalogCountImpl.logicalDeleteRecord(id);
         return Response.noContent().build();
     }

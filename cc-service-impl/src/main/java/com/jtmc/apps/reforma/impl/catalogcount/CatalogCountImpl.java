@@ -2,9 +2,15 @@ package com.jtmc.apps.reforma.impl.catalogcount;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
+import com.jtmc.apps.reforma.domain.Branch;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
+import com.jtmc.apps.reforma.domain.UserDetails;
+import com.jtmc.apps.reforma.impl.branch.BranchImpl;
+import com.jtmc.apps.reforma.impl.user.UserImpl;
+import com.jtmc.apps.reforma.repository.BranchRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
+import com.jtmc.apps.reforma.repository.UserRepositoryImpl;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +27,12 @@ public class CatalogCountImpl {
 
     @Inject
     private CatalogCountRepository catalogCountRepository;
+
+    @Inject
+    private BranchImpl branchImpl;
+
+    @Inject
+    private UserImpl userImpl;
 
     public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
         Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
@@ -55,7 +67,15 @@ public class CatalogCountImpl {
 
     @Transactional
     public void insertIntoCatalogCount(CatalogCount catalogCount) {
+        UserDetails userDetails = this.userImpl.getLoggedInUserDetails();
+        if (!userImpl.hasLoggedInUserWritePermissions(userDetails)) {
+            logger.error("No write permissions for user {}", userDetails.getUsername());
+            throw new RuntimeException("No write permissions for user;");
+        }
+
+        Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         catalogCountRepository.insert(catalogCount);
+        logger.info("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branch.getId());
     }
 
     @Transactional

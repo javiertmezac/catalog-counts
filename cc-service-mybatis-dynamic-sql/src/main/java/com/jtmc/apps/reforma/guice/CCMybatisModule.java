@@ -1,14 +1,7 @@
 package com.jtmc.apps.reforma.guice;
 
-import com.google.inject.name.Names;
-import com.jtmc.apps.reforma.domain.CatalogCount;
-import com.jtmc.apps.reforma.domain.CustomCatalogCount;
 import com.jtmc.apps.reforma.repository.mapper.*;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.guice.MyBatisModule;
-import org.mybatis.guice.datasource.builtin.PooledDataSourceProvider;
-
-import java.util.Properties;
 
 public class CCMybatisModule extends MyBatisModule {
     @Override
