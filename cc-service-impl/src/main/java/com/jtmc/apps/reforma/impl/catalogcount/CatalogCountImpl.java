@@ -2,8 +2,13 @@ package com.jtmc.apps.reforma.impl.catalogcount;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
+import com.jtmc.apps.reforma.domain.Branch;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
+import com.jtmc.apps.reforma.domain.UserDetails;
+import com.jtmc.apps.reforma.impl.branch.BranchImpl;
+import com.jtmc.apps.reforma.impl.exception.CatalogCountNotFoundException;
+import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
@@ -21,6 +26,12 @@ public class CatalogCountImpl {
 
     @Inject
     private CatalogCountRepository catalogCountRepository;
+
+    @Inject
+    private BranchImpl branchImpl;
+
+    @Inject
+    private UserImpl userImpl;
 
     public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
         Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
@@ -55,30 +66,51 @@ public class CatalogCountImpl {
 
     @Transactional
     public void insertIntoCatalogCount(CatalogCount catalogCount) {
+        UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+
+        Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         catalogCountRepository.insert(catalogCount);
+        logger.info("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branch.getId());
     }
 
     @Transactional
     public void updateCatalogCount(CatalogCount catalogCount) {
+        UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+        Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        CatalogCount ccToBeUpdated = this.selectOneRecord(catalogCount.getId());
+        logger.info("CatalogCount #{} to be updated", ccToBeUpdated.getId());
+        logCatalogCount(ccToBeUpdated);
+
         catalogCountRepository.update(catalogCount);
+        logger.info("User '{}' updated CatalogCount #{} on branch #{}", userDetails.getUsername(), catalogCount.getId(), branch.getId());
+        logCatalogCount(catalogCount);
     }
 
     public CatalogCount selectOneRecord(int id) {
         Optional<CatalogCount> catalogCount = catalogCountRepository.selectOneRecord(id);
         if(!catalogCount.isPresent()) {
-            //todo: improve this exception
-            throw new RuntimeException("CatalogCount not found");
+            logger.error("CatalogCount #{} not found", id);
+            throw new CatalogCountNotFoundException("CatalogCount not found");
         }
         return catalogCount.get();
     }
 
     @Transactional
-    public void logicalDeleteRecord(int id) {
-        CatalogCount cc = new CatalogCount();
-        cc.setId(id);
-        if (catalogCountRepository.logicalDelete(cc) != 1) {
-            logger.error("logicalDelete for record catalog-count {} was not successfully done", id);
+    public void logicalDeleteRecord(CatalogCount catalogCount) {
+        UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+        Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        if (catalogCountRepository.logicalDelete(catalogCount) != 1) {
+            logger.error("logicalDelete for record catalog-count {} was not successfully done", catalogCount.getId());
             throw new RuntimeException("something wrong happened on deletion for catalog-count");
+        } else {
+            logger.info("User {} deleted CatalogCount #{} on branch #{}", userDetails.getUsername(), catalogCount.getId(), branch.getId());
         }
+    }
+
+    private void logCatalogCount(CatalogCount cc) {
+        logger.info("CatalogCount - id: {}, registration: {}, ccEnumId: {}, " +
+                "amount: {}, details: {}, branchId: {}, isDeleted: {}", cc.getId(),
+                cc.getRegistration().toString(), cc.getCatalogcountenumid(),
+                cc.getAmount(), cc.getDetails(), cc.getBranchid(), cc.getIsdeleted());
     }
 }

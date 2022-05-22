@@ -28,6 +28,7 @@ import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApiImpl;
 import com.jtmc.apps.reforma.api.v1.user.UserApi;
 import com.jtmc.apps.reforma.api.v1.user.UserApiImpl;
 import com.jtmc.apps.reforma.guice.CCMybatisModule;
+import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.infrastructure.GuiceApplication;
 import com.jtmc.apps.reforma.infrastructure.ServerModule;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
@@ -57,6 +58,7 @@ public class Launcher {
             install(new CCMybatisModule());
 
             bind(JwtUserClaim.class).asEagerSingleton();
+            bind(UserImpl.class).asEagerSingleton();
             bind(HealthcheckApi.class).to(HealthcheckImpl.class);
             bind(CatalogCountApi.class).to(CatalogCountApiImpl.class);
             bind(ExcelImportApi.class).to(ExcelImportApiImpl.class);
