@@ -4,12 +4,18 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Expenses;
 import com.jtmc.apps.reforma.domain.Incomes;
 import com.jtmc.apps.reforma.domain.Months;
+import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.impl.report.audit.AuditReportImpl;
+
+import javax.ws.rs.WebApplicationException;
 
 public class AuditReportApiImpl implements AuditReportApi {
 
     @Inject
     private AuditReportImpl auditReport;
+
+    @Inject
+    private CatalogCountImpl catalogCountImpl;
 
     @Override
     public AuditReportResponse createAuditReport(AuditReportRequest auditReportRequest) {
@@ -28,10 +34,17 @@ public class AuditReportApiImpl implements AuditReportApi {
         );
         response.setPeriod(period);
 
-        double previousBalance = auditReport.getPreviousBalance(
-                auditReportRequest.getFromMonth(),
-                auditReportRequest.getYear()
-        );
+//        double previousBalance = auditReport.getPreviousBalance(
+//                auditReportRequest.getFromMonth(),
+//                auditReportRequest.getYear()
+//        );
+        double previousBalance = 0.0;
+        try {
+             previousBalance = catalogCountImpl.getTotalBalanceUpToGivenDate(
+                     auditReportRequest.getFromMonth(), auditReportRequest.getYear());
+        } catch (Exception e) {
+            throw new WebApplicationException(e);
+        }
         response.setPreviousBalance(previousBalance);
 
         String fromDate = buildFromDate(auditReportRequest.getFromMonth(),

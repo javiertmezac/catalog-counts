@@ -16,12 +16,10 @@ import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,8 +37,31 @@ public class CatalogCountImpl {
 
     public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
         Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
+        Stream<CatalogCountResponse> catalogCountResponseStream = calculateTotal(catalogCounts.stream());
+        List<CatalogCountResponse> responseList = catalogCountResponseStream.collect(Collectors.toList());
+        Collections.reverse(responseList);
+        return responseList;
+    }
+
+    //todo: fix this logic
+    public double getTotalBalanceUpToGivenDate(int month, int year) throws Exception {
+        Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(1);
+        String fromDate = String.format("%s-%s-%s", year, month, "01");
+        Date from = new SimpleDateFormat("yyyy-MM-dd").parse(fromDate);
+        Stream<CustomCatalogCount> filteredCatalogCounts = catalogCounts.stream()
+                .filter(x -> x.getRegistration().isBefore(from.toInstant()));
+        Stream<CatalogCountResponse> response = calculateTotal(filteredCatalogCounts);
+
+        List<CatalogCountResponse> responseList = response.collect(Collectors.toList());
+        Collections.reverse(responseList);
+
+        Optional<CatalogCountResponse> optionalResponse = responseList.stream().findFirst();
+        return optionalResponse.map(CatalogCountResponse::getTotal).orElse(0.0);
+    }
+
+    private Stream<CatalogCountResponse> calculateTotal(Stream<CustomCatalogCount> catalogCounts) {
         final double[] total = {0};
-        Stream<CatalogCountResponse> catalogCountResponseStream = catalogCounts.stream().map((cc) -> {
+        return catalogCounts.map((cc) -> {
             total[0] = calculateTotalColumn(cc, total[0]);
             return new CatalogCountResponse(
                     cc.getId(),
@@ -52,10 +73,6 @@ public class CatalogCountImpl {
                     validateCatalogCountEditableByRegistration(cc.getRegistration())
             );
         });
-
-        List<CatalogCountResponse> responseList = catalogCountResponseStream.collect(Collectors.toList());
-        Collections.reverse(responseList);
-        return responseList;
     }
 
     private double calculateTotalColumn(CatalogCount catalogCount, double saldo) {
