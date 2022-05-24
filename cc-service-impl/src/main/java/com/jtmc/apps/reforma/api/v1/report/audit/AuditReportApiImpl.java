@@ -1,15 +1,24 @@
 package com.jtmc.apps.reforma.api.v1.report.audit;
 
 import com.google.inject.Inject;
+import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.Expenses;
 import com.jtmc.apps.reforma.domain.Incomes;
 import com.jtmc.apps.reforma.domain.Months;
+import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.impl.report.audit.AuditReportImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.WebApplicationException;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+@JwtRequired
 public class AuditReportApiImpl implements AuditReportApi {
+    final private Logger logger = LoggerFactory.getLogger(AuditReportApiImpl.class);
 
     @Inject
     private AuditReportImpl auditReport;
@@ -17,12 +26,17 @@ public class AuditReportApiImpl implements AuditReportApi {
     @Inject
     private CatalogCountImpl catalogCountImpl;
 
+    @Inject
+    private BranchImpl branchImpl;
+
     @Override
     public AuditReportResponse createAuditReport(AuditReportRequest auditReportRequest) {
+        checkNotNull(auditReportRequest, "invalid auditReport payload");
+        checkArgument(auditReportRequest.getBranchId() > 0, "Invalid branchId");
+
         AuditReportResponse response = new AuditReportResponse();
         response.setTitle("Informe de Auditoría");
-        //todo: this should change once "Misions / services is added into system"
-        response.setMision("Reforma");
+        response.setMision(branchImpl.selectOneBranch(auditReportRequest.getBranchId()).getName());
 
         auditReport.areMonthsValid(
                 auditReportRequest.getFromMonth(), auditReportRequest.getToMonth());
@@ -34,23 +48,19 @@ public class AuditReportApiImpl implements AuditReportApi {
         );
         response.setPeriod(period);
 
-//        double previousBalance = auditReport.getPreviousBalance(
-//                auditReportRequest.getFromMonth(),
-//                auditReportRequest.getYear()
-//        );
-        double previousBalance = 0.0;
-        try {
-             previousBalance = catalogCountImpl.getTotalBalanceUpToGivenDate(
-                     auditReportRequest.getFromMonth(), auditReportRequest.getYear());
-        } catch (Exception e) {
-            throw new WebApplicationException(e);
-        }
-        response.setPreviousBalance(previousBalance);
-
         String fromDate = buildFromDate(auditReportRequest.getFromMonth(),
                 auditReportRequest.getYear());
         String toDate = buildToDate(auditReportRequest.getToMonth(),
                 auditReportRequest.getYear());
+
+        double previousBalance;
+        try {
+             previousBalance = catalogCountImpl.getTotalBalanceUpToGivenDate(auditReportRequest.getBranchId(), fromDate);
+        } catch (Exception e) {
+            logger.error("wrong date parsing", e);
+            throw new WebApplicationException(e);
+        }
+        response.setPreviousBalance(previousBalance);
 
        Incomes incomes = auditReport.getSumIncomes(fromDate, toDate);
         SumIncomes sumIncomes = new SumIncomes();
@@ -81,9 +91,9 @@ public class AuditReportApiImpl implements AuditReportApi {
         //todo: uncheckedExpenses and loans are not considered yet
         response.setTotal((previousBalance + incomes.getTotal()) - expenses.getTotal());
 
+        response.setComments(auditReportRequest.getReporterComments());
 
         //todo: change this part and get values from DB?
-        response.setComments("This is an audit report");
         response.setAuditor("[placeholder]");
         response.setTreasurer("Javier Trinidad Meza Cazarez");
         response.setSecretary("[placeholder]");

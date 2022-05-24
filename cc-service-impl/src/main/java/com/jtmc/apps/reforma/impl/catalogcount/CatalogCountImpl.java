@@ -43,10 +43,9 @@ public class CatalogCountImpl {
         return responseList;
     }
 
-    //todo: fix this logic
-    public double getTotalBalanceUpToGivenDate(int month, int year) throws Exception {
-        Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(1);
-        String fromDate = String.format("%s-%s-%s", year, month, "01");
+    //todo: improve this logic
+    public double getTotalBalanceUpToGivenDate(int branchId, String fromDate) throws Exception {
+        Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
         Date from = new SimpleDateFormat("yyyy-MM-dd").parse(fromDate);
         Stream<CustomCatalogCount> filteredCatalogCounts = catalogCounts.stream()
                 .filter(x -> x.getRegistration().isBefore(from.toInstant()));
