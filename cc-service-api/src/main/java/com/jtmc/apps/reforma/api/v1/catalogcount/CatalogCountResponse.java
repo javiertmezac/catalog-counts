@@ -7,19 +7,22 @@ public class CatalogCountResponse  {
     private double amount;
     private String details;
     private double total;
+    private boolean editable;
 
     public CatalogCountResponse(int id,
                                 String registrationDate,
                                 String catalogCountEnum,
                                 double amount,
                                 String details,
-                                double total) {
+                                double total,
+                                boolean editable) {
         this.id = id;
         this.registrationDate = registrationDate;
         this.catalogCountEnum = catalogCountEnum;
         this.amount = amount;
         this.details = details;
         this.total = total;
+        this.editable = editable;
     }
 
     //todo: should we have another Response Class for single CatalogCount ("no total column")?
@@ -33,6 +36,14 @@ public class CatalogCountResponse  {
         this.catalogCountEnum = catalogCountEnum;
         this.amount = amount;
         this.details = details;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
     public int getId() {
