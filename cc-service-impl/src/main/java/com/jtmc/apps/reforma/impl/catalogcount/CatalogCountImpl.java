@@ -121,6 +121,7 @@ public class CatalogCountImpl {
         }
     }
 
+    //todo: on update catalogcount consider maximum day 7 of "maxDate.month"
     private boolean validateCatalogCountEditableByRegistration(Instant catalogCountRegistration) {
         LocalDate currentDate = LocalDate.now();
         Month currentMonth = currentDate.getMonth();
