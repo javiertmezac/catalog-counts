@@ -1,7 +1,7 @@
 package com.jtmc.apps.reforma.impl.exception;
 
-public class CatalogCountNotEditableException extends RuntimeException {
-    public CatalogCountNotEditableException(String message) {
-        super(message);
+public class CatalogCountNotEditableException extends ImplementationException {
+    public CatalogCountNotEditableException(String message, int statusCode) {
+        super(message, statusCode);
     }
 }

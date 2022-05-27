@@ -31,7 +31,6 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         return responseList;
     }
 
-
     @Override
     public Response insert(Integer branchId, CatalogCountRequest catalogCountRequest) {
 

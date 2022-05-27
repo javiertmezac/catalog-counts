@@ -7,6 +7,7 @@ import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
 import com.jtmc.apps.reforma.domain.UserDetails;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
+import com.jtmc.apps.reforma.impl.exception.CatalogCountLogicalDeleteException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotEditableException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotFoundException;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
@@ -95,7 +96,7 @@ public class CatalogCountImpl {
         Optional<CatalogCount> catalogCount = catalogCountRepository.selectOneRecord(id);
         if(!catalogCount.isPresent()) {
             logger.error("CatalogCount #{} not found", id);
-            throw new CatalogCountNotFoundException("CatalogCount not found");
+            throw new CatalogCountNotFoundException("CatalogCount not found", 404);
         }
         return catalogCount.get();
     }
@@ -107,7 +108,7 @@ public class CatalogCountImpl {
         Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         if (catalogCountRepository.logicalDelete(catalogCount) != 1) {
             logger.error("logicalDelete for record catalog-count {} was not successfully done", catalogCount.getId());
-            throw new RuntimeException("something wrong happened on deletion for catalog-count");
+            throw new CatalogCountLogicalDeleteException("something wrong happened on deletion for catalog-count", 500);
         } else {
             logger.info("User {} deleted CatalogCount #{} on branch #{}", userDetails.getUsername(), catalogCount.getId(), branch.getId());
         }
@@ -116,7 +117,7 @@ public class CatalogCountImpl {
     private void isCatalogCountRegistrationDateValid(Instant registration) {
         if(!validateCatalogCountEditableByRegistration(registration)) {
             logger.error("Cannot Insert CatalogCount as Registration date is out of range");
-            throw new CatalogCountNotEditableException("CatalogCount with no valid registration dateRange");
+            throw new CatalogCountNotEditableException("CatalogCount with no valid registration dateRange", 400);
         }
     }
 
