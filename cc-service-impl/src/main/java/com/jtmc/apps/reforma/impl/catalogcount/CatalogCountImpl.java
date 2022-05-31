@@ -68,9 +68,9 @@ public class CatalogCountImpl {
 
     @Transactional
     public void insertIntoCatalogCount(CatalogCount catalogCount) {
-        isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
-
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+
+        isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
 
         Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         catalogCountRepository.insert(catalogCount);
@@ -79,9 +79,9 @@ public class CatalogCountImpl {
 
     @Transactional
     public void updateCatalogCount(CatalogCount catalogCount) {
-        isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
-
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+
+        isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
         Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         CatalogCount ccToBeUpdated = this.selectOneRecord(catalogCount.getId());
         logger.info("CatalogCount #{} to be updated", ccToBeUpdated.getId());
@@ -103,8 +103,15 @@ public class CatalogCountImpl {
 
     @Transactional
     public void logicalDeleteRecord(CatalogCount catalogCount) {
-        isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+
+        CatalogCount ccFromDB = this.selectOneRecord(catalogCount.getId());
+        if (ccFromDB.getIsdeleted()) {
+           logger.error("CatalogCount {} was already marked as deleted", ccFromDB.getId());
+           throw new IllegalArgumentException("No valid Request");
+        }
+        isCatalogCountRegistrationDateValid(ccFromDB.getRegistration());
+
         Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         if (catalogCountRepository.logicalDelete(catalogCount) != 1) {
             logger.error("logicalDelete for record catalog-count {} was not successfully done", catalogCount.getId());
