@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.*;
+import java.time.chrono.ChronoZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -128,15 +129,16 @@ public class CatalogCountImpl {
         }
     }
 
-    //todo: on update catalogcount consider maximum day 7 of "maxDate.month"
+    //todo: should I consider the timezone of each "user"?
     private boolean validateCatalogCountEditableByRegistration(Instant catalogCountRegistration) {
-        LocalDate currentDate = LocalDate.now();
-        Month currentMonth = currentDate.getMonth();
-        LocalDate date = LocalDate.of(currentDate.getYear(), currentMonth, 1);
-        LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIDNIGHT);
+        ZonedDateTime zonedDateTime = catalogCountRegistration.atZone(ZoneId.systemDefault());
 
-        int secondsInADay = 86340;
-        return catalogCountRegistration.isAfter(dateTime.toInstant(ZoneOffset.UTC).minus(1, ChronoUnit.DAYS).plusSeconds(secondsInADay));
+        LocalDate currentDate = LocalDate.now();
+        LocalDate firstDayCurrentDate = LocalDate.of(currentDate.getYear(), currentDate.getMonth(), 28);
+        LocalDateTime dateTime = LocalDateTime.of(firstDayCurrentDate, LocalTime.MAX);
+
+        ZonedDateTime minZonedDateTime = dateTime.atZone(ZoneId.systemDefault());
+        return zonedDateTime.isAfter(minZonedDateTime.minus(1, ChronoUnit.DAYS));
     }
 
     private void logCatalogCount(CatalogCount cc) {
