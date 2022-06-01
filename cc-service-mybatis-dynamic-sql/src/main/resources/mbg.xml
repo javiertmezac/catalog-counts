@@ -44,5 +44,16 @@
             <property name="virtualKeyColumns" value="id"/>
             <columnOverride column="registration" javaType="java.time.Instant" />
         </table>
+        <table tableName="period" >
+            <property name="virtualKeyColumns" value="id"/>
+        </table>
+        <table tableName="period_details" >
+            <property name="virtualKeyColumns" value="id"/>
+            <columnOverride column="registration" javaType="java.time.Instant" />
+        </table>
+        <table tableName="report" >
+            <property name="virtualKeyColumns" value="id"/>
+            <columnOverride column="registration" javaType="java.time.Instant" />
+        </table>
     </context>
 </generatorConfiguration>

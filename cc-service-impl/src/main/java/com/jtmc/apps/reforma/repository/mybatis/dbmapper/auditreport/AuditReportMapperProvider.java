@@ -18,9 +18,11 @@ public class AuditReportMapperProvider {
                 .SELECT("cce.family, sum(cc.amount) as sumAmount")
                 .FROM(ccTable + " as cc")
                 .INNER_JOIN("catalog_count_enum as cce on cc.catalogCountEnumId = cce.id")
-                .WHERE("registrationDate >= date(#{dateFrom}) and registrationDate < date(#{dateTo})")
+                .WHERE("registration >= date(#{dateFrom}) and registration < date(#{dateTo})")
                 .AND()
                 .WHERE(String.format("catalogCountEnumId in %s", whereCatalogCountEnum))
+                .AND()
+                .WHERE("cc.isDeleted = false")
                 .GROUP_BY("cce.family")
                 .toString();
     }
@@ -30,9 +32,11 @@ public class AuditReportMapperProvider {
                 .SELECT("cce.family, sum(cc.amount) as sumAmount")
                 .FROM(ccTable + " as cc")
                 .INNER_JOIN("catalog_count_enum as cce on cc.catalogCountEnumId = cce.id")
-                .WHERE("registrationDate >= date(#{dateFrom}) and registrationDate < date(#{dateTo})")
+                .WHERE("registration >= date(#{dateFrom}) and registration < date(#{dateTo})")
                 .AND()
                 .WHERE(String.format("catalogCountEnumId not in %s", whereCatalogCountEnum))
+                .AND()
+                .WHERE("cc.isDeleted = false")
                 .GROUP_BY("cce.family")
                 .toString();
     }

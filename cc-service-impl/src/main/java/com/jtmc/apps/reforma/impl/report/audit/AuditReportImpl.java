@@ -34,6 +34,7 @@ public class AuditReportImpl {
     @Inject
     private AuditReportMapper auditReportMapper;
 
+    //todo: consider UTC time for from and to Dates!
     public Incomes getSumIncomes(String fromDate, String toDate) {
         dateValidations(fromDate, toDate);
 
