@@ -4,11 +4,13 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.PeriodDetails;
 import com.jtmc.apps.reforma.domain.UserDetails;
 import com.jtmc.apps.reforma.impl.exception.PeriodConfirmException;
+import com.jtmc.apps.reforma.impl.period.PeriodImpl;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.PeriodConfirmRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.ForbiddenException;
 import java.time.Instant;
 
 public class PeriodConfirmImpl {
@@ -20,10 +22,18 @@ public class PeriodConfirmImpl {
     @Inject
     private UserImpl userImpl;
 
+    @Inject
+    private PeriodImpl periodImpl;
+
     public void confirmPeriod(int branchId, int periodId) {
         UserDetails userDetails = userImpl.getLoggedInUserDetails();
-        //todo: validate given periodId exists
-        //todo: validate if given branch and userDetails default branch are equal?
+        periodImpl.getPeriodById(periodId);
+
+        if (userDetails.getDefaultBranch() != branchId) {
+            logger.error("LoggedInUser's default branchId {} does not match with given branchId {}",
+                    userDetails.getDefaultBranch(), branchId);
+            throw new IllegalArgumentException();
+        }
 
         PeriodDetails details = new PeriodDetails();
         details.setBranchid(branchId);
