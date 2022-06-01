@@ -31,5 +31,6 @@ public interface CatalogCountApi {
 
     @DELETE
     @Path("/{branchId}/catalog-count/{catalogCountId}")
+    @Produces(MediaType.APPLICATION_JSON)
     Response logicalDeleteRecord(@PathParam("branchId") Integer branchId, @PathParam("catalogCountId") int id);
 }

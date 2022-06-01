@@ -31,7 +31,6 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         return responseList;
     }
 
-
     @Override
     public Response insert(Integer branchId, CatalogCountRequest catalogCountRequest) {
 
@@ -91,6 +90,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         logger.info("CatalogCountId #{} to be deleted", id);
         CatalogCount cc = new CatalogCount();
         cc.setId(id);
+        cc.setBranchid(branchId);
         catalogCountImpl.logicalDeleteRecord(cc);
         return Response.noContent().build();
     }
