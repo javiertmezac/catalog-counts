@@ -32,6 +32,7 @@ public class UserRepositoryImpl {
         }
         // username
         userDetails.setUsername(username);
+        userDetails.setPersonaId(loggedInUser.get().getPersonaid());
         // roles
 
         //todo: what to return when no role is assigned?

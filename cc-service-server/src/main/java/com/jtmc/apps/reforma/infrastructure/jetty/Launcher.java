@@ -23,6 +23,8 @@ import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckImpl;
 import com.jtmc.apps.reforma.api.v1.login.LoginApi;
 import com.jtmc.apps.reforma.api.v1.login.LoginApiImpl;
+import com.jtmc.apps.reforma.api.v1.periodconfirm.PeriodConfirmApi;
+import com.jtmc.apps.reforma.api.v1.periodconfirm.PeriodConfirmApiImpl;
 import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApi;
 import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApiImpl;
 import com.jtmc.apps.reforma.api.v1.user.UserApi;
@@ -66,6 +68,7 @@ public class Launcher {
             bind(AuditReportApi.class).to(AuditReportApiImpl.class);
             bind(LoginApi.class).to(LoginApiImpl.class);
             bind(UserApi.class).to(UserApiImpl.class);
+            bind(PeriodConfirmApi.class).to(PeriodConfirmApiImpl.class);
 
             Properties myProperties = new Properties();
             myProperties.setProperty("key", System.getenv("key"));
@@ -92,6 +95,7 @@ public class Launcher {
                     injector.getInstance(AuditReportApi.class),
                     injector.getInstance(LoginApi.class),
                     injector.getInstance(UserApi.class),
+                    injector.getInstance(PeriodConfirmApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),
