@@ -134,10 +134,18 @@ public class CatalogCountImpl {
         ZonedDateTime zonedDateTime = catalogCountRegistration.atZone(ZoneId.systemDefault());
 
         LocalDate currentDate = LocalDate.now();
-        LocalDate firstDayCurrentDate = LocalDate.of(currentDate.getYear(), currentDate.getMonth(), 28);
+        int firstDay = 1;
+        LocalDate firstDayCurrentDate = LocalDate.of(currentDate.getYear(), currentDate.getMonth(), firstDay);
         LocalDateTime dateTime = LocalDateTime.of(firstDayCurrentDate, LocalTime.MAX);
 
         ZonedDateTime minZonedDateTime = dateTime.atZone(ZoneId.systemDefault());
+        //todo: missing "and not confirmed"
+        int maxDay = 7;
+        if (currentDate.getDayOfMonth() <= maxDay) {
+            return zonedDateTime.isAfter(minZonedDateTime
+                    .minus(1, ChronoUnit.MONTHS)
+                    .minus(1, ChronoUnit.DAYS));
+        }
         return zonedDateTime.isAfter(minZonedDateTime.minus(1, ChronoUnit.DAYS));
     }
 
