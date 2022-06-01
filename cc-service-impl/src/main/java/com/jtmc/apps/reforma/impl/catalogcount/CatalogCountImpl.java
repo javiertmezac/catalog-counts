@@ -17,9 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.*;
-import java.time.chrono.ChronoZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -89,7 +91,9 @@ public class CatalogCountImpl {
         logCatalogCount(ccToBeUpdated);
 
         catalogCountRepository.update(catalogCount);
-        logger.info("User '{}' updated CatalogCount #{} on branch #{}", userDetails.getUsername(), catalogCount.getId(), branch.getId());
+        logger.info("User '{}' updated CatalogCount #{} on branch #{}",
+                userDetails.getUsername(), catalogCount.getId(), branch.getId()
+        );
         logCatalogCount(catalogCount);
     }
 
