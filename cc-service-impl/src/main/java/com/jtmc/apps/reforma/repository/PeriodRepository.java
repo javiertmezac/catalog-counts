@@ -24,7 +24,7 @@ public class PeriodRepository {
 
             SelectStatementProvider statementProvider = MyBatis3Utils.select(PeriodMapper.selectList,
                     PeriodDynamicSqlSupport.period, x -> x
-                            .where(PeriodDynamicSqlSupport.to, SqlBuilder.isEqualTo(toMonth))
+                            .where(PeriodDynamicSqlSupport.tomonth, SqlBuilder.isEqualTo(toMonth))
                             .and(PeriodDynamicSqlSupport.year, SqlBuilder.isEqualTo(year))
                             .and(PeriodDynamicSqlSupport.status, SqlBuilder.isTrue())
             );
