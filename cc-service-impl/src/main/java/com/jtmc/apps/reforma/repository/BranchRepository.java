@@ -9,7 +9,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.util.Optional;
 
 public class BranchRepository {
-        @Inject
+    @Inject
     private SqlSessionFactory sqlSessionFactory;
 
     public Optional<Branch> selectOneBranch(int branchId){

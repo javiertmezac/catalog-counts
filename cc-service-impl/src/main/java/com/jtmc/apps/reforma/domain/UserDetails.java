@@ -6,6 +6,15 @@ public class UserDetails {
     private List<Integer> roles;
     private int defaultBranch;
     private String username;
+    private int personaId;
+
+    public int getPersonaId() {
+        return personaId;
+    }
+
+    public void setPersonaId(int personaId) {
+        this.personaId = personaId;
+    }
 
     public List<Integer> getRoles() {
         return roles;
