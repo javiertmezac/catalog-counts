@@ -5,7 +5,7 @@
     <parent>
         <artifactId>catalog-counts-base-pom</artifactId>
         <groupId>com.jtmc.apps.reforma</groupId>
-        <version>1.0.0</version>
+        <version>1.1.0-alpha</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,12 +42,12 @@
         <dependency>
             <groupId>com.jtmc.apps.reforma</groupId>
             <artifactId>catalog-counts-service-impl</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-alpha</version>
         </dependency>
         <dependency>
             <groupId>com.jtmc.apps.reforma</groupId>
             <artifactId>cc-service-api</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-alpha</version>
         </dependency>
         <dependency>
             <groupId>com.google.inject.extensions</groupId>

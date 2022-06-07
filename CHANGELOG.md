@@ -1,5 +1,17 @@
 # Catalog Counts Service Changelog
 
+## 1.1.0-alpha
+release date: Jun 6, 2022
+
+## What's Changed
+* Feature/logger log trail by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/46
+* Develop by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/47
+* Feature/confirmation alert by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/49
+* improve audit report logic  by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/48
+* PeriodConfirm API by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/53
+
+**Full Changelog**: https://github.com/javiertmezac/catalog-counts/compare/1.0.0...1.1.0-alpha
+
 ## 1.0.0
 release date: May 9, 2022
 
