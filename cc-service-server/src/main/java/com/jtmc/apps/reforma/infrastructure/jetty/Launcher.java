@@ -31,6 +31,8 @@ import com.jtmc.apps.reforma.api.v1.periodconfirm.PeriodConfirmApi;
 import com.jtmc.apps.reforma.api.v1.periodconfirm.PeriodConfirmApiImpl;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaApi;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaApiImpl;
+import com.jtmc.apps.reforma.api.v1.personadetails.PersonaDetailsApi;
+import com.jtmc.apps.reforma.api.v1.personadetails.PersonaDetailsApiImpl;
 import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApi;
 import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApiImpl;
 import com.jtmc.apps.reforma.api.v1.user.UserApi;
@@ -80,6 +82,7 @@ public class Launcher {
             bind(PeriodApi.class).to(PeriodApiImpl.class);
             bind(BranchApi.class).to(BranchApiImpl.class);
             bind(PersonaApi.class).to(PersonaApiImpl.class);
+            bind(PersonaDetailsApi.class).to(PersonaDetailsApiImpl.class);
 
             Properties myProperties = new Properties();
             myProperties.setProperty("key", System.getenv("key"));
@@ -110,6 +113,7 @@ public class Launcher {
                     injector.getInstance(PeriodApi.class),
                     injector.getInstance(BranchApi.class),
                     injector.getInstance(PersonaApi.class),
+                    injector.getInstance(PersonaDetailsApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),

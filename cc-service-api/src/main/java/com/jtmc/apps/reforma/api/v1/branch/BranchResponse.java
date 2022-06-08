@@ -6,7 +6,7 @@ public class BranchResponse extends BranchBase {
     private String registration;
     private boolean status;
 
-    public Integer getId(Integer id) {
+    public Integer getId() {
         return this.id;
     }
 

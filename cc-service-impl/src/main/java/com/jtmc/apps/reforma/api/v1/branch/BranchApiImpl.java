@@ -51,7 +51,7 @@ public class BranchApiImpl implements BranchApi {
 
     private BranchResponse mapToBranchResponse(Branch branch) {
         BranchResponse response = new BranchResponse();
-        response.getId(branch.getId());
+        response.setId(branch.getId());
         response.setName(branch.getName());
         response.setAddress(branch.getAddress());
         response.setRegistration(branch.getRegistration().toString());
