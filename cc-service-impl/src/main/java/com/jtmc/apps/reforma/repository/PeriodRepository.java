@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Period;
 import com.jtmc.apps.reforma.repository.mapper.PeriodDynamicSqlSupport;
 import com.jtmc.apps.reforma.repository.mapper.PeriodMapper;
-import com.jtmc.apps.reforma.repository.mybatis.exception.MyBatisRepositoryMapperException;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.dynamic.sql.SqlBuilder;

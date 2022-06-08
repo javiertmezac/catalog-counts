@@ -1,6 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.branch;
 
 import com.google.inject.Inject;
+import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.Branch;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@JwtRequired
 public class BranchApiImpl implements BranchApi {
     @Inject
     private BranchImpl branchImpl;

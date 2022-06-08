@@ -1,15 +1,17 @@
 package com.jtmc.apps.reforma.domain;
 
+import com.jtmc.apps.reforma.domain.legacy.Persona;
+
 public class Attendance {
 
     private Persona persona;
     private boolean attended;
 
-    public Persona getPersona() {
+    public com.jtmc.apps.reforma.domain.legacy.Persona getPersona() {
         return persona;
     }
 
-    public void setPersona(Persona persona) {
+    public void setPersona(com.jtmc.apps.reforma.domain.legacy.Persona persona) {
         this.persona = persona;
     }
 

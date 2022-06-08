@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.persona.PersonaResponse;
 import com.jtmc.apps.reforma.api.v1.service.AttendanceResponse;
 import com.jtmc.apps.reforma.domain.Attendance;
-import com.jtmc.apps.reforma.domain.Persona;
+import com.jtmc.apps.reforma.domain.legacy.Persona;
 import com.jtmc.apps.reforma.domain.Service;
 import com.jtmc.apps.reforma.impl.exception.ServiceNotFoundException;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;

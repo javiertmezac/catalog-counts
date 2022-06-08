@@ -2,7 +2,7 @@ package com.jtmc.apps.reforma.impl.service;
 
 import com.google.common.collect.Lists;
 import com.jtmc.apps.reforma.domain.Attendance;
-import com.jtmc.apps.reforma.domain.Persona;
+import com.jtmc.apps.reforma.domain.legacy.Persona;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.persona.PersonaMapper;
 import org.jeasy.random.EasyRandom;

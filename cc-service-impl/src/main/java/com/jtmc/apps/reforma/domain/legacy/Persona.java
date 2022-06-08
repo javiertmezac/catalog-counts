@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.domain;
+package com.jtmc.apps.reforma.domain.legacy;
 
 import java.util.Date;
 
@@ -54,7 +54,7 @@ public class Persona {
 
     @Override
     public String toString() {
-        return "com.jtmc.apps.reforma.domain.Persona{" +
+        return "com.jtmc.apps.reforma.domain.legacy.Persona{" +
                 "name='" + name + '\'' +
                 "lastname='" + lastname + '\'' +
                 ", lastTimeVisited=" + lastTimeVisited +

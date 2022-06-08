@@ -1,7 +1,6 @@
 package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.api.v1.branch.BranchResponse;
 import com.jtmc.apps.reforma.domain.Branch;
 import com.jtmc.apps.reforma.repository.mapper.BranchMapper;
 import org.apache.ibatis.session.SqlSession;

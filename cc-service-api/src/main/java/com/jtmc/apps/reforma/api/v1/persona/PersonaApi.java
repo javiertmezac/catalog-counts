@@ -10,11 +10,11 @@ public interface PersonaApi {
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    PersonaResponseList selectPersonas();
+    PersonaResponseList selectAll();
 
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insertPersona(PersonaRequest request);
+    Response insert(PersonaRequest request);
 }

@@ -1,6 +1,6 @@
 package com.jtmc.apps.reforma.repository.mybatis.dbmapper.persona;
 
-import com.jtmc.apps.reforma.domain.Persona;
+import com.jtmc.apps.reforma.domain.legacy.Persona;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
