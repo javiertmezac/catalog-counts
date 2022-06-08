@@ -9,6 +9,8 @@ import com.google.inject.name.Names;
 import com.jtmc.apps.reforma.api.filter.CorsFilter;
 import com.jtmc.apps.reforma.api.filter.JwtRequiredFilter;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtUserClaim;
+import com.jtmc.apps.reforma.api.v1.branch.BranchApi;
+import com.jtmc.apps.reforma.api.v1.branch.BranchApiImpl;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApi;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApiImpl;
 import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumApi;
@@ -31,6 +33,7 @@ import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApi;
 import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApiImpl;
 import com.jtmc.apps.reforma.api.v1.user.UserApi;
 import com.jtmc.apps.reforma.api.v1.user.UserApiImpl;
+import com.jtmc.apps.reforma.domain.Branch;
 import com.jtmc.apps.reforma.guice.CCMybatisModule;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.infrastructure.GuiceApplication;
@@ -72,6 +75,7 @@ public class Launcher {
             bind(UserApi.class).to(UserApiImpl.class);
             bind(PeriodConfirmApi.class).to(PeriodConfirmApiImpl.class);
             bind(PeriodApi.class).to(PeriodApiImpl.class);
+            bind(BranchApi.class).to(BranchApiImpl.class);
 
             Properties myProperties = new Properties();
             myProperties.setProperty("key", System.getenv("key"));
@@ -100,6 +104,7 @@ public class Launcher {
                     injector.getInstance(UserApi.class),
                     injector.getInstance(PeriodConfirmApi.class),
                     injector.getInstance(PeriodApi.class),
+                    injector.getInstance(BranchApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),
