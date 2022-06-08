@@ -10,8 +10,8 @@ import com.jtmc.apps.reforma.repository.PeriodConfirmRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.ForbiddenException;
 import java.time.Instant;
+import java.util.Optional;
 
 public class PeriodConfirmImpl {
     private final Logger logger = LoggerFactory.getLogger(PeriodConfirmImpl.class);
@@ -40,13 +40,21 @@ public class PeriodConfirmImpl {
         details.setPeriodid(periodId);
         details.setRegistration(Instant.now());
         details.setConfirmedby(userDetails.getPersonaId());
-        details.setStatus(true);
 
         int validInsertion = 1;
-        if (repository.insertPeriodDetails(details) != validInsertion) {
+        if (repository.insert(details) != validInsertion) {
             logger.error("PeriodConfirm for branchId {} and periodId {} was not registered",
                     branchId, periodId);
             throw new PeriodConfirmException("Internal Error on PeriodConfirm", 500);
         }
+    }
+
+    public PeriodDetails selectOne(int confirmId) {
+        Optional<PeriodDetails> periodDetails = repository.selectOne(confirmId);
+        if(!periodDetails.isPresent()) {
+            logger.error("PeriodDetails (confirmation) not found: {}", confirmId);
+            throw new PeriodDetailsConfirmationNotFoundException("Confirmation not found", 404);
+        }
+        return periodDetails.get();
     }
 }

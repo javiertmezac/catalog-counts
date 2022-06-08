@@ -8,16 +8,29 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 public class PeriodConfirmRepository {
     final private Logger logger = LoggerFactory.getLogger(PeriodConfirmRepository.class);
 
     @Inject
     private SqlSessionFactory sqlSessionFactory;
 
-    public int insertPeriodDetails(PeriodDetails periodDetails) {
+    public int insert(PeriodDetails periodDetails) {
         try(SqlSession session = sqlSessionFactory.openSession(true)) {
             PeriodDetailsMapper mapper = session.getMapper(PeriodDetailsMapper.class);
+            periodDetails.setStatus(true);
             return mapper.insert(periodDetails);
+        } catch (Exception ex) {
+           logger.error("{}", ex);
+           throw  ex;
+        }
+    }
+
+    public Optional<PeriodDetails> selectOne(int confirmId) {
+         try(SqlSession session = sqlSessionFactory.openSession()) {
+             PeriodDetailsMapper mapper = session.getMapper(PeriodDetailsMapper.class);
+            return mapper.selectByPrimaryKey(confirmId);
         } catch (Exception ex) {
            logger.error("{}", ex);
            throw  ex;

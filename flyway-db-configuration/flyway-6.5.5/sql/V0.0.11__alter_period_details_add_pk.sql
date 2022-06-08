@@ -1,0 +1,1 @@
+ALTER TABLE period_details DROP PRIMARY KEY, ADD PRIMARY KEY(id, periodId, branchId);
