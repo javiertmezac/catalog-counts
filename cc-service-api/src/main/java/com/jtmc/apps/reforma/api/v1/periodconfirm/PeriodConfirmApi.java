@@ -13,7 +13,8 @@ public interface PeriodConfirmApi {
     Response confirmPeriodForBranch(@PathParam("branchId") int branchId, @PathParam("periodId") int periodId);
 
     @GET
-    @Path("/confirm/{confirmId}")
+    @Path("/confirm")
     @Produces(MediaType.APPLICATION_JSON)
-    ConfirmResponse selectOne(@PathParam("confirmId") int confirmId);
+    ConfirmResponse selectOne(@PathParam("branchId") int branchId,
+                              @PathParam("periodId") int periodId);
 }

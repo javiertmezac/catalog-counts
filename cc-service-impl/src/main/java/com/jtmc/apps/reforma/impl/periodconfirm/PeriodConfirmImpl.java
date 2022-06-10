@@ -32,7 +32,7 @@ public class PeriodConfirmImpl {
         if (userDetails.getDefaultBranch() != branchId) {
             logger.error("LoggedInUser's default branchId {} does not match with given branchId {}",
                     userDetails.getDefaultBranch(), branchId);
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Wrong default branch selection");
         }
 
         PeriodDetails details = new PeriodDetails();
@@ -49,10 +49,10 @@ public class PeriodConfirmImpl {
         }
     }
 
-    public PeriodDetails selectOne(int confirmId) {
-        Optional<PeriodDetails> periodDetails = repository.selectOne(confirmId);
+    public PeriodDetails selectOne(int branchId, int periodId) {
+        Optional<PeriodDetails> periodDetails = repository.selectOne(branchId, periodId);
         if(!periodDetails.isPresent()) {
-            logger.error("PeriodDetails (confirmation) not found: {}", confirmId);
+            logger.error("PeriodDetails (confirmation) not found: branchID {}, periodId{}");
             throw new PeriodDetailsConfirmationNotFoundException("Confirmation not found", 404);
         }
         return periodDetails.get();

@@ -25,11 +25,11 @@ public class PeriodConfirmApiImpl implements PeriodConfirmApi {
     }
 
     @Override
-    public ConfirmResponse selectOne(int confirmId) {
-        PeriodDetails periodDetails = periodConfirmImpl.selectOne(confirmId);
+    public ConfirmResponse selectOne(int branchId, int periodId) {
+        PeriodDetails periodDetails = periodConfirmImpl.selectOne(branchId, periodId);
 
         ConfirmResponse response = new ConfirmResponse();
-        response.setId(periodDetails.getId());
+        response.setPeriodId(periodDetails.getPeriodid());
         response.setBranchId(periodDetails.getBranchid());
         response.setRegistration(periodDetails.getRegistration().toString());
         return response;

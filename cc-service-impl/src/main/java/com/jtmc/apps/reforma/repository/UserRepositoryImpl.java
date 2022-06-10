@@ -4,11 +4,10 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Login;
 import com.jtmc.apps.reforma.domain.PersonaDetails;
 import com.jtmc.apps.reforma.domain.UserDetails;
+import com.jtmc.apps.reforma.repository.exception.UnauthorizedUserException;
 import com.jtmc.apps.reforma.repository.mapper.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.dynamic.sql.BasicColumn;
-import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ public class UserRepositoryImpl {
         // branchId
         Optional<Login> loggedInUser = this.selectLoggedInUser(username);
         if(!loggedInUser.isPresent()) {
-            throw new RuntimeException("No valid LoggedInUser");
+            throw new UnauthorizedUserException("No valid LoggedInUser", 401);
         }
         // username
         userDetails.setUsername(username);

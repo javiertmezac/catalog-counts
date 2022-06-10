@@ -1,16 +1,16 @@
 package com.jtmc.apps.reforma.api.v1.periodconfirm;
 
 public class ConfirmResponse {
-    private int id;
+    private int periodId;
     private String registration;
     private int branchId;
 
-    public int getId() {
-        return id;
+    public int getPeriodId() {
+        return periodId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPeriodId(int periodId) {
+        this.periodId = periodId;
     }
 
     public String getRegistration() {
