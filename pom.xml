@@ -7,7 +7,7 @@
     <groupId>com.jtmc.apps.reforma</groupId>
     <artifactId>catalog-counts-base-pom</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0-alpha</version>
+    <version>1.1.0</version>
 
     <properties>
         <mockito.version>3.2.4</mockito.version>

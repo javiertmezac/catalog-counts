@@ -1,9 +1,25 @@
 # Catalog Counts Service Changelog
 
-## 1.1.0-alpha
-release date: Jun 6, 2022
+## 1.1.0
+release date: June 10, 2022
 
-## What's Changed
+### Features
+- ++ 1.1.0-alpha version
+- added GET method on ConfirmPeriodApi
+- added BranchApi
+- change table structure on report and period_details
+    - composite key on period_details (branch and period)
+    - composite fk on report (branch and period)
+    - updated data objects
+
+### Improvements
+- modified existing PersonaApi to adjust new requirements
+- display date when logging. previous was just date
+
+## 1.1.0-alpha
+release date: June 6, 2022
+
+### What's Changed
 * Feature/logger log trail by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/46
 * Develop by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/47
 * Feature/confirmation alert by @javiertmezac in https://github.com/javiertmezac/catalog-counts/pull/49
