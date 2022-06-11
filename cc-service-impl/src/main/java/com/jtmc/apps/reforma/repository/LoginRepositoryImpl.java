@@ -7,10 +7,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
 
 import static com.jtmc.apps.reforma.repository.mapper.LoginDynamicSqlSupport.*;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
+import static org.mybatis.dynamic.sql.SqlBuilder.isTrue;
 import static org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils.select;
 
 public class LoginRepositoryImpl {
@@ -24,9 +27,16 @@ public class LoginRepositoryImpl {
             SelectStatementProvider statementProvider =
                     select(LoginMapper.selectList, login,
                             c -> c.where(username, isEqualTo(inputUsername))
-                                    .and(password, isEqualTo(inputPassword))
+                            .and(password, isEqualTo(base64Encode(inputPassword)))
+                            .and(status, isTrue())
                     );
             return mapper.selectOne(statementProvider);
         }
+    }
+
+    private String base64Encode(String value) {
+        Base64.Encoder encoder = Base64.getEncoder();
+        byte[] toEncode = value.getBytes(StandardCharsets.UTF_8);
+        return encoder.encodeToString(toEncode);
     }
 }
