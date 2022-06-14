@@ -2,6 +2,7 @@ package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.PeriodDetails;
+import com.jtmc.apps.reforma.repository.exception.RepositoryException;
 import com.jtmc.apps.reforma.repository.mapper.PeriodDetailsMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -23,7 +24,7 @@ public class PeriodConfirmRepository {
             return mapper.insert(periodDetails);
         } catch (Exception ex) {
            logger.error("{}", ex);
-           throw  ex;
+           throw new RepositoryException("Error in PeriodConfirmRepository", 500);
         }
     }
 
@@ -33,7 +34,7 @@ public class PeriodConfirmRepository {
             return mapper.selectByPrimaryKey(branchId, periodId, confirmedBy);
         } catch (Exception ex) {
            logger.error("{}", ex);
-           throw  ex;
+           throw new RepositoryException("Error in PeriodConfirmRepository", 500);
         }
     }
 }
