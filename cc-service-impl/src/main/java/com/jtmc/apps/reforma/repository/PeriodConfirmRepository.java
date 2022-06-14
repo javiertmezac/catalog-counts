@@ -27,10 +27,10 @@ public class PeriodConfirmRepository {
         }
     }
 
-    public Optional<PeriodDetails> selectOne(int branchId, int periodId) {
+    public Optional<PeriodDetails> selectOne(int branchId, int periodId, int confirmedBy) {
          try(SqlSession session = sqlSessionFactory.openSession()) {
              PeriodDetailsMapper mapper = session.getMapper(PeriodDetailsMapper.class);
-            return mapper.selectByPrimaryKey(periodId, branchId);
+            return mapper.selectByPrimaryKey(branchId, periodId, confirmedBy);
         } catch (Exception ex) {
            logger.error("{}", ex);
            throw  ex;

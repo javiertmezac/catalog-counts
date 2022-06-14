@@ -4,6 +4,15 @@ public class ConfirmResponse {
     private int periodId;
     private String registration;
     private int branchId;
+    private int confirmedBy;
+
+    public int getConfirmedBy() {
+        return confirmedBy;
+    }
+
+    public void setConfirmedBy(int confirmedBy) {
+        this.confirmedBy = confirmedBy;
+    }
 
     public int getPeriodId() {
         return periodId;

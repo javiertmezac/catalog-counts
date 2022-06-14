@@ -34,7 +34,8 @@ public class LoginApplication {
 
         Optional<Login> user = userRepository.selectUser(inputUsername, inputPassword);
         if (!user.isPresent()) {
-            logger.warn("User not found for provided credentials");
+            logger.warn("UserLogin not found for provided credentials");
+            //todo: should this be a different error message?
             throw new UserNotFoundException("Bad Request", 400);
         }
         return user.get();
