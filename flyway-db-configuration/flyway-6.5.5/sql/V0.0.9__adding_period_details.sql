@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `period_details` (
   `periodId`        INT UNSIGNED NOT NULL,
   `branchId`        INT UNSIGNED NOT NULL,
   `status`          BOOLEAN NOT NULL,
-  PRIMARY KEY (`periodId`, `branchId`),
+  PRIMARY KEY (`branchId`, `periodId`, `confirmedBy`),
   CONSTRAINT `periodDetails_confirmedBy_FK` FOREIGN KEY (`confirmedBy`) REFERENCES `catalog_count`.`persona` (`id`),
   CONSTRAINT `periodDetails_period_FK` FOREIGN KEY (`periodId`) REFERENCES `catalog_count`.`period` (`id`),
   CONSTRAINT `periodDetails_brandh_FK` FOREIGN KEY (`branchId`) REFERENCES `catalog_count`.`branch` (`id`)
