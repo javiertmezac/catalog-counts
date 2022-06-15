@@ -6,6 +6,15 @@ public class UserResponse {
     private List<Integer> roles;
     private int defaultBranch;
     private String username;
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public List<Integer> getRoles() {
         return roles;

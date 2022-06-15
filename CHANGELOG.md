@@ -1,5 +1,14 @@
 # Catalog Counts Service Changelog
 
+## 1.1.1
+release date: June 14, 2022
+
+### Breaking Changes
+- updated DB to include confirmedBy as CompositeKey
+    - period_details compositeKey branch, period, confirmed
+    - report FCK branch, period, confirmed
+- ran myBatis Generator to update PeriodDetails and Report related DAOs
+
 ## 1.1.0
 release date: June 10, 2022
 

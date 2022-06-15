@@ -7,29 +7,29 @@ import org.mybatis.dynamic.sql.SqlColumn;
 import org.mybatis.dynamic.sql.SqlTable;
 
 public final class PeriodDetailsDynamicSqlSupport {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-10T12:33:29.898714-07:00", comments="Source Table: period_details")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-13T22:32:32.258877-07:00", comments="Source Table: period_details")
     public static final PeriodDetails periodDetails = new PeriodDetails();
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-10T12:33:29.899949-07:00", comments="Source field: period_details.periodId")
-    public static final SqlColumn<Integer> periodid = periodDetails.periodid;
-
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-10T12:33:29.901963-07:00", comments="Source field: period_details.branchId")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-13T22:32:32.259266-07:00", comments="Source field: period_details.branchId")
     public static final SqlColumn<Integer> branchid = periodDetails.branchid;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-10T12:33:29.902547-07:00", comments="Source field: period_details.confirmedBy")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-13T22:32:32.259628-07:00", comments="Source field: period_details.periodId")
+    public static final SqlColumn<Integer> periodid = periodDetails.periodid;
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-13T22:32:32.259742-07:00", comments="Source field: period_details.confirmedBy")
     public static final SqlColumn<Integer> confirmedby = periodDetails.confirmedby;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-10T12:33:29.902941-07:00", comments="Source field: period_details.registration")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-13T22:32:32.259846-07:00", comments="Source field: period_details.registration")
     public static final SqlColumn<Instant> registration = periodDetails.registration;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-10T12:33:29.903337-07:00", comments="Source field: period_details.status")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-13T22:32:32.259964-07:00", comments="Source field: period_details.status")
     public static final SqlColumn<Boolean> status = periodDetails.status;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-10T12:33:29.899331-07:00", comments="Source Table: period_details")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-13T22:32:32.259115-07:00", comments="Source Table: period_details")
     public static final class PeriodDetails extends SqlTable {
-        public final SqlColumn<Integer> periodid = column("periodId", JDBCType.INTEGER);
-
         public final SqlColumn<Integer> branchid = column("branchId", JDBCType.INTEGER);
+
+        public final SqlColumn<Integer> periodid = column("periodId", JDBCType.INTEGER);
 
         public final SqlColumn<Integer> confirmedby = column("confirmedBy", JDBCType.INTEGER);
 

@@ -1,8 +1,11 @@
 package com.jtmc.apps.reforma.impl.periodconfirm;
 
 import com.google.inject.Inject;
+import com.jtmc.apps.reforma.domain.Branch;
+import com.jtmc.apps.reforma.domain.Period;
 import com.jtmc.apps.reforma.domain.PeriodDetails;
 import com.jtmc.apps.reforma.domain.UserDetails;
+import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.exception.PeriodConfirmException;
 import com.jtmc.apps.reforma.impl.period.PeriodImpl;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
@@ -25,9 +28,13 @@ public class PeriodConfirmImpl {
     @Inject
     private PeriodImpl periodImpl;
 
+    @Inject
+    private BranchImpl branchImpl;
+
     public void confirmPeriod(int branchId, int periodId) {
         UserDetails userDetails = userImpl.getLoggedInUserDetails();
-        periodImpl.getPeriodById(periodId);
+        Branch branch = branchImpl.selectOneBranch(branchId);
+        Period period = periodImpl.getPeriodById(periodId);
 
         if (userDetails.getDefaultBranch() != branchId) {
             logger.error("LoggedInUser's default branchId {} does not match with given branchId {}",
@@ -43,16 +50,17 @@ public class PeriodConfirmImpl {
 
         int validInsertion = 1;
         if (repository.insert(details) != validInsertion) {
-            logger.error("PeriodConfirm for branchId {} and periodId {} was not registered",
-                    branchId, periodId);
+            logger.error("PeriodConfirm for branchId {}, periodId {} and confirmedBy {} was not registered",
+                    branch.getName(), period.getDescription(), userDetails.getUsername());
             throw new PeriodConfirmException("Internal Error on PeriodConfirm", 500);
         }
     }
 
-    public PeriodDetails selectOne(int branchId, int periodId) {
-        Optional<PeriodDetails> periodDetails = repository.selectOne(branchId, periodId);
+    public PeriodDetails selectOne(int branchId, int periodId, int confirmedBy) {
+        Optional<PeriodDetails> periodDetails = repository.selectOne(branchId, periodId, confirmedBy);
         if(!periodDetails.isPresent()) {
-            logger.error("PeriodDetails (confirmation) not found: branchID {}, periodId{}");
+            logger.error("PeriodDetails (confirmation) not found: branchID {}, periodId {} and confirmedBy {}",
+                    branchId, periodId, confirmedBy);
             throw new PeriodDetailsConfirmationNotFoundException("Confirmation not found", 404);
         }
         return periodDetails.get();
