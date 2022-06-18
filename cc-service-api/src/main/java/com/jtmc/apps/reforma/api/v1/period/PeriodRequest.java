@@ -1,11 +1,18 @@
 package com.jtmc.apps.reforma.api.v1.period;
 
-public class PeriodResponse {
-    private int id;
+public class PeriodRequest {
     private String description;
     private int fromMonth;
     private int toMonth;
     private int year;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public int getFromMonth() {
         return fromMonth;
@@ -29,21 +36,5 @@ public class PeriodResponse {
 
     public void setYear(int year) {
         this.year = year;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }
