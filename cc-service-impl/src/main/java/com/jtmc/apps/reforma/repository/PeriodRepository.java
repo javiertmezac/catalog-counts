@@ -54,4 +54,11 @@ public class PeriodRepository {
             return mapper.insertSelective(p);
         }
     }
+
+    public int update(Period p) {
+        try(SqlSession session = sqlSessionFactory.openSession(true)) {
+            PeriodMapper mapper = session.getMapper(PeriodMapper.class);
+            return mapper.updateByPrimaryKeySelective(p);
+        }
+    }
 }

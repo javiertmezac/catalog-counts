@@ -9,6 +9,7 @@ import com.jtmc.apps.reforma.repository.PeriodRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.BadRequestException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,16 +41,34 @@ public class PeriodImpl {
         return period.get();
     }
 
-    public void insert(Period period) {
+    //todo: ugly, change it
+    public void upsert(Period period) {
         UserDetails userDetails = userImpl.getLoggedInUserDetails();
         //todo validate contralor rights.
 
-        int successfulInserted = 1;
-        if(periodRepository.insert(period) != successfulInserted) {
-            logger.error("Could not insert new period");
-            throw new RuntimeException("Could not insert period");
+        if (period.getFrommonth() > period.getTomonth()) {
+            logger.error("Period FromMonth {} should not be greater than To Month {}. username: {}",
+                    period.getFrommonth(), period.getTomonth(), userDetails.getUsername());
+            throw new BadRequestException("From Month cannot be greater than To Month");
         }
-        logger.info("New period from  {} to {} year {}: successfully inserted by {}",
+
+        int success = 1;
+        int newValue = 0;
+        String finalLoggerMessage;
+        if (period.getId() == newValue) {
+            if(periodRepository.insert(period) != success) {
+                logger.error("Could not insert new period");
+                throw new RuntimeException("Could not insert period");
+            }
+            finalLoggerMessage = "New period from  {} to {} year {}: successfully inserted by {}";
+        } else {
+            if(periodRepository.update(period) != success) {
+                logger.error("Could not update period {}", period.getId());
+                throw new RuntimeException("Could not update period");
+            }
+            finalLoggerMessage = "Period from  {} to {} year {}: successfully updated by {}";
+        }
+        logger.info(finalLoggerMessage,
                 period.getFrommonth(), period.getTomonth(), period.getYear(), userDetails.getUsername());
     }
 

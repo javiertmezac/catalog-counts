@@ -1,10 +1,19 @@
 package com.jtmc.apps.reforma.api.v1.period;
 
 public class PeriodRequest {
+    private int id;
     private String description;
     private int fromMonth;
     private int toMonth;
     private int year;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getDescription() {
         return description;

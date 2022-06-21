@@ -67,18 +67,32 @@ public class PeriodApiImpl implements PeriodApi {
 
     @Override
     public Response insert(PeriodRequest request) {
-        checkArgument(request.getFromMonth() > 0, "Invalid From Month");
-        checkArgument(request.getToMonth() > 0, "Invalid To Month");
-        checkArgument(request.getYear() > 0, "Invalid Year");
-        checkArgument(StringUtils.isNotBlank(request.getDescription()), "Invalid Description");
+        validatePeriodRequestParams(request);
+        periodImpl.upsert(convertToPeriod(request));
+        return Response.noContent().build();
+    }
 
+    @Override
+    public Response update(PeriodRequest request) {
+        validatePeriodRequestParams(request);
+        periodImpl.upsert(convertToPeriod(request));
+        return Response.noContent().build();
+    }
+
+    private Period convertToPeriod(PeriodRequest request) {
         Period p = new Period();
+        p.setId(request.getId());
         p.setDescription(request.getDescription());
         p.setFrommonth(request.getFromMonth());
         p.setTomonth(request.getToMonth());
         p.setYear(request.getYear());
-        periodImpl.insert(p);
+        return  p;
+    }
 
-        return Response.noContent().build();
+    private void validatePeriodRequestParams(PeriodRequest request) {
+        checkArgument(request.getFromMonth() > 0, "Invalid From Month");
+        checkArgument(request.getToMonth() > 0, "Invalid To Month");
+        checkArgument(request.getYear() > 0, "Invalid Year");
+        checkArgument(StringUtils.isNotBlank(request.getDescription()), "Invalid Description");
     }
 }

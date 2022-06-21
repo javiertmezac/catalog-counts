@@ -20,4 +20,9 @@ public interface PeriodApi {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     Response insert(PeriodRequest request);
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    Response update(PeriodRequest request);
 }
