@@ -11,6 +11,11 @@ public interface PeriodApi {
     @Produces(MediaType.APPLICATION_JSON)
     PeriodResponseList getPeriod(@QueryParam("toMonth") int toMonth, @QueryParam("year") int year);
 
+    @GET
+    @Path("/{periodId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    PeriodResponse getPeriod(@PathParam("periodId") int periodId);
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

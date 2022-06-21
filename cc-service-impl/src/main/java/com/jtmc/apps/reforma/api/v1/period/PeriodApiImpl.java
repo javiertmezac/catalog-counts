@@ -40,6 +40,13 @@ public class PeriodApiImpl implements PeriodApi {
         return responseList;
     }
 
+    @Override
+    public PeriodResponse getPeriod(int periodId) {
+        checkArgument(periodId > 0, "Invalid Period");
+        Period p = periodImpl.getPeriodById(periodId);
+        return converter(p);
+    }
+
     private void validateQueryParams(int toMonth, int year) {
         checkArgument(toMonth > 0, "Invalid toMonth");
         checkArgument(toMonth < 13, "Invalid toMonth");

@@ -48,7 +48,7 @@ public class PeriodRepository {
     }
 
     public int insert(Period p) {
-        try(SqlSession session = sqlSessionFactory.openSession()) {
+        try(SqlSession session = sqlSessionFactory.openSession(true)) {
             PeriodMapper mapper = session.getMapper(PeriodMapper.class);
             p.setStatus(true);
             return mapper.insertSelective(p);
