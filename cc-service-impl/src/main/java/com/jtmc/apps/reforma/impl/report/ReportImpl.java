@@ -1,19 +1,18 @@
 package com.jtmc.apps.reforma.impl.report;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.domain.Period;
-import com.jtmc.apps.reforma.domain.PeriodDetails;
-import com.jtmc.apps.reforma.domain.Report;
+import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.exception.PeriodNotFoundException;
-import com.jtmc.apps.reforma.repository.PeriodConfirmRepository;
-import com.jtmc.apps.reforma.repository.PeriodRepository;
-import com.jtmc.apps.reforma.repository.ReportRepository;
+import com.jtmc.apps.reforma.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ReportImpl {
 
@@ -28,7 +27,14 @@ public class ReportImpl {
    @Inject
    private PeriodConfirmRepository periodConfirmRepository;
 
-   public void whatever(int branchId, int month, int year) {
+   @Inject
+   private PersonaDetailsRepository personaDetailsRepository;
+
+   @Inject
+   private RoleRepository roleRepository;
+
+
+   public PeriodReport periodReport(int branchId, int month, int year) {
 
        Optional<Period> period = periodRepository.selectOne(month, year);
        if(!period.isPresent()) {
@@ -44,58 +50,27 @@ public class ReportImpl {
 
        List<PeriodDetails> periodConfirmationList = periodConfirmRepository.select(branchId, periodId);
        //optional todo: verify roles of "confirmation users"
+       Stream<PersonaRolePeriodConfirmation> periodConfirmationStream = periodConfirmationList.stream().map(x -> {
+           PersonaRolePeriodConfirmation confirmation = new PersonaRolePeriodConfirmation();
+           confirmation.setPersonaId(x.getConfirmedby());
+           confirmation.setConfirmationDate(x.getRegistration());
+
+           Optional<PersonaDetails> personaDetails = personaDetailsRepository.selectOne(x.getConfirmedby());
+           confirmation.setRole(personaDetails.map(pd ->
+                   roleRepository.selectOne(pd.getRoleid())
+                           .orElse(null))
+                   .orElse(null));
+           return confirmation;
+       });
 
        PeriodReport periodReport = new PeriodReport();
+       periodReport.setPeriodId(periodId);
+       periodReport.setPeriodDescription(period.get().getDescription());
        periodReport.setReportUUID(report.map(r -> UUID.fromString(r.getUuid())).orElse(null));
+       periodReport.setConfirmationList(periodConfirmationStream.collect(Collectors.toList()));
 
+       return periodReport;
    }
-    class PeriodReport {
-       private int periodId;
-       private String periodDescription;
-       private UUID reportUUID;
-       private boolean treasureConfirmation;
-       private boolean secretaryConfirmation;
-
-        public int getPeriodId() {
-            return periodId;
-        }
-
-        public void setPeriodId(int periodId) {
-            this.periodId = periodId;
-        }
-
-        public String getPeriodDescription() {
-            return periodDescription;
-        }
-
-        public void setPeriodDescription(String periodDescription) {
-            this.periodDescription = periodDescription;
-        }
-
-        public UUID getReportUUID() {
-            return reportUUID;
-        }
-
-        public void setReportUUID(UUID reportUUID) {
-            this.reportUUID = reportUUID;
-        }
-
-        public boolean isTreasureConfirmation() {
-            return treasureConfirmation;
-        }
-
-        public void setTreasureConfirmation(boolean treasureConfirmation) {
-            this.treasureConfirmation = treasureConfirmation;
-        }
-
-        public boolean isSecretaryConfirmation() {
-            return secretaryConfirmation;
-        }
-
-        public void setSecretaryConfirmation(boolean secretaryConfirmation) {
-            this.secretaryConfirmation = secretaryConfirmation;
-        }
-    }
 }
 
 

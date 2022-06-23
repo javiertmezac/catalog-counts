@@ -29,6 +29,7 @@ public class CCMybatisModule extends MyBatisModule {
         addMapperClass(RoleMapper.class);
         addMapperClass(PeriodMapper.class);
         addMapperClass(PeriodDetailsMapper.class);
+        addMapperClass(ReportMapper.class);
 
         addMapperClass(CustomCatalogCountMapper.class);
     }
