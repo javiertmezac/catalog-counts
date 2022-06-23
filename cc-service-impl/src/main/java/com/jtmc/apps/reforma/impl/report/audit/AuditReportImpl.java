@@ -6,6 +6,7 @@ import com.jtmc.apps.reforma.domain.Incomes;
 import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import com.jtmc.apps.reforma.domain.SumCatalogCountByFamily;
 import com.jtmc.apps.reforma.impl.exception.MonthlyTotalNotFoundException;
+import com.jtmc.apps.reforma.repository.ReportRepository;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
 import org.apache.commons.lang3.StringUtils;
 

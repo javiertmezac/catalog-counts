@@ -97,6 +97,8 @@ public class AuditReportApiImpl implements AuditReportApi {
         response.setAuditor("[placeholder]");
         response.setTreasurer("Javier Trinidad Meza Cazarez");
         response.setSecretary("[placeholder]");
+
+        //todo: save report..
         return response;
     }
 
