@@ -33,16 +33,9 @@ public class ReportImpl {
    @Inject
    private RoleRepository roleRepository;
 
+   public PeriodReport periodReport(int branchId, Period period) {
 
-   public PeriodReport periodReport(int branchId, int month, int year) {
-
-       Optional<Period> period = periodRepository.selectOne(month, year);
-       if(!period.isPresent()) {
-           logger.error("Period for month {} and year {}, not found", month, year);
-           throw new PeriodNotFoundException("Not Found", 404);
-       }
-
-       int periodId = period.get().getId();
+       int periodId = period.getId();
        Optional<Report> report = reportRepository.selectByPeriod(periodId);
        if (!report.isPresent()) {
           logger.warn("Report for PeriodId {}, not found", periodId);
@@ -65,7 +58,7 @@ public class ReportImpl {
 
        PeriodReport periodReport = new PeriodReport();
        periodReport.setPeriodId(periodId);
-       periodReport.setPeriodDescription(period.get().getDescription());
+       periodReport.setPeriodDescription(period.getDescription());
        periodReport.setReportUUID(report.map(r -> UUID.fromString(r.getUuid())).orElse(null));
        periodReport.setConfirmationList(periodConfirmationStream.collect(Collectors.toList()));
 
