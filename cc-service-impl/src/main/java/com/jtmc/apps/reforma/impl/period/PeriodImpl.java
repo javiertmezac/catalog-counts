@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
