@@ -2,12 +2,14 @@ package com.jtmc.apps.reforma.impl.report;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.*;
-import com.jtmc.apps.reforma.impl.exception.PeriodNotFoundException;
-import com.jtmc.apps.reforma.repository.*;
+import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
+import com.jtmc.apps.reforma.repository.PeriodConfirmRepository;
+import com.jtmc.apps.reforma.repository.PersonaDetailsRepository;
+import com.jtmc.apps.reforma.repository.ReportRepository;
+import com.jtmc.apps.reforma.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,9 +24,6 @@ public class ReportImpl {
    private ReportRepository reportRepository;
 
    @Inject
-   private PeriodRepository periodRepository;
-
-   @Inject
    private PeriodConfirmRepository periodConfirmRepository;
 
    @Inject
@@ -32,6 +31,9 @@ public class ReportImpl {
 
    @Inject
    private RoleRepository roleRepository;
+
+   @Inject
+   private CatalogCountImpl catalogCountImpl;
 
    public PeriodReport periodReport(int branchId, Period period) {
 
@@ -64,6 +66,37 @@ public class ReportImpl {
 
        return periodReport;
    }
+
+    public String buildToDate(int toMonth, int year) {
+
+        final int december = 12;
+        final String day = "01";
+        String month = String.valueOf(toMonth + 1);
+
+        if(toMonth == december) {
+            year = year + 1;
+            month = "01";
+        }
+        return  String.format("%s-%s-%s",
+                year, month, day);
+    }
+
+    public String buildFromDate(int fromMonth, int year) {
+        return String.format("%s-%s-%s",
+                year, fromMonth, "01");
+    }
+
+    public double calculatePreviousBalance(int branchId, String fromDate) {
+        double previousBalance;
+        try {
+             previousBalance = catalogCountImpl.getTotalBalanceUpToGivenDate(branchId, fromDate);
+        } catch (Exception e) {
+            logger.error("wrong date parsing", e);
+            throw new RuntimeException(e);
+        }
+        return previousBalance;
+    }
+
 }
 
 

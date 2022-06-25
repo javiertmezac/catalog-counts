@@ -12,4 +12,10 @@ public interface ReportApi {
     @Consumes(MediaType.APPLICATION_JSON)
     PeriodReportResponseList periodReportStatus(@PathParam("branchId") int branchId);
 
+    @POST
+    @Path("/{branchId}/report/default")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    ReportResponse createReport(@PathParam("branchId") int branchId, ReportRequest reportRequest);
+
 }

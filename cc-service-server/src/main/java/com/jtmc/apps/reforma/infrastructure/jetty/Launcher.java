@@ -35,12 +35,8 @@ import com.jtmc.apps.reforma.api.v1.personadetails.PersonaDetailsApi;
 import com.jtmc.apps.reforma.api.v1.personadetails.PersonaDetailsApiImpl;
 import com.jtmc.apps.reforma.api.v1.report.ReportApi;
 import com.jtmc.apps.reforma.api.v1.report.ReportApiImpl;
-import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApi;
-import com.jtmc.apps.reforma.api.v1.report.audit.AuditReportApiImpl;
 import com.jtmc.apps.reforma.api.v1.user.UserApi;
 import com.jtmc.apps.reforma.api.v1.user.UserApiImpl;
-import com.jtmc.apps.reforma.domain.Branch;
-import com.jtmc.apps.reforma.domain.Persona;
 import com.jtmc.apps.reforma.guice.CCMybatisModule;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.infrastructure.GuiceApplication;
@@ -77,7 +73,7 @@ public class Launcher {
             bind(CatalogCountApi.class).to(CatalogCountApiImpl.class);
             bind(ExcelImportApi.class).to(ExcelImportApiImpl.class);
             bind(CatalogCountEnumApi.class).to(CatalogCountEnumApiImpl.class);
-            bind(AuditReportApi.class).to(AuditReportApiImpl.class);
+//            bind(AuditReportApi.class).to(AuditReportApiImpl.class);
             bind(LoginApi.class).to(LoginApiImpl.class);
             bind(UserApi.class).to(UserApiImpl.class);
             bind(PeriodConfirmApi.class).to(PeriodConfirmApiImpl.class);
@@ -109,7 +105,7 @@ public class Launcher {
                     injector.getInstance(CatalogCountApi.class),
                     injector.getInstance(ExcelImportApi.class),
                     injector.getInstance(CatalogCountEnumApi.class),
-                    injector.getInstance(AuditReportApi.class),
+//                    injector.getInstance(AuditReportApi.class),
                     injector.getInstance(LoginApi.class),
                     injector.getInstance(UserApi.class),
                     injector.getInstance(PeriodConfirmApi.class),

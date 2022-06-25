@@ -1,7 +1,6 @@
-package com.jtmc.apps.reforma.api.v1.report.audit;
+package com.jtmc.apps.reforma.api.v1.report;
 
-public class AuditReportResponse {
-
+public class ReportResponse {
     private String title;
     private String mision;
     private String period;

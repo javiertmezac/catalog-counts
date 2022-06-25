@@ -1,4 +1,4 @@
-package com.jtmc.apps.reforma.api.v1.report.audit;
+package com.jtmc.apps.reforma.api.v1.report;
 
 public class SumIncomes {
 
