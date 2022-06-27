@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -42,7 +43,7 @@ class AuditReportImplTest {
     @Mock
     private AuditReportMapper auditReportMapper;
 
-    private String fromDate;
+    private Instant fromDate;
     private String toDate;
     int expectedMonth = 1;
     int expectedYear = 2021;
@@ -51,7 +52,7 @@ class AuditReportImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        fromDate = "2021-06-01";
+        fromDate = Instant.now();
         toDate = "2021-07-01";
     }
 
@@ -77,7 +78,7 @@ class AuditReportImplTest {
     void testGetSumIncomes_shouldValidate_toDateIsGreater_thanFromDate() {
         IllegalArgumentException actualException =
                 Assertions.assertThrows(IllegalArgumentException.class, () ->
-                        auditReport.getSumIncomes(toDate, fromDate));
+                        auditReport.getSumIncomes(fromDate, toDate));
 
         String expectedMessage = String.format("FromMonth cannot be greater than ToMonth");
         Assertions.assertEquals(expectedMessage, actualException.getMessage());
@@ -86,7 +87,7 @@ class AuditReportImplTest {
     @Test
     void testValidateDateRange_returnsIllegalArgument_whenNoDateFormat() {
         IllegalArgumentException illegalArgumentException = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                auditReport.getSumExpenses("something", "blah"));
+                auditReport.getSumExpenses(Instant.MIN, "blah"));
         Assertions.assertTrue(illegalArgumentException.getMessage().contains("Unparseable date:"));
     }
 
@@ -104,7 +105,7 @@ class AuditReportImplTest {
         offering.setFamily(OFFERINGS);
         offering.setSumAmount(300);
 
-        when(auditReportMapper.selectSumCatalogCountIncomes(fromDate, toDate))
+        when(auditReportMapper.selectSumCatalogCountIncomes(fromDate.toString(), toDate))
                 .thenReturn(Arrays.asList(sumTithe, donations, offering));
 
         Incomes actualIncomes = auditReport.getSumIncomes(fromDate, toDate);
@@ -134,7 +135,7 @@ class AuditReportImplTest {
        expectedSumByFamily.setFamily(family);
        expectedSumByFamily.setSumAmount(expectedAmount);
 
-       when(auditReportMapper.selectSumCatalogCountExpenses(fromDate, toDate))
+       when(auditReportMapper.selectSumCatalogCountExpenses(fromDate.toString(), toDate))
                .thenReturn(Arrays.asList(expectedSumByFamily));
 
        Expenses actualExpenses = auditReport.getSumExpenses(fromDate, toDate);

@@ -8,6 +8,7 @@ import com.jtmc.apps.reforma.impl.period.PeriodImpl;
 import com.jtmc.apps.reforma.impl.report.ReportImpl;
 import com.jtmc.apps.reforma.impl.report.audit.AuditReportImpl;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,7 +61,7 @@ public class ReportApiImpl implements ReportApi {
                 Months.valueOfNumber(toMonth),
                 year));
 
-        String fromDate = report.buildFromDate(fromMonth, year);
+        Instant fromDate = report.buildFromDate(fromMonth, year);
         String toDate = report.buildToDate(toMonth, year);
 
         double previousBalance = report.calculatePreviousBalance(branchId, fromDate);

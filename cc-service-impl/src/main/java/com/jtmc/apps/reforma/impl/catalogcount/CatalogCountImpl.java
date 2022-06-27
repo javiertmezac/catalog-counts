@@ -44,11 +44,10 @@ public class CatalogCountImpl {
     }
 
     //todo: improve this logic
-    public double getTotalBalanceUpToGivenDate(int branchId, String fromDate) throws Exception {
+    public double getTotalBalanceUpToGivenDate(int branchId, Instant fromDate) {
         Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
-        Date from = new SimpleDateFormat("yyyy-MM-dd").parse(fromDate);
         Stream<CustomCatalogCount> filteredCatalogCounts = catalogCounts.stream()
-                .filter(x -> x.getRegistration().isBefore(from.toInstant()));
+                .filter(x -> x.getRegistration().isBefore(fromDate));
         Stream<CatalogCountResponse> response = calculateTotal(filteredCatalogCounts);
 
         List<CatalogCountResponse> responseList = response.collect(Collectors.toList());

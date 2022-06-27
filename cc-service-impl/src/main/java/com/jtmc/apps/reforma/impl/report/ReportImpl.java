@@ -2,6 +2,7 @@ package com.jtmc.apps.reforma.impl.report;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.*;
+import com.jtmc.apps.reforma.domain.Period;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.repository.PeriodConfirmRepository;
 import com.jtmc.apps.reforma.repository.PersonaDetailsRepository;
@@ -10,6 +11,7 @@ import com.jtmc.apps.reforma.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -81,12 +83,17 @@ public class ReportImpl {
                 year, month, day);
     }
 
-    public String buildFromDate(int fromMonth, int year) {
-        return String.format("%s-%s-%s",
-                year, fromMonth, "01");
+    public Instant buildFromDate(int fromMonth, int year) {
+
+        int firstDay = 1;
+        LocalDate date = LocalDate.of(year, fromMonth, firstDay);
+        LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIN);
+        ZonedDateTime minZonedDateTime = dateTime.atZone(ZoneId.systemDefault());
+
+        return minZonedDateTime.toInstant();
     }
 
-    public double calculatePreviousBalance(int branchId, String fromDate) {
+    public double calculatePreviousBalance(int branchId, Instant fromDate) {
         double previousBalance;
         try {
              previousBalance = catalogCountImpl.getTotalBalanceUpToGivenDate(branchId, fromDate);

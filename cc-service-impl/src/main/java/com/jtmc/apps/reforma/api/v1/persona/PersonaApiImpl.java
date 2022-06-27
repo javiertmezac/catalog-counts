@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.ws.rs.core.Response;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

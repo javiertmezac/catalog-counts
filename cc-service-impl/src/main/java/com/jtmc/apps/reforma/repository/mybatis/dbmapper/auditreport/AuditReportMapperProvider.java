@@ -18,7 +18,7 @@ public class AuditReportMapperProvider {
                 .SELECT("cce.family, sum(cc.amount) as sumAmount")
                 .FROM(ccTable + " as cc")
                 .INNER_JOIN("catalog_count_enum as cce on cc.catalogCountEnumId = cce.id")
-                .WHERE("registration >= date(#{dateFrom}) and registration < date(#{dateTo})")
+                .WHERE("registration >= #{dateFrom} and registration < #{dateTo}")
                 .AND()
                 .WHERE(String.format("catalogCountEnumId in %s", whereCatalogCountEnum))
                 .AND()

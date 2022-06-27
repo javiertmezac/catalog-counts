@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -36,13 +37,13 @@ public class AuditReportImpl {
     private AuditReportMapper auditReportMapper;
 
     //todo: consider UTC time for from and to Dates!
-    public Incomes getSumIncomes(String fromDate, String toDate) {
-        dateValidations(fromDate, toDate);
+    public Incomes getSumIncomes(Instant fromDate, String toDate) {
+//        dateValidations(fromDate, toDate);
 
         Incomes incomes = new Incomes();
 
         List<SumCatalogCountByFamily> sumCatalogCountByFamily =
-                auditReportMapper.selectSumCatalogCountIncomes(fromDate, toDate);
+                auditReportMapper.selectSumCatalogCountIncomes(fromDate.toString(), toDate);
         sumCatalogCountByFamily.stream().forEach( c -> {
             switch (c.getFamily()) {
                 case TITHES:
@@ -60,12 +61,12 @@ public class AuditReportImpl {
         return incomes;
     }
 
-    public Expenses getSumExpenses(String fromDate, String toDate) {
-        dateValidations(fromDate, toDate);
+    public Expenses getSumExpenses(Instant fromDate, String toDate) {
+//        dateValidations(fromDate, toDate);
         Expenses expenses = new Expenses();
 
         List<SumCatalogCountByFamily> sumCatalogCountByFamilies =
-                auditReportMapper.selectSumCatalogCountExpenses(fromDate, toDate);
+                auditReportMapper.selectSumCatalogCountExpenses(fromDate.toString(), toDate);
 
         sumCatalogCountByFamilies.stream().forEach(c -> {
             switch (c.getFamily()) {
