@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
+//todo: fix unit tests
 @Ignore
 @RunWith(BlockJUnit4ClassRunner.class)
 public class CatalogCountApiImplTest {

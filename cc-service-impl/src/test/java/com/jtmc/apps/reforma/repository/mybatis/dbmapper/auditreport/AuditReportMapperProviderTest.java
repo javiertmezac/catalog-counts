@@ -21,8 +21,9 @@ class AuditReportMapperProviderTest {
         String expectedSumIncomesQuery = "SELECT cce.family, sum(cc.amount) as sumAmount\n" +
                 "FROM catalog_count as cc\n" +
                 "INNER JOIN catalog_count_enum as cce on cc.catalogCountEnumId = cce.id\n" +
-                "WHERE (registrationDate >= date(#{dateFrom}) and registrationDate < date(#{dateTo})) \n" +
-                "AND (catalogCountEnumId in (1, 2, 3))\n" +
+                "WHERE (registration >= #{dateFrom} and registration < #{dateTo}) \n" +
+                "AND (catalogCountEnumId in (1, 2, 3)) \n" +
+                "AND (cc.isDeleted = false)\n" +
                 "GROUP BY cce.family";
         Assertions.assertEquals(expectedSumIncomesQuery, provider.getSumCatalogCountIncomes());
     }
@@ -32,8 +33,9 @@ class AuditReportMapperProviderTest {
         String expectedSumIncomesQuery = "SELECT cce.family, sum(cc.amount) as sumAmount\n" +
                 "FROM catalog_count as cc\n" +
                 "INNER JOIN catalog_count_enum as cce on cc.catalogCountEnumId = cce.id\n" +
-                "WHERE (registrationDate >= date(#{dateFrom}) and registrationDate < date(#{dateTo})) \n" +
-                "AND (catalogCountEnumId not in (1, 2, 3))\n" +
+                "WHERE (registration >= #{dateFrom} and registration < #{dateTo}) \n" +
+                "AND (catalogCountEnumId not in (1, 2, 3)) \n" +
+                "AND (cc.isDeleted = false)\n" +
                 "GROUP BY cce.family";
         Assertions.assertEquals(expectedSumIncomesQuery, provider.getSumCatalogCountExpenses());
     }

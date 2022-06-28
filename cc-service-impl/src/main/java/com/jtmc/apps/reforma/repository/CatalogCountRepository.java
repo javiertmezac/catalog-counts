@@ -26,7 +26,7 @@ public class CatalogCountRepository implements ICatalogCountRepository {
     private final Logger logger = LoggerFactory.getLogger(CatalogCountRepository.class);
 
     @Inject
-    SqlSessionFactory sqlSessionFactory;
+    private SqlSessionFactory sqlSessionFactory;
 
     @Override
     public int insert(CatalogCount catalogCount) {

@@ -7,9 +7,8 @@ class MonthsTest {
 
     @Test
     void valueOfNumber() {
-        String expectedLabel = "JUNE";
+        String expectedLabel = "JUNIO";
         Months month = Months.valueOfNumber(6);
         Assertions.assertEquals(expectedLabel, month.name());
     }
-
 }
