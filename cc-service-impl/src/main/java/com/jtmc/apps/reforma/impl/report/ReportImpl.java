@@ -1,8 +1,8 @@
 package com.jtmc.apps.reforma.impl.report;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.domain.Period;
+import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.repository.PeriodConfirmRepository;
 import com.jtmc.apps.reforma.repository.PersonaDetailsRepository;
@@ -69,28 +69,28 @@ public class ReportImpl {
        return periodReport;
    }
 
-    public String buildToDate(int toMonth, int year) {
+    public Instant buildToDate(int toMonth, int year) {
 
         final int december = 12;
-        final String day = "01";
-        String month = String.valueOf(toMonth + 1);
+        final int day = 1;
+        int month = toMonth + 1;
 
         if(toMonth == december) {
             year = year + 1;
-            month = "01";
+            month = 1;
         }
-        return  String.format("%s-%s-%s",
-                year, month, day);
+        return getZonedDateTime(year, month, day).toInstant();
     }
 
     public Instant buildFromDate(int fromMonth, int year) {
-
         int firstDay = 1;
-        LocalDate date = LocalDate.of(year, fromMonth, firstDay);
-        LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIN);
-        ZonedDateTime minZonedDateTime = dateTime.atZone(ZoneId.systemDefault());
+        return getZonedDateTime(year, fromMonth, firstDay).toInstant();
+    }
 
-        return minZonedDateTime.toInstant();
+    private ZonedDateTime getZonedDateTime(int year, int month, int day) {
+        LocalDate date = LocalDate.of(year, month, day);
+        LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIN);
+        return dateTime.atZone(ZoneId.systemDefault());
     }
 
     public double calculatePreviousBalance(int branchId, Instant fromDate) {
@@ -103,7 +103,5 @@ public class ReportImpl {
         }
         return previousBalance;
     }
-
 }
-
 

@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AuditReportImpl {
 
@@ -37,13 +38,12 @@ public class AuditReportImpl {
     private AuditReportMapper auditReportMapper;
 
     //todo: consider UTC time for from and to Dates!
-    public Incomes getSumIncomes(Instant fromDate, String toDate) {
-//        dateValidations(fromDate, toDate);
-
+    public Incomes getSumIncomes(Instant fromDate, Instant toDate) {
+        validateDates(fromDate, toDate);
         Incomes incomes = new Incomes();
 
         List<SumCatalogCountByFamily> sumCatalogCountByFamily =
-                auditReportMapper.selectSumCatalogCountIncomes(fromDate.toString(), toDate);
+                auditReportMapper.selectSumCatalogCountIncomes(fromDate.toString(), toDate.toString());
         sumCatalogCountByFamily.stream().forEach( c -> {
             switch (c.getFamily()) {
                 case TITHES:
@@ -61,12 +61,12 @@ public class AuditReportImpl {
         return incomes;
     }
 
-    public Expenses getSumExpenses(Instant fromDate, String toDate) {
-//        dateValidations(fromDate, toDate);
+    public Expenses getSumExpenses(Instant fromDate, Instant toDate) {
+        validateDates(fromDate, toDate);
         Expenses expenses = new Expenses();
 
         List<SumCatalogCountByFamily> sumCatalogCountByFamilies =
-                auditReportMapper.selectSumCatalogCountExpenses(fromDate.toString(), toDate);
+                auditReportMapper.selectSumCatalogCountExpenses(fromDate.toString(), toDate.toString());
 
         sumCatalogCountByFamilies.stream().forEach(c -> {
             switch (c.getFamily()) {
@@ -99,47 +99,9 @@ public class AuditReportImpl {
         return expenses;
     }
 
-    private boolean validateDateRange(String fromDate, String toDate) {
-         try {
-            Date from = new SimpleDateFormat("yyyy-MM-dd").parse(fromDate);
-            Date to = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
-
-            return from.before(to);
-
-        } catch (ParseException ex) {
-           throw new IllegalArgumentException(ex.getMessage());
-        }
-    }
-
-    private void dateValidations(String fromDate, String toDate) {
-        checkArgument(StringUtils.isNotBlank(fromDate));
-        checkArgument(StringUtils.isNotBlank(toDate));
-
-        String errorMessage = "FromMonth cannot be greater than ToMonth";
-        checkArgument(validateDateRange(fromDate, toDate), errorMessage);
-    }
-
-    public void areMonthsValid(int fromMonth, int toMonth) {
-        checkArgument(fromMonth >= 1 && fromMonth <= 12 ,
-                "fromMonth not valid");
-
-        checkArgument(toMonth >= 1 && toMonth <= 12 ,
-                "toMonth not valid");
-    }
-
-    public double getPreviousBalance(int fromMonth, int year) {
-        checkArgument(fromMonth >= 1 && fromMonth <= 12 ,
-                "fromMonth not valid");
-        MonthlyTotal monthlyTotal =
-                auditReportMapper.getPreviousBalanceFromMonthAndYear(fromMonth, year);
-        if(monthlyTotal == null) {
-            String errorMessage =
-                    String.format(
-                            "MonthlyTotal - PreviousBalance not found for month %s and Year %s",
-                            fromMonth, year
-                    );
-            throw new MonthlyTotalNotFoundException(errorMessage, 404);
-        }
-        return monthlyTotal.getTotal();
+    private void validateDates(Instant fromDate, Instant toDate) {
+        checkNotNull(fromDate, "fromDate cannot be null");
+        checkNotNull(toDate, "toDate cannot be null");
+        checkArgument(fromDate.isBefore(toDate), "FromMonth cannot be greater than ToMonth");
     }
 }

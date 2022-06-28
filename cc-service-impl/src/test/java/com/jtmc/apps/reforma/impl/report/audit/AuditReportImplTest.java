@@ -6,6 +6,7 @@ import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import com.jtmc.apps.reforma.domain.SumCatalogCountByFamily;
 import com.jtmc.apps.reforma.impl.exception.MonthlyTotalNotFoundException;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
+import org.apache.ibatis.jdbc.Null;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -44,7 +46,7 @@ class AuditReportImplTest {
     private AuditReportMapper auditReportMapper;
 
     private Instant fromDate;
-    private String toDate;
+    private Instant toDate;
     int expectedMonth = 1;
     int expectedYear = 2021;
 
@@ -53,7 +55,7 @@ class AuditReportImplTest {
         MockitoAnnotations.initMocks(this);
 
         fromDate = Instant.now();
-        toDate = "2021-07-01";
+        toDate = Instant.from(fromDate.plus(10, ChronoUnit.DAYS));
     }
 
     @Test
@@ -63,14 +65,14 @@ class AuditReportImplTest {
     }
 
     @Test
-    void testGetSumIncomes_shouldThrowIllegalException_whenDateFromNull() {
-        Assertions.assertThrows(IllegalArgumentException.class, () ->
+    void testGetSumIncomes_shouldThrowNullPointerException_whenDateFromNull() {
+        Assertions.assertThrows(NullPointerException.class, () ->
                 auditReport.getSumIncomes(null, toDate));
     }
 
     @Test
-    void testGetSumIncomes_shouldThrowIllegalException_whenDateToNull() {
-        Assertions.assertThrows(IllegalArgumentException.class, () ->
+    void testGetSumIncomes_shouldThrowNullPointerException_whenDateToNull() {
+        Assertions.assertThrows(NullPointerException.class, () ->
                 auditReport.getSumIncomes(fromDate, null));
     }
 
@@ -78,17 +80,24 @@ class AuditReportImplTest {
     void testGetSumIncomes_shouldValidate_toDateIsGreater_thanFromDate() {
         IllegalArgumentException actualException =
                 Assertions.assertThrows(IllegalArgumentException.class, () ->
-                        auditReport.getSumIncomes(fromDate, toDate));
+                        auditReport.getSumIncomes(fromDate, Instant.MIN));
 
         String expectedMessage = String.format("FromMonth cannot be greater than ToMonth");
         Assertions.assertEquals(expectedMessage, actualException.getMessage());
     }
 
     @Test
-    void testValidateDateRange_returnsIllegalArgument_whenNoDateFormat() {
-        IllegalArgumentException illegalArgumentException = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                auditReport.getSumExpenses(Instant.MIN, "blah"));
-        Assertions.assertTrue(illegalArgumentException.getMessage().contains("Unparseable date:"));
+    void testValidateDateRange_returnsIllegalArgument_whenNoFromDateFormat() {
+        NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class, () ->
+                auditReport.getSumExpenses(null, Instant.MAX));
+        Assertions.assertTrue(nullPointerException.getMessage().contains("fromDate cannot be null"));
+    }
+
+    @Test
+    void testValidateDateRange_returnsIllegalArgument_whenNoToDateFormat() {
+        NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class, () ->
+                auditReport.getSumExpenses(Instant.MIN, null));
+        Assertions.assertTrue(nullPointerException.getMessage().contains("toDate cannot be null"));
     }
 
     @Test
@@ -105,7 +114,7 @@ class AuditReportImplTest {
         offering.setFamily(OFFERINGS);
         offering.setSumAmount(300);
 
-        when(auditReportMapper.selectSumCatalogCountIncomes(fromDate.toString(), toDate))
+        when(auditReportMapper.selectSumCatalogCountIncomes(fromDate.toString(), toDate.toString()))
                 .thenReturn(Arrays.asList(sumTithe, donations, offering));
 
         Incomes actualIncomes = auditReport.getSumIncomes(fromDate, toDate);
@@ -135,7 +144,7 @@ class AuditReportImplTest {
        expectedSumByFamily.setFamily(family);
        expectedSumByFamily.setSumAmount(expectedAmount);
 
-       when(auditReportMapper.selectSumCatalogCountExpenses(fromDate.toString(), toDate))
+       when(auditReportMapper.selectSumCatalogCountExpenses(fromDate.toString(), toDate.toString()))
                .thenReturn(Arrays.asList(expectedSumByFamily));
 
        Expenses actualExpenses = auditReport.getSumExpenses(fromDate, toDate);
@@ -183,82 +192,5 @@ class AuditReportImplTest {
                 break;
         }
         return actualAmount;
-    }
-
-    @Test
-    void testGetPreviousBalance_returnsIllegalArgument_whenNoValid_fromMonth() {
-        Assertions.assertThrows(IllegalArgumentException.class,
-                () -> auditReport.getPreviousBalance(0, 2021));
-    }
-
-    @Test
-    void testGetPreviousBalance_returnsIllegalArgument_whenNoValid_fromMonth_greaterDec() {
-        Assertions.assertThrows(IllegalArgumentException.class,
-                () -> auditReport.getPreviousBalance(13, 2021));
-    }
-
-    @Test
-    void testGetPreviousBalance_shouldCall_auditMapper() {
-        when(auditReportMapper.getPreviousBalanceFromMonthAndYear(anyInt(), anyInt()))
-                .thenReturn(new MonthlyTotal());
-        auditReport.getPreviousBalance(expectedMonth, expectedYear);
-        verify(auditReportMapper).getPreviousBalanceFromMonthAndYear(expectedMonth, expectedYear);
-    }
-
-    @Test
-    void testGetPreviousBalance_throwsException_fromAuditMapper() {
-        doThrow(RuntimeException.class)
-                .when(auditReportMapper)
-                .getPreviousBalanceFromMonthAndYear(expectedMonth, expectedYear);
-        Assertions.assertThrows(RuntimeException.class, () ->
-                auditReport.getPreviousBalance(expectedMonth, expectedYear));
-    }
-
-    @Test
-    void testGetPreviousBalance_throwsException_whenMonthlyTotal_Null() {
-        when(auditReportMapper.getPreviousBalanceFromMonthAndYear(expectedMonth, expectedYear))
-                .thenReturn(null);
-        MonthlyTotalNotFoundException actualException =
-                Assertions.assertThrows(MonthlyTotalNotFoundException.class, () ->
-                        auditReport.getPreviousBalance(expectedMonth, expectedYear));
-        String expectedErrorMessage =
-                String.format("MonthlyTotal - PreviousBalance not found for month %s and Year %s",
-                        expectedMonth, expectedYear);
-        Assertions.assertEquals(expectedErrorMessage,
-                actualException.getMessage());
-        Assertions.assertEquals(404, actualException.getStatusCode());
-    }
-
-    @Test
-    void testGetPreviousBalance_returnsCorrectValue() {
-        EasyRandom easyRandom = new EasyRandom();
-        MonthlyTotal expectedMonthlyTotal = easyRandom.nextObject(MonthlyTotal.class);
-        when(auditReportMapper.getPreviousBalanceFromMonthAndYear(expectedMonth, expectedYear))
-                .thenReturn(expectedMonthlyTotal);
-
-        double actualResult = auditReport.getPreviousBalance(expectedMonth, expectedYear);
-        Assertions.assertEquals(expectedMonthlyTotal.getTotal(), actualResult);
-    }
-
-    @Test
-    void testAreMonthsValid_throwsIllegalException_whenFromMonth_notValid() {
-        int notValidFromMonth = 13;
-
-        //checkArgument is static, easiest way to test is through real class
-        AuditReportImpl realImpl = new AuditReportImpl();
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            realImpl.areMonthsValid(notValidFromMonth, expectedMonth);
-        });
-    }
-
-    @Test
-    void testAreMonthsValid_throwsIllegalException_whenToMonth_notValid() {
-        int notValidToMonth = 13;
-
-        //checkArgument is static, easiest way to test is through real class
-        AuditReportImpl realImpl = new AuditReportImpl();
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            realImpl.areMonthsValid(expectedMonth, notValidToMonth);
-        });
     }
 }

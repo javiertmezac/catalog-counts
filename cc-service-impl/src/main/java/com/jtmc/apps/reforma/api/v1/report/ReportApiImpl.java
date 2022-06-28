@@ -62,7 +62,7 @@ public class ReportApiImpl implements ReportApi {
                 year));
 
         Instant fromDate = report.buildFromDate(fromMonth, year);
-        String toDate = report.buildToDate(toMonth, year);
+        Instant toDate = report.buildToDate(toMonth, year);
 
         double previousBalance = report.calculatePreviousBalance(branchId, fromDate);
         response.setPreviousBalance(previousBalance);
