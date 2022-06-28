@@ -4,17 +4,12 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Period;
 import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
-import com.jtmc.apps.reforma.repository.PeriodConfirmRepository;
-import com.jtmc.apps.reforma.repository.PersonaDetailsRepository;
-import com.jtmc.apps.reforma.repository.ReportRepository;
-import com.jtmc.apps.reforma.repository.RoleRepository;
+import com.jtmc.apps.reforma.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.*;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,6 +25,9 @@ public class ReportImpl {
 
    @Inject
    private PersonaDetailsRepository personaDetailsRepository;
+
+   @Inject
+   private PersonaRepository personaRepository;
 
    @Inject
    private RoleRepository roleRepository;
@@ -94,14 +92,25 @@ public class ReportImpl {
     }
 
     public double calculatePreviousBalance(int branchId, Instant fromDate) {
-        double previousBalance;
-        try {
-             previousBalance = catalogCountImpl.getTotalBalanceUpToGivenDate(branchId, fromDate);
-        } catch (Exception e) {
-            logger.error("wrong date parsing", e);
-            throw new RuntimeException(e);
-        }
-        return previousBalance;
+        return catalogCountImpl.getTotalBalanceUpToGivenDate(branchId, fromDate);
+    }
+
+    public Map<String, String> fetchBranchPersonaByRole(int branchId) {
+        List<PersonaDetails> personaDetails = personaDetailsRepository.select(branchId);
+        List<Role> roles = roleRepository.selectAll();
+        List<Persona> personas = personaRepository.selectAll();
+        Map<String, String> personaRoleMap = new HashMap<>();
+        personaDetails.forEach(x -> {
+            Optional<Role> role = roles.stream().filter(r -> r.getId().equals(x.getRoleid())).findFirst();
+            Optional<Persona> persona = personas.stream()
+                    .filter(p -> p.getId().equals(x.getPersonaid()))
+                    .findFirst();
+            if (role.isPresent() && persona.isPresent()) {
+                personaRoleMap.put(role.get().getDescription(),
+                        String.format("%s %s", persona.get().getName(), persona.get().getLastname()));
+            }
+        });
+        return personaRoleMap;
     }
 }
 

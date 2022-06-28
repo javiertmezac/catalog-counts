@@ -5,9 +5,11 @@ import com.jtmc.apps.reforma.domain.Role;
 import com.jtmc.apps.reforma.repository.mapper.RoleMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 
 public class RoleRepository {
@@ -21,6 +23,12 @@ public class RoleRepository {
         try(SqlSession session = sqlSessionFactory.openSession()) {
             RoleMapper mapper = session.getMapper(RoleMapper.class);
             return mapper.selectByPrimaryKey(roleId);
+        }
+    }
+    public List<Role> selectAll(){
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            RoleMapper mapper = session.getMapper(RoleMapper.class);
+            return mapper.select(SelectDSLCompleter.allRows());
         }
     }
 

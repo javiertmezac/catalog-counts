@@ -7,9 +7,11 @@ import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.period.PeriodImpl;
 import com.jtmc.apps.reforma.impl.report.ReportImpl;
 import com.jtmc.apps.reforma.impl.report.audit.AuditReportImpl;
+import com.jtmc.apps.reforma.impl.user.UserImpl;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,7 +36,8 @@ public class ReportApiImpl implements ReportApi {
     @Override
     public PeriodReportResponseList periodReportStatus(int branchId) {
         List<Period> periodList = period.list();
-        Stream<PeriodReportResponse> periodReportStream = periodList.stream().map(x -> convert(report.periodReport(branchId, x)));
+        Stream<PeriodReportResponse> periodReportStream =
+                periodList.stream().map(x -> convert(report.periodReport(branchId, x)));
         PeriodReportResponseList responseList = new PeriodReportResponseList();
         responseList.setPeriodReportList(periodReportStream.collect(Collectors.toList()));
         return responseList;
@@ -98,10 +101,10 @@ public class ReportApiImpl implements ReportApi {
 
         response.setComments(reportRequest.getReporterComments());
 
-        //todo: change this part and get values from DB?
+        Map<String, String> personaByRole = report.fetchBranchPersonaByRole(branchId);
         response.setAuditor("[placeholder]");
-        response.setTreasurer("Javier Trinidad Meza Cazarez");
-        response.setSecretary("[placeholder]");
+        response.setTreasurer(personaByRole.get(Roles.TREASURE.getDescription()));
+        response.setSecretary(personaByRole.get(Roles.SECRETARY.getDescription()));
 
         //todo: save report..
         return response;

@@ -44,4 +44,11 @@ public class PersonaDetailsRepository {
             return mapper.selectOne(x -> x.where(PersonaDetailsDynamicSqlSupport.personaid, SqlBuilder.isEqualTo(personaId)));
         }
     }
+
+    public List<PersonaDetails> select(int branchId) {
+         try(SqlSession session = sqlSessionFactory.openSession()) {
+            PersonaDetailsMapper mapper = session.getMapper(PersonaDetailsMapper.class);
+            return mapper.select(x -> x.where(PersonaDetailsDynamicSqlSupport.branchid, SqlBuilder.isEqualTo(branchId)));
+        }
+    }
 }
