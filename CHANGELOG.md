@@ -1,5 +1,24 @@
 # Catalog Counts Service Changelog
 
+## 2.0.0-beta
+release date: July 3, 2022
+
+### Features
+- Period API
+- Period report creation and status
+- Report creation considering systemDefault timezone for "from" and "to" Dates
+  - add report roles names (description)
+
+### Breaking Changes
+- Added encoding on password
+
+### Fix
+- fix some General unit tests
+
+### Documentation
+- Update Documentation folder. add Insomnia collection
+- add Quarterly Report | Brainstorming
+
 ## 1.1.1
 release date: June 14, 2022
 
