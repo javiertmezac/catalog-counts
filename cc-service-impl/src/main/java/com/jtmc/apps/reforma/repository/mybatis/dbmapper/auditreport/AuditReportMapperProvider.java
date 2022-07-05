@@ -22,6 +22,8 @@ public class AuditReportMapperProvider {
                 .AND()
                 .WHERE(String.format("catalogCountEnumId in %s", whereCatalogCountEnum))
                 .AND()
+                .WHERE("cc.branchId = #{branchId}")
+                .AND()
                 .WHERE("cc.isDeleted = false")
                 .GROUP_BY("cce.family")
                 .toString();
@@ -36,21 +38,10 @@ public class AuditReportMapperProvider {
                 .AND()
                 .WHERE(String.format("catalogCountEnumId not in %s", whereCatalogCountEnum))
                 .AND()
+                .WHERE("cc.branchId = #{branchId}")
+                .AND()
                 .WHERE("cc.isDeleted = false")
                 .GROUP_BY("cce.family")
                 .toString();
-    }
-
-    public String getPreviousBalance() {
-       return new SQL()
-               .SELECT("*")
-               .FROM("monthly_total")
-               .WHERE("MONTH(registrationDate) = #{month}")
-               .AND()
-               .WHERE("YEAR(registrationDate) = #{year}")
-               .ORDER_BY("registrationDate ASC")
-               .LIMIT(1)
-               .toString();
-
     }
 }

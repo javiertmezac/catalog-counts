@@ -23,6 +23,7 @@ class AuditReportMapperProviderTest {
                 "INNER JOIN catalog_count_enum as cce on cc.catalogCountEnumId = cce.id\n" +
                 "WHERE (registration >= #{dateFrom} and registration < #{dateTo}) \n" +
                 "AND (catalogCountEnumId in (1, 2, 3)) \n" +
+                "AND (cc.branchId = #{branchId}) \n" +
                 "AND (cc.isDeleted = false)\n" +
                 "GROUP BY cce.family";
         Assertions.assertEquals(expectedSumIncomesQuery, provider.getSumCatalogCountIncomes());
@@ -35,19 +36,9 @@ class AuditReportMapperProviderTest {
                 "INNER JOIN catalog_count_enum as cce on cc.catalogCountEnumId = cce.id\n" +
                 "WHERE (registration >= #{dateFrom} and registration < #{dateTo}) \n" +
                 "AND (catalogCountEnumId not in (1, 2, 3)) \n" +
+                "AND (cc.branchId = #{branchId}) \n" +
                 "AND (cc.isDeleted = false)\n" +
                 "GROUP BY cce.family";
         Assertions.assertEquals(expectedSumIncomesQuery, provider.getSumCatalogCountExpenses());
-    }
-
-    @Test
-    void testGetPreviousBalance_sqlStatement() {
-        String expectedPreviousBalanceQuery = "SELECT *\n" +
-                "FROM monthly_total\n" +
-                "WHERE (MONTH(registrationDate) = #{month}) \n" +
-                "AND (YEAR(registrationDate) = #{year})\n" +
-                "ORDER BY registrationDate ASC LIMIT 1";
-
-        Assertions.assertEquals(expectedPreviousBalanceQuery, provider.getPreviousBalance());
     }
 }

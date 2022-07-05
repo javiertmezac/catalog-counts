@@ -47,8 +47,8 @@ class AuditReportImplTest {
 
     private Instant fromDate;
     private Instant toDate;
-    int expectedMonth = 1;
-    int expectedYear = 2021;
+    int branchId = 0;
+
 
     @BeforeEach
     void setUp() {
@@ -60,27 +60,27 @@ class AuditReportImplTest {
 
     @Test
     void testGetSumIncomes_shouldCall_auditReportMapper() {
-        auditReport.getSumIncomes(fromDate, toDate);
-        verify(auditReportMapper).selectSumCatalogCountIncomes(anyString(), anyString());
+        auditReport.getSumIncomes(branchId, fromDate, toDate);
+        verify(auditReportMapper).selectSumCatalogCountIncomes(anyInt(), anyString(), anyString());
     }
 
     @Test
     void testGetSumIncomes_shouldThrowNullPointerException_whenDateFromNull() {
         Assertions.assertThrows(NullPointerException.class, () ->
-                auditReport.getSumIncomes(null, toDate));
+                auditReport.getSumIncomes(branchId, null, toDate));
     }
 
     @Test
     void testGetSumIncomes_shouldThrowNullPointerException_whenDateToNull() {
         Assertions.assertThrows(NullPointerException.class, () ->
-                auditReport.getSumIncomes(fromDate, null));
+                auditReport.getSumIncomes(branchId, fromDate, null));
     }
 
     @Test
     void testGetSumIncomes_shouldValidate_toDateIsGreater_thanFromDate() {
         IllegalArgumentException actualException =
                 Assertions.assertThrows(IllegalArgumentException.class, () ->
-                        auditReport.getSumIncomes(fromDate, Instant.MIN));
+                        auditReport.getSumIncomes(branchId, fromDate, Instant.MIN));
 
         String expectedMessage = String.format("FromMonth cannot be greater than ToMonth");
         Assertions.assertEquals(expectedMessage, actualException.getMessage());
@@ -89,14 +89,14 @@ class AuditReportImplTest {
     @Test
     void testValidateDateRange_returnsIllegalArgument_whenNoFromDateFormat() {
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class, () ->
-                auditReport.getSumExpenses(null, Instant.MAX));
+                auditReport.getSumExpenses(branchId, null, Instant.MAX));
         Assertions.assertTrue(nullPointerException.getMessage().contains("fromDate cannot be null"));
     }
 
     @Test
     void testValidateDateRange_returnsIllegalArgument_whenNoToDateFormat() {
         NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class, () ->
-                auditReport.getSumExpenses(Instant.MIN, null));
+                auditReport.getSumExpenses(branchId,Instant.MIN, null));
         Assertions.assertTrue(nullPointerException.getMessage().contains("toDate cannot be null"));
     }
 
@@ -114,10 +114,10 @@ class AuditReportImplTest {
         offering.setFamily(OFFERINGS);
         offering.setSumAmount(300);
 
-        when(auditReportMapper.selectSumCatalogCountIncomes(fromDate.toString(), toDate.toString()))
+        when(auditReportMapper.selectSumCatalogCountIncomes(branchId, fromDate.toString(), toDate.toString()))
                 .thenReturn(Arrays.asList(sumTithe, donations, offering));
 
-        Incomes actualIncomes = auditReport.getSumIncomes(fromDate, toDate);
+        Incomes actualIncomes = auditReport.getSumIncomes(branchId, fromDate, toDate);
 
         Assertions.assertNotNull(actualIncomes);
         Assertions.assertEquals(sumTithe.getSumAmount(), actualIncomes.getTithe());
@@ -127,8 +127,8 @@ class AuditReportImplTest {
 
     @Test
     void testGetSumExpenses_callsAuditReportMapper() {
-        auditReport.getSumExpenses(fromDate, toDate);
-        verify(auditReportMapper).selectSumCatalogCountExpenses(anyString(), anyString());
+        auditReport.getSumExpenses(branchId, fromDate, toDate);
+        verify(auditReportMapper).selectSumCatalogCountExpenses(anyInt(), anyString(), anyString());
     }
 
     @Test
@@ -144,10 +144,10 @@ class AuditReportImplTest {
        expectedSumByFamily.setFamily(family);
        expectedSumByFamily.setSumAmount(expectedAmount);
 
-       when(auditReportMapper.selectSumCatalogCountExpenses(fromDate.toString(), toDate.toString()))
+       when(auditReportMapper.selectSumCatalogCountExpenses(branchId, fromDate.toString(), toDate.toString()))
                .thenReturn(Arrays.asList(expectedSumByFamily));
 
-       Expenses actualExpenses = auditReport.getSumExpenses(fromDate, toDate);
+       Expenses actualExpenses = auditReport.getSumExpenses(branchId, fromDate, toDate);
 
        Assertions.assertNotNull(actualExpenses);
        Assertions.assertEquals(expectedAmount, getCorrectFamilyExpense(family, actualExpenses));

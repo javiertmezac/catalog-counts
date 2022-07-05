@@ -70,7 +70,7 @@ public class ReportApiImpl implements ReportApi {
         double previousBalance = report.calculatePreviousBalance(branchId, fromDate);
         response.setPreviousBalance(previousBalance);
 
-        Incomes incomes = auditReport.getSumIncomes(fromDate, toDate);
+        Incomes incomes = auditReport.getSumIncomes(branchId, fromDate, toDate);
         SumIncomes sumIncomes = new SumIncomes();
         sumIncomes.setDonations(incomes.getDonations());
         sumIncomes.setTithe(incomes.getTithe());
@@ -78,7 +78,7 @@ public class ReportApiImpl implements ReportApi {
         sumIncomes.setSumIncomesTotal(incomes.getTotal());
         response.setSumIncomes(sumIncomes);
 
-        Expenses expenses = auditReport.getSumExpenses(fromDate, toDate);
+        Expenses expenses = auditReport.getSumExpenses(branchId, fromDate, toDate);
         SumExpenses sumExpenses = new SumExpenses();
         sumExpenses.setServices(expenses.getServices());
         sumExpenses.setHelps(expenses.getHelps());

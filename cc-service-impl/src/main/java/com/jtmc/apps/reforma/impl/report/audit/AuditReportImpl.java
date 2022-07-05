@@ -38,12 +38,12 @@ public class AuditReportImpl {
     private AuditReportMapper auditReportMapper;
 
     //todo: consider UTC time for from and to Dates!
-    public Incomes getSumIncomes(Instant fromDate, Instant toDate) {
+    public Incomes getSumIncomes(int branchId, Instant fromDate, Instant toDate) {
         validateDates(fromDate, toDate);
         Incomes incomes = new Incomes();
 
         List<SumCatalogCountByFamily> sumCatalogCountByFamily =
-                auditReportMapper.selectSumCatalogCountIncomes(fromDate.toString(), toDate.toString());
+                auditReportMapper.selectSumCatalogCountIncomes(branchId, fromDate.toString(), toDate.toString());
         sumCatalogCountByFamily.stream().forEach( c -> {
             switch (c.getFamily()) {
                 case TITHES:
@@ -61,12 +61,12 @@ public class AuditReportImpl {
         return incomes;
     }
 
-    public Expenses getSumExpenses(Instant fromDate, Instant toDate) {
+    public Expenses getSumExpenses(int branchId, Instant fromDate, Instant toDate) {
         validateDates(fromDate, toDate);
         Expenses expenses = new Expenses();
 
         List<SumCatalogCountByFamily> sumCatalogCountByFamilies =
-                auditReportMapper.selectSumCatalogCountExpenses(fromDate.toString(), toDate.toString());
+                auditReportMapper.selectSumCatalogCountExpenses(branchId, fromDate.toString(), toDate.toString());
 
         sumCatalogCountByFamilies.stream().forEach(c -> {
             switch (c.getFamily()) {

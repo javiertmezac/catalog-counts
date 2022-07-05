@@ -1,5 +1,11 @@
 # Catalog Counts Service Changelog
 
+## 2.0.1-beta
+release date: July 3, 2022
+
+### HOTFIX
+- add branchId to calculate report incomes and expenses
+
 ## 2.0.0-beta
 release date: July 3, 2022
 
