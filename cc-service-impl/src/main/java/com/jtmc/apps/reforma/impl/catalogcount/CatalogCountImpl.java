@@ -161,7 +161,7 @@ public class CatalogCountImpl {
 
         ZonedDateTime minZonedDateTime = dateTime.atZone(ZoneId.systemDefault());
         //todo: missing "and not confirmed"
-        int maxDay = 7;
+        int maxDay = 10;
         if (currentDate.getDayOfMonth() <= maxDay) {
             return zonedDateTime.isAfter(minZonedDateTime
                     .minus(1, ChronoUnit.MONTHS)

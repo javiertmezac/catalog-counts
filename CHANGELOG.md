@@ -1,5 +1,12 @@
 # Catalog Counts Service Changelog
 
+## 2.0.2-beta
+release date: July 7, 2022
+
+### HOTFIX
+- extend confirmation date til 10
+
+
 ## 2.0.1-beta
 release date: July 3, 2022
 
