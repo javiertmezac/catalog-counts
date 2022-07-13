@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-@JwtRequired
+//@JwtRequired
 public class PeriodApiImpl implements PeriodApi {
 
     @Inject

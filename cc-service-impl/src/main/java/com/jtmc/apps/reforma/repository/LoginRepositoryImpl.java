@@ -34,6 +34,14 @@ public class LoginRepositoryImpl {
         }
     }
 
+    public int insert(Login login) {
+         try(SqlSession session = sqlSessionFactory.openSession(true)) {
+            LoginMapper mapper = session.getMapper(LoginMapper.class);
+            login.setStatus(true);
+            return mapper.insert(login);
+        }
+    }
+
     private String base64Encode(String value) {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] toEncode = value.getBytes(StandardCharsets.UTF_8);

@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.ForbiddenException;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,6 +35,15 @@ public class UserImpl {
         if (!userDetails.getRoles().contains(Roles.SECRETARY.getValue())) {
             logger.error("No write permissions for user {}", userDetails.getUsername());
             throw new NoWritePermissionsException("No write permissions for user", 401);
+        }
+        return userDetails;
+    }
+
+    public UserDetails validateAdminPermissionsForLoggedInUser() {
+        UserDetails userDetails = this.getLoggedInUserDetails();
+        if (!userDetails.getRoles().contains(Roles.SUPER_ADMIN.getValue())) {
+            logger.error("No super_admin permissions for user {}", userDetails.getUsername());
+            throw new ForbiddenException();
         }
         return userDetails;
     }

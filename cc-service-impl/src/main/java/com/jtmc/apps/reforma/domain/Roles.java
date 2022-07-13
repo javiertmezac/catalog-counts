@@ -2,7 +2,8 @@ package com.jtmc.apps.reforma.domain;
 
 public enum Roles {
     TREASURE(1, "Tesorero Financiero"),
-    SECRETARY (2, "Secretario Financiero");
+    SECRETARY (2, "Secretario Financiero"),
+    SUPER_ADMIN(3, "Super Admin");
 
     private int value;
     private String description;
