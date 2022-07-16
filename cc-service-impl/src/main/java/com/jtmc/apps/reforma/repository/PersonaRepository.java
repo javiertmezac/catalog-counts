@@ -2,9 +2,11 @@ package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Persona;
+import com.jtmc.apps.reforma.repository.mapper.PersonaDynamicSqlSupport;
 import com.jtmc.apps.reforma.repository.mapper.PersonaMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +23,9 @@ public class PersonaRepository {
     public Optional<Persona> selectOne(int id){
         try(SqlSession session = sqlSessionFactory.openSession()) {
             PersonaMapper mapper = session.getMapper(PersonaMapper.class);
-            return mapper.selectByPrimaryKey(id);
+            return mapper.selectOne(c -> c
+                    .where(PersonaDynamicSqlSupport.id, SqlBuilder.isEqualTo(id))
+                    .and(PersonaDynamicSqlSupport.status, SqlBuilder.isTrue()));
         }
     }
     public List<Persona> selectAll(){
