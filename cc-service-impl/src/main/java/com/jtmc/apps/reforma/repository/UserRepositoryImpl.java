@@ -2,12 +2,16 @@ package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Login;
+import com.jtmc.apps.reforma.domain.Persona;
 import com.jtmc.apps.reforma.domain.PersonaDetails;
 import com.jtmc.apps.reforma.domain.UserDetails;
+import com.jtmc.apps.reforma.repository.exception.RepositoryException;
 import com.jtmc.apps.reforma.repository.exception.UnauthorizedUserException;
 import com.jtmc.apps.reforma.repository.mapper.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,33 +26,7 @@ public class UserRepositoryImpl {
     @Inject
     private SqlSessionFactory sqlSessionFactory;
 
-    public UserDetails selectUser(String username) {
-        UserDetails userDetails = new UserDetails();
-        // branchId
-        Optional<Login> loggedInUser = this.selectLoggedInUser(username);
-        if(!loggedInUser.isPresent()) {
-            throw new UnauthorizedUserException("No valid LoggedInUser", 401);
-        }
-        // username
-        userDetails.setUsername(username);
-        userDetails.setPersonaId(loggedInUser.get().getPersonaid());
-        // roles
-
-        //todo: what to return when no role is assigned?
-        Collection<PersonaDetails> personaDetails = this.selectUserRoles(loggedInUser.get().getPersonaid());
-        Stream<Integer> rolesId = personaDetails.stream().map(PersonaDetails::getRoleid);
-        List<Integer> roles = rolesId.collect(Collectors.toList());
-        userDetails.setRoles(roles);
-
-        //todo: for now default branch will be the first value
-        // for sure I know only one row per user will be registered in persona_details
-        // version 0.5.0
-        Optional<PersonaDetails> selectingBranch = personaDetails.stream().findFirst();
-        userDetails.setDefaultBranch(selectingBranch.isPresent() ? selectingBranch.get().getBranchid() : 0);
-        return userDetails;
-    }
-
-    private Optional<Login> selectLoggedInUser(String username) {
+    public Optional<Login> selectLoggedInUser(String username) {
         try(SqlSession session = sqlSessionFactory.openSession()) {
             LoginMapper mapper = session.getMapper(LoginMapper.class);
             return mapper.selectOne(c -> c.where(LoginDynamicSqlSupport.username, isEqualTo(username))
@@ -56,7 +34,7 @@ public class UserRepositoryImpl {
         }
     }
 
-    private Collection<PersonaDetails> selectUserRoles(Integer personaId) {
+    public Collection<PersonaDetails> selectUserRoles(Integer personaId) {
         try(SqlSession session = sqlSessionFactory.openSession()) {
             PersonaDetailsMapper mapper = session.getMapper(PersonaDetailsMapper.class);
             return mapper.select(c -> c.where(PersonaDetailsDynamicSqlSupport.personaid, isEqualTo(personaId))

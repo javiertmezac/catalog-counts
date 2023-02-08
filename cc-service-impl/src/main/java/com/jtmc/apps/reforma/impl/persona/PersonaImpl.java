@@ -34,7 +34,7 @@ public class PersonaImpl {
     }
 
     public void insert(Persona persona) {
-        userImpl.getLoggedInUserDetails();
+        userImpl.validateAdminPermissionsForLoggedInUser();
         if (repository.insert(persona) != 1) {
             logger.error("Persona was not inserted. {}", persona);
             throw new RuntimeException("Persona was not inserted.");
