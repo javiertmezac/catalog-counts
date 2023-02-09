@@ -60,7 +60,7 @@ public class MyBatisConfigModule extends MyBatisModule {
         try {
             String systemEnv = getSystemEnvVariable();
 
-            Logger.info(System.getenv("JDBC.url"));
+//            Logger.info(System.getenv("JDBC.url"));
 
             myBatisProperties.setProperty("mybatis.environment.id", systemEnv);
             myBatisProperties.setProperty("JDBC.driver", "com.mysql.cj.jdbc.Driver");

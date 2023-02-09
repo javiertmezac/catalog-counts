@@ -27,6 +27,7 @@ target/
 
 *.iml
 *.idea
+*.DS_Store
 
 #maven
 pom.xml.releaseBackup
