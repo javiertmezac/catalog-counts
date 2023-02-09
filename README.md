@@ -8,8 +8,13 @@
 - Junit
 - Flyway
 - Google Guice
+- Docker, Docker compose
 
 ## Deployment
+### Specifications
+- Mysql Engine: 8.0.28
+
+
 ### Dockerized the service
 1. `mvn package` to generate .jar with latest changes
 2. `docker build -t cc-service-image:<tag> .`

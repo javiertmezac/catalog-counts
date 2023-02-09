@@ -1,6 +1,5 @@
 package com.jtmc.apps.reforma.domain;
 
-import com.google.gson.Gson;
 import com.jtmc.apps.reforma.domain.legacy.CatalogCountEnum;
 import org.apache.commons.lang3.StringUtils;
 
@@ -61,10 +60,5 @@ public class CatalogCounts {
             throw new Exception("registration DateTime shouldn't be null");
         }
         this.registrationDateTime = registrationDateTime;
-    }
-
-    public String getObjectAsJson() {
-       Gson gson = new Gson();
-       return gson.toJson(this);
     }
 }
