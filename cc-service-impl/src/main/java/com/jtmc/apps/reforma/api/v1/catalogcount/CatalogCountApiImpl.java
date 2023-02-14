@@ -87,7 +87,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         checkArgument(branchId > 0, "invalid branch");
         checkArgument(id > 0, "invalid catalog count id");
 
-        logger.info("CatalogCountId #{} to be deleted", id);
+        logger.debug("CatalogCountId #{} to be deleted", id);
         CatalogCount cc = new CatalogCount();
         cc.setId(id);
         cc.setBranchid(branchId);

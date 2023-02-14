@@ -62,7 +62,6 @@ public class CatalogCountRepository implements ICatalogCountRepository {
                                             SqlBuilder.equalTo(CatalogCountEnumDynamicSqlSupport.id))
                                     .where(CatalogCountDynamicSqlSupport.branchid, SqlBuilder.isEqualTo(branchId))
                                     .and(CatalogCountDynamicSqlSupport.isdeleted, SqlBuilder.isFalse())
-                                    .and(CatalogCountEnumDynamicSqlSupport.family, SqlBuilder.isNotEqualTo("initial_amount"))
                                     .orderBy(CatalogCountDynamicSqlSupport.registration ));
             return mapper.selectMany(statementProvider);
         }
