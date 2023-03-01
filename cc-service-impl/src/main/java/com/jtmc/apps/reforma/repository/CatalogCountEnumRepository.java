@@ -8,13 +8,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
-import org.mybatis.dynamic.sql.select.render.DefaultSelectStatementProvider;
-import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
-import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
-import org.mybatis.dynamic.sql.where.WhereDSL;
 import org.mybatis.guice.transactional.Transactional;
 
-import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -44,7 +39,6 @@ public class CatalogCountEnumRepository implements ICatalogCountEnumRepository {
             String initialAmountIdentifier = "0.1";
             Optional<CatalogCountEnum> optionalEnum = mapper.selectOne(c -> c.where(CatalogCountEnumDynamicSqlSupport.identifier,
                     SqlBuilder.isEqualTo(initialAmountIdentifier)));
-//            return optionalEnum.orElseThrow(NotFoundException::new);
             CatalogCountEnum empty = new CatalogCountEnum();
             return optionalEnum.orElse(empty);
         }
@@ -54,9 +48,4 @@ public class CatalogCountEnumRepository implements ICatalogCountEnumRepository {
         Boolean isOutcome = true;
         return this.selectAllCatalogCountEnum().stream().filter(x -> x.getType() != isOutcome);
    }
-
-//   @Transactional
-//    public void insertCatalogCountEnum(CatalogCountEnum catalogCountEnum) {
-//        mapper.insertIntoCatalogCountEnum(catalogCountEnum);
-//   }
 }
