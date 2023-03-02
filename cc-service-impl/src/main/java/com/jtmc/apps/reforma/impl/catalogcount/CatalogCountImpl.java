@@ -36,12 +36,35 @@ public class CatalogCountImpl {
     @Inject
     private UserImpl userImpl;
 
+    //todo: selectAllWithTotalColumn needs some refactor.
+    // 1. many things happening under the hood. ie. calculateTotal is calculating but also transforming
+    // the response into CatalogCountResponse.
     public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
-        Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
+        Collection<CustomCatalogCount> catalogCounts = selectAll(branchId);
         Stream<CatalogCountResponse> catalogCountResponseStream = calculateTotal(catalogCounts.stream());
         List<CatalogCountResponse> responseList = catalogCountResponseStream.collect(Collectors.toList());
         Collections.reverse(responseList);
         return responseList;
+    }
+
+    public Collection<CustomCatalogCount> selectAll(Integer branchId) {
+        return catalogCountRepository.selectAllByBranch(branchId);
+    }
+
+    public Optional<CustomCatalogCount> selectInitialAmountForBranch(Integer branchId) {
+        Collection<CustomCatalogCount> all = selectAll(branchId);
+        CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
+        Stream<CustomCatalogCount> initialAmountList = all.stream()
+                .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()));
+        int itShouldBeOnlyOne = 1;
+        if (initialAmountList.count() > itShouldBeOnlyOne) {
+           logger.warn("Found more than one initial Amount CatalogCount register for branch {}", branchId);
+           return Optional.empty();
+        } else {
+            return all.stream()
+                    .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()))
+                    .findFirst();
+        }
     }
 
     //todo: improve this logic

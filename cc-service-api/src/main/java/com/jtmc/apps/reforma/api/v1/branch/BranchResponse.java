@@ -6,6 +6,8 @@ public class BranchResponse extends BranchBase {
     private String registration;
     private boolean status;
 
+    private BranchInitialAmount initialAmount;
+
     public Integer getId() {
         return this.id;
     }
@@ -28,5 +30,13 @@ public class BranchResponse extends BranchBase {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public BranchInitialAmount getInitialAmount() {
+        return initialAmount;
+    }
+
+    public void setInitialAmount(BranchInitialAmount initialAmount) {
+        this.initialAmount = initialAmount;
     }
 }

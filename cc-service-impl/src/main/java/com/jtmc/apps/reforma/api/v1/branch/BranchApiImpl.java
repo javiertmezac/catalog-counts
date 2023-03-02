@@ -32,7 +32,9 @@ public class BranchApiImpl implements BranchApi {
     @Override
     public BranchResponse getBranch(int branchId) {
         Branch branch = branchImpl.selectOneBranch(branchId);
-        return mapToBranchResponse(branch);
+        BranchResponse response = mapToBranchResponse(branch);
+        response.setInitialAmount(branchImpl.getInitialAmount(branchId));
+        return response;
     }
 
     @Override
