@@ -1,7 +1,7 @@
 # Catalog Counts Service Changelog
 
-## 2.1.0-beta
-release date: N/A
+## 2.1.0
+release date: Apr 9, 2023
 
 ### Features
 - Now supports initial amount to be configured. Flow is the same as registering a CatalogCount, only difference is the EnumId.
@@ -9,7 +9,6 @@ release date: N/A
 
 ### Breaking Changes
 - add V0.0.11, requires flyway migration to be run in DB
-
 
 
 ## 2.0.2-beta
