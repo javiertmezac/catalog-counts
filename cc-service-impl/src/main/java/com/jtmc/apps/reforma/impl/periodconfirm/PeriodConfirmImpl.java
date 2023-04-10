@@ -59,7 +59,7 @@ public class PeriodConfirmImpl {
     public PeriodDetails selectOne(int branchId, int periodId, int confirmedBy) {
         Optional<PeriodDetails> periodDetails = repository.selectOne(branchId, periodId, confirmedBy);
         if(!periodDetails.isPresent()) {
-            logger.error("PeriodDetails (confirmation) not found: branchID {}, periodId {} and confirmedBy {}",
+            logger.debug("PeriodDetails (confirmation) not found: branchID {}, periodId {} and confirmedBy {}",
                     branchId, periodId, confirmedBy);
             throw new PeriodDetailsConfirmationNotFoundException("Confirmation not found", 404);
         }

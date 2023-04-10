@@ -6,6 +6,8 @@ import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class CatalogCountEnumApiImpl implements CatalogCountEnumApi {
 
@@ -15,17 +17,20 @@ public class CatalogCountEnumApiImpl implements CatalogCountEnumApi {
     @Override
     public CatalogCountEnumResponseList getCatalogCountEnums() {
         List<CatalogCountEnum> catalogCountEnumList = catalogCountEnumRepository.selectAllCatalogCountEnum();
+        CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
 
         List<CatalogCountEnumResponse> response = new ArrayList<>();
-        catalogCountEnumList.stream().forEach(catalogCountEnum -> {
-            String label = String.format("%s - %s", catalogCountEnum.getIdentifier(), catalogCountEnum.getName());
+        catalogCountEnumList.stream()
+                .filter(x -> !Objects.equals(x.getIdentifier(), initialAmountEnum.getIdentifier()))
+                .forEach(catalogCountEnum -> {
+                    String label = String.format("%s - %s", catalogCountEnum.getIdentifier(), catalogCountEnum.getName());
 
-            CatalogCountEnumResponse catalogCountEnumResponse = new CatalogCountEnumResponse();
-            catalogCountEnumResponse.setLabel(label);
-            catalogCountEnumResponse.setValue(catalogCountEnum.getId());
+                    CatalogCountEnumResponse catalogCountEnumResponse = new CatalogCountEnumResponse();
+                    catalogCountEnumResponse.setLabel(label);
+                    catalogCountEnumResponse.setValue(catalogCountEnum.getId());
 
-            response.add(catalogCountEnumResponse);
-        });
+                    response.add(catalogCountEnumResponse);
+                });
 
         CatalogCountEnumResponseList actualResponse = new CatalogCountEnumResponseList();
         actualResponse.setCatalogCountEnumList(response);

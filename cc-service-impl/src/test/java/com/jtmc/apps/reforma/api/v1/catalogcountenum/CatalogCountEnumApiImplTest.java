@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,8 +41,15 @@ class CatalogCountEnumApiImplTest {
 
     @Test
     void testGetCatalogCountEnums_returnsExpectedValue() {
-        List<CatalogCountEnum> expectedCatalogCountEnum = easyRandom.objects(CatalogCountEnum.class, 4).collect(Collectors.toList());
+        Stream<CatalogCountEnum> easyRandomCatalogCountEnumStream =
+                easyRandom.objects(CatalogCountEnum.class, 4);
+        CatalogCountEnum randomInitialAmount = easyRandom.nextObject(CatalogCountEnum.class);
+        List<CatalogCountEnum> expectedCatalogCountEnum = easyRandomCatalogCountEnumStream
+                .filter(x -> !x.getIdentifier().equals(randomInitialAmount.getIdentifier()))
+                .collect(Collectors.toList());
         when(catalogCountEnumRepository.selectAllCatalogCountEnum()).thenReturn(expectedCatalogCountEnum);
+        when(catalogCountEnumRepository.getInitialAmountEnum())
+                .thenReturn(randomInitialAmount);
 
         CatalogCountEnumResponseList actualResponse = catalogCountEnumApiImpl.getCatalogCountEnums();
 

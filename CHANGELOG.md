@@ -1,5 +1,16 @@
 # Catalog Counts Service Changelog
 
+## 2.1.0
+release date: Apr 9, 2023
+
+### Features
+- Now supports initial amount to be configured. Flow is the same as registering a CatalogCount, only difference is the EnumId.
+  - As a note, it is important to register the Initial Amount with a date previous to the month Movements will start. ie. Movements start on Feb, initial amount should be set in Jan.
+
+### Breaking Changes
+- add V0.0.11, requires flyway migration to be run in DB
+
+
 ## 2.0.2-beta
 release date: July 7, 2022
 

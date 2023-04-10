@@ -21,7 +21,7 @@ services:
       - FLYWAY_URL=jdbc:mysql://db:3306/catalog_count?useUnicode=true&connectionCollation=utf8_unicode_ci&characterSetResults=utf8&characterEncoding=utf8&serverTimezone=UTC
     volumes:
       - ./flyway-db-configuration/flyway-6.5.5/sql:/flyway/sql
-    command: migrate -connectRetries=60
+    command: migrate -connectRetries=60 -outputType=json
     depends_on:
       - db
   app:

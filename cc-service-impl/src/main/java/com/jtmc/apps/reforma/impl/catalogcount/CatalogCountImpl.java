@@ -2,26 +2,22 @@ package com.jtmc.apps.reforma.impl.catalogcount;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
-import com.jtmc.apps.reforma.domain.Branch;
-import com.jtmc.apps.reforma.domain.CatalogCount;
-import com.jtmc.apps.reforma.domain.CustomCatalogCount;
-import com.jtmc.apps.reforma.domain.UserDetails;
+import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountLogicalDeleteException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotEditableException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotFoundException;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
+import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.BadRequestException;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,17 +28,43 @@ public class CatalogCountImpl {
     private CatalogCountRepository catalogCountRepository;
 
     @Inject
+    private CatalogCountEnumRepository catalogCountEnumRepository;
+
+    @Inject
     private BranchImpl branchImpl;
 
     @Inject
     private UserImpl userImpl;
 
+    //todo: selectAllWithTotalColumn needs some refactor.
+    // 1. many things happening under the hood. ie. calculateTotal is calculating but also transforming
+    // the response into CatalogCountResponse.
     public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
-        Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
+        Collection<CustomCatalogCount> catalogCounts = selectAll(branchId);
         Stream<CatalogCountResponse> catalogCountResponseStream = calculateTotal(catalogCounts.stream());
         List<CatalogCountResponse> responseList = catalogCountResponseStream.collect(Collectors.toList());
         Collections.reverse(responseList);
         return responseList;
+    }
+
+    public Collection<CustomCatalogCount> selectAll(Integer branchId) {
+        return catalogCountRepository.selectAllByBranch(branchId);
+    }
+
+    public Optional<CustomCatalogCount> selectInitialAmountForBranch(Integer branchId) {
+        Collection<CustomCatalogCount> all = selectAll(branchId);
+        CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
+        Stream<CustomCatalogCount> initialAmountList = all.stream()
+                .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()));
+        int itShouldBeOnlyOne = 1;
+        if (initialAmountList.count() > itShouldBeOnlyOne) {
+           logger.warn("Found more than one initial Amount CatalogCount register for branch {}", branchId);
+           return Optional.empty();
+        } else {
+            return all.stream()
+                    .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()))
+                    .findFirst();
+        }
     }
 
     //todo: improve this logic
@@ -76,9 +98,8 @@ public class CatalogCountImpl {
     }
 
     private double calculateTotalColumn(CatalogCount catalogCount, double saldo) {
-        //todo: this will only work if first 3 rows from CatalogCountEnum are "incoming values"
-        int incomingEnums = 3;
-        if (catalogCount.getCatalogcountenumid() <= incomingEnums)  {
+        Stream<CatalogCountEnum> catalogCountEnumStream = catalogCountEnumRepository.getIncomeCatalogCountEnums();
+        if (catalogCountEnumStream.anyMatch(x -> Objects.equals(x.getId(), catalogCount.getCatalogcountenumid()))) {
             saldo = saldo + catalogCount.getAmount();
         } else {
             saldo = saldo - catalogCount.getAmount();
@@ -89,17 +110,19 @@ public class CatalogCountImpl {
     @Transactional
     public void insertIntoCatalogCount(CatalogCount catalogCount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+        validateCatalogCountEnum(catalogCount);
 
         isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
 
         Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         catalogCountRepository.insert(catalogCount);
-        logger.info("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branch.getId());
+        logger.debug("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branch.getId());
     }
 
     @Transactional
     public void updateCatalogCount(CatalogCount catalogCount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+        validateCatalogCountEnum(catalogCount);
 
         isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
         Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
@@ -168,6 +191,13 @@ public class CatalogCountImpl {
                     .minus(1, ChronoUnit.DAYS));
         }
         return zonedDateTime.isAfter(minZonedDateTime.minus(1, ChronoUnit.DAYS));
+    }
+
+    private void validateCatalogCountEnum(CatalogCount catalogCount) {
+        CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
+        if(catalogCount.getCatalogcountenumid().equals(initialAmountEnum.getId())) {
+            throw new BadRequestException();
+        }
     }
 
     private void logCatalogCount(CatalogCount cc) {
