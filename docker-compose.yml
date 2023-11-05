@@ -1,6 +1,5 @@
-version: '3.1'
 services:
-  db:
+  cc-db:
     container_name: cc-service-db
     platform: linux/x86_64
     image: mysql:8.0.28
@@ -9,22 +8,28 @@ services:
       MYSQL_DATABASE: catalog_count
     ports:
       - 3306:3306
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=${MYSQL_ROOT_PASSWORD}
+      start_period: 5s
+      timeout: 20s
+      retries: 10
     volumes:
       - ./provision/cc-service-db/infra/docker.cnf:/etc/mysql/conf.d/docker.cnf
-  flyway:
+  cc-flyway:
     container_name: cc-service-flyway
     platform: linux/x86_64
     image: flyway/flyway:6.5.5
     environment:
       - FLYWAY_USER=root
       - FLYWAY_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - FLYWAY_URL=jdbc:mysql://db:3306/catalog_count?useUnicode=true&connectionCollation=utf8_unicode_ci&characterSetResults=utf8&characterEncoding=utf8&serverTimezone=UTC
+      - FLYWAY_URL=jdbc:mysql://cc-db:3306/catalog_count?useUnicode=true&connectionCollation=utf8mb4&characterSetResults=utf8mb4&characterEncoding=utf8mb4&serverTimezone=UTC
     volumes:
       - ./flyway-db-configuration/flyway-6.5.5/sql:/flyway/sql
-    command: migrate -connectRetries=60 -outputType=json
+    command: migrate -connectRetries=60
     depends_on:
-      - db
-  app:
+      cc-db:
+        condition: service_healthy
+  cc-app:
     container_name: cc-service-jetty-server-app
     image: cc-service-jetty-server-image
     ports:
@@ -33,10 +38,10 @@ services:
     environment:
       - app_env=local
       - key=${CC_SERVICE_KEY}
-      - JDBC_URL=jdbc:mysql://db:3306/catalog_count?useUnicode=true&connectionCollation=utf8_unicode_ci&characterSetResults=utf8&characterEncoding=utf8&serverTimezone=UTC
+      - JDBC_URL=jdbc:mysql://cc-db:3306/catalog_count?useUnicode=true&connectionCollation=utf8_unicode_ci&characterSetResults=utf8&characterEncoding=utf8&serverTimezone=UTC
       - JDBC_USERNAME=root
       - JDBC_PASSWORD=$MYSQL_ROOT_PASSWORD
     build:
       context: .
     depends_on:
-      - flyway
+      - cc-flyway
