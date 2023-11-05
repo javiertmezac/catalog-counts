@@ -74,8 +74,8 @@ public class ExcelSheet {
        return verifyFileVersion()
                && hasValidTabSheet()
                && hasOnlyOneTable()
-               && areColumnsInOrder()
-               && tableHasTotalRow()
-               && hasEmptyRowsWithinTable();
+               && areColumnsInOrder();
+//               && tableHasTotalRow()
+//               && hasEmptyRowsWithinTable();
     }
 }

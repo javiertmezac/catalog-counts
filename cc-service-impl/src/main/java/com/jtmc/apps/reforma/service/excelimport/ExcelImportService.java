@@ -5,6 +5,7 @@ import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -62,25 +63,36 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
 
             while (itr.hasNext()) {
                 Row row = itr.next();
-                if (skipFirstTwoRows(row) || row.getRowNum() == totalRowIndex) {
+                if (skipFirstTwoRows(row)) {
                     continue;
+                }
+
+                if(row.getRowNum() == totalRowIndex) {
+                    break;
                 }
 
                 CatalogCount catalogCount = new CatalogCount();
                 catalogCount.setRegistration(Instant.ofEpochMilli(row.getCell(1).getDateCellValue().getTime()));
 
-                CatalogCountEnum ccEnum = mapCatalogCountWithDB(row.getCell(2).getStringCellValue());
+                CatalogCountEnum ccEnum = new CatalogCountEnum();
+                CellType cellType = row.getCell(2).getCellType();
+                if (cellType.equals(CellType.STRING)) {
+                    ccEnum = mapCatalogCountWithDB(row.getCell(2).getStringCellValue());
+                } else if (cellType.equals(CellType.NUMERIC)) {
+                    ccEnum = mapCatalogCountWithDB(String.valueOf(row.getCell(2).getNumericCellValue()));
+                }
 
                 catalogCount.setCatalogcountenumid(ccEnum.getId());
                 catalogCount.setDetails(row.getCell(3).getStringCellValue());
 
-                //todo: fix this isType().. what is the use of this?
-//                if (ccEnum.isType()) {
-//                    catalogCount.setAmount(row.getCell(4).getNumericCellValue());
-//                } else {
-//                    catalogCount.setAmount(row.getCell(5).getNumericCellValue());
-//                }
+                boolean expensesIdentifier = true;
+                if (ccEnum.getType() != expensesIdentifier) {
+                    catalogCount.setAmount(row.getCell(4).getNumericCellValue());
+                } else {
+                    catalogCount.setAmount(row.getCell(5).getNumericCellValue());
+                }
                 catalogCount.setIsdeleted(false);
+                catalogCount.setBranchid(1);
 
                repository.insert(catalogCount);
             }
@@ -95,8 +107,8 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
     }
 
     private boolean skipFirstTwoRows(Row row) {
-        int headersIndex = 1;
-        int previousTotal = 2;
+        int headersIndex = 0;
+        int previousTotal = 1;
 
         return row.getRowNum() == headersIndex || row.getRowNum() == previousTotal;
     }
