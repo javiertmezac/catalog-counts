@@ -60,4 +60,16 @@ public class BranchApiImpl implements BranchApi {
         response.setStatus(branch.getStatus());
         return response;
     }
+
+    @Override
+    public void insertBranchInitialAmount(int branchId, BranchInitialAmount branchInitialAmount) {
+        checkArgument(branchId > 0, "invalid branch");
+        checkNotNull(branchInitialAmount);
+        checkArgument(branchInitialAmount.getAmount() > 0.0,
+                "Invalid branch Initial Amount. should be > 0.0");
+
+        Branch branchDetails = branchImpl.selectOneBranch(branchId);
+        branchImpl.getInitialAmount(branchId);
+        branchImpl.insertInitialAmount(branchDetails, branchInitialAmount.getAmount());
+    }
 }

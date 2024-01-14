@@ -7,6 +7,7 @@ import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountLogicalDeleteException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotEditableException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotFoundException;
+import com.jtmc.apps.reforma.impl.exception.ImplementationException;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
@@ -58,7 +59,8 @@ public class CatalogCountImpl {
                 .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()));
         int itShouldBeOnlyOne = 1;
         if (initialAmountList.count() > itShouldBeOnlyOne) {
-           logger.warn("Found more than one initial Amount CatalogCount register for branch {}", branchId);
+           String error = String.format("Found more than one initial Amount CatalogCount register for branch %d", branchId);
+           throw new ImplementationException(error)
            return Optional.empty();
         } else {
             return all.stream()
@@ -117,6 +119,20 @@ public class CatalogCountImpl {
         Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         catalogCountRepository.insert(catalogCount);
         logger.debug("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branch.getId());
+    }
+
+    @Transactional
+    public void insertInitialAmountCatalogCount(Branch branch, double amount) {
+        CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
+
+        CatalogCount catalogCount = new CatalogCount();
+        catalogCount.setAmount(amount);
+        catalogCount.setDetails(initialAmountEnum.getDescription());
+        catalogCount.setCatalogcountenumid(initialAmountEnum.getId());
+        catalogCount.setIsdeleted(false);
+        catalogCount.setRegistration(branch.getRegistration().minus(1, ChronoUnit.MONTHS));
+        catalogCount.setBranchid(branch.getId());
+        catalogCountRepository.insert(catalogCount);
     }
 
     @Transactional

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.branch.BranchInitialAmount;
 import com.jtmc.apps.reforma.domain.Branch;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
+import com.jtmc.apps.reforma.domain.UserDetails;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.BranchRepository;
@@ -56,5 +57,10 @@ public class BranchImpl {
             logger.error("Branch was not inserted. {}", branch);
             throw new RuntimeException("Branch was not inserted.");
         }
+    }
+
+    public void insertInitialAmount(Branch branch, double amount) {
+        UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+        catalogCountImpl.insertInitialAmountCatalogCount(branch, amount);
     }
 }

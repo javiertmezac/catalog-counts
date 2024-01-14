@@ -13,6 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ExcelImportService {
 
 
     //todo: get file name from storage service. Current local file: excel-import/example1.xlsx
-private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
+    private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
         File file = new File(getClass().getClassLoader().getResource(fileStorageKey).getFile());
         return new FileInputStream(file);
     }
@@ -61,6 +62,8 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
               process should be stored for reference  (return ExcelImportStatusResponse)
             */
 
+            int secondsToAdd = 0;
+            int minutesToAdd = 0;
             while (itr.hasNext()) {
                 Row row = itr.next();
                 if (skipFirstTwoRows(row)) {
@@ -72,7 +75,15 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
                 }
 
                 CatalogCount catalogCount = new CatalogCount();
-                catalogCount.setRegistration(Instant.ofEpochMilli(row.getCell(1).getDateCellValue().getTime()));
+                if (secondsToAdd == 60) {
+                    secondsToAdd = 0;
+                    minutesToAdd++;
+                }
+                catalogCount.setRegistration(Instant
+                        .ofEpochMilli(row.getCell(1).getDateCellValue().getTime())
+                        .plus(minutesToAdd, ChronoUnit.MINUTES)
+                        .plusSeconds(secondsToAdd++)
+                );
 
                 CatalogCountEnum ccEnum = new CatalogCountEnum();
                 CellType cellType = row.getCell(2).getCellType();
@@ -83,7 +94,9 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
                 }
 
                 catalogCount.setCatalogcountenumid(ccEnum.getId());
-                catalogCount.setDetails(row.getCell(3).getStringCellValue());
+                String movementDetails =  row.getCell(8) == null ? "" : row.getCell(8).getStringCellValue();
+                String movementDescription = row.getCell(3).getStringCellValue();
+                catalogCount.setDetails(movementDetails.isEmpty() ? movementDescription : movementDetails);
 
                 boolean expensesIdentifier = true;
                 if (ccEnum.getType() != expensesIdentifier) {
@@ -94,7 +107,7 @@ private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
                 catalogCount.setIsdeleted(false);
                 catalogCount.setBranchid(1);
 
-               repository.insert(catalogCount);
+                repository.insert(catalogCount);
             }
         } catch (Exception e) {
             e.printStackTrace();
