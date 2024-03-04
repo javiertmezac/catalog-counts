@@ -1,23 +1,33 @@
-# This is a basic workflow that is manually triggered
-
 name: ECS CatalogCount Service DesireCount
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
 on:
+  workflow_dispatch:
   schedule:
+    - cron: '0 8 * * *' # runs at 8am UTC, 12am PST
     - cron: '0 15 * * *' # runs at 3pm UTC, 8am PST
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
   modify-desire-count:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      if: github.event.schedule == '0 15 * * *'
-      run: echo "Hello I will change desire count to 0"
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-1
+      - name: hello world
+        run: |
+          echo "Hello JTMC!"
+          aws --version
+          aws sts get-caller-identity
+      - name: firing up the service
+        if: github.event.schedule == '0 8 * * *'
+        run: |
+          echo "Hello I will change desire count to 1"
+          aws ecs update-service --cluster jtmc-cluster --service catalogcounts --desired-count 1
+      - name: Shutting down the service
+        if: github.event.schedule == '0 15 * * *'
+        run: |
+          echo "Hello I will change desire count to 0"
+          aws ecs update-service --cluster jtmc-cluster --service catalogcounts --desired-count 0
