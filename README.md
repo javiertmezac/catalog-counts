@@ -1,6 +1,8 @@
 # Catalog Counts Service
 > Custom development
 
+[![ECS CatalogCount Service DesireCount](https://github.com/javiertmezac/catalog-counts/actions/workflows/ecs-service-desire-count.yml/badge.svg)](https://github.com/javiertmezac/catalog-counts/actions/workflows/ecs-service-desire-count.yml)
+
 ## Overall Tools
 - MyBatis
 - Jetty
