@@ -22,12 +22,12 @@ jobs:
           aws --version
           aws sts get-caller-identity
       - name: firing up the service
-        if: github.event.schedule == '0 8 * * *'
+        if: github.event.schedule == '0 15 * * *'
         run: |
           echo "Hello I will change desire count to 1"
           aws ecs update-service --cluster jtmc-cluster --service catalogcounts --desired-count 1
       - name: Shutting down the service
-        if: github.event.schedule == '0 15 * * *'
+        if: github.event.schedule == '0 8 * * *'
         run: |
           echo "Hello I will change desire count to 0"
           aws ecs update-service --cluster jtmc-cluster --service catalogcounts --desired-count 0
