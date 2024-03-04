@@ -49,6 +49,22 @@ To create a copy of db data
   --no-create-db --no-create-info --compact --password=${MYSQL_ROOT_PASS} \
   catalog_count backup.sql
 ```
+
+### Excel Import
+
+Manual process to "update" previous month's movements
+1. get last month's movements in excel_sheet file - consider format
+2. POST /cc-service/api/v1/excelimport
+   1. ```json
+      {
+         "personProfileId": "c70d4cfe-0f68-482d-8e82-5952fadba5e4",
+         "fileStorageKey": "excel-import/example1copy.xlsx",
+         "tabName": "Registros 2023"
+      }
+    ```
+3. `docker exec -it cc-service-db`
+4. `mysqldump -p --no-create-info catalog_count catalog_count > data_dump.sql`
+5. `docker cp cc-service-db:/data_dump.sql .`
 ---
 ### Digital Ocean Manual Deployment - deprecated
 > Digital Ocean App: docker image

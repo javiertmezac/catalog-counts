@@ -60,7 +60,7 @@ public class CatalogCountImpl {
         int itShouldBeOnlyOne = 1;
         if (initialAmountList.count() > itShouldBeOnlyOne) {
            String error = String.format("Found more than one initial Amount CatalogCount register for branch %d", branchId);
-           throw new ImplementationException(error)
+//           throw new ImplementationException(error)
            return Optional.empty();
         } else {
             return all.stream()

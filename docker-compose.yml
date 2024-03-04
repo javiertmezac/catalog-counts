@@ -15,6 +15,7 @@ services:
       retries: 10
     volumes:
       - ./provision/cc-service-db/infra/docker.cnf:/etc/mysql/conf.d/docker.cnf
+
   cc-flyway:
     container_name: cc-service-flyway
     platform: linux/x86_64
@@ -29,6 +30,7 @@ services:
     depends_on:
       cc-db:
         condition: service_healthy
+
   cc-app:
     container_name: cc-service-jetty-server-app
     image: cc-service-jetty-server-image
