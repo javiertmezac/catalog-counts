@@ -1,5 +1,12 @@
 # Catalog Counts Service Changelog
 
+## 2.1.0.1
+release date:  - 
+
+### Comments
+- No official releas
+- Added ecs-service-desire-count.yml github action to update ECS service - based on cron schedule
+
 ## 2.1.0
 release date: Apr 9, 2023
 
