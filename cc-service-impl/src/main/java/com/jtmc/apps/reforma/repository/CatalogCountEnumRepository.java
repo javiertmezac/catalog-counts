@@ -29,7 +29,7 @@ public class CatalogCountEnumRepository implements ICatalogCountEnumRepository {
    public List<CatalogCountEnum> selectAllCatalogCountEnum() {
         try(SqlSession session = sqlSessionFactory.openSession()) {
             CatalogCountEnumMapper mapper = session.getMapper(CatalogCountEnumMapper.class);
-            return mapper.select(SelectDSLCompleter.allRows());
+            return mapper.select(SelectDSLCompleter.allRowsOrderedBy(CatalogCountEnumDynamicSqlSupport.identifier));
         }
    }
 

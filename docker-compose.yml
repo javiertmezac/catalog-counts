@@ -15,6 +15,7 @@ services:
       retries: 10
     volumes:
       - ./provision/cc-service-db/infra/docker.cnf:/etc/mysql/conf.d/docker.cnf
+
   cc-flyway:
     container_name: cc-service-flyway
     platform: linux/x86_64
@@ -22,13 +23,14 @@ services:
     environment:
       - FLYWAY_USER=root
       - FLYWAY_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - FLYWAY_URL=jdbc:mysql://cc-db:3306/catalog_count?useUnicode=true&connectionCollation=utf8mb4&characterSetResults=utf8mb4&characterEncoding=utf8mb4&serverTimezone=UTC
+      - FLYWAY_URL=jdbc:mysql://cc-db:3306/catalog_count?useUnicode=true&serverTimezone=UTC
     volumes:
       - ./flyway-db-configuration/flyway-6.5.5/sql:/flyway/sql
     command: migrate -connectRetries=60
     depends_on:
       cc-db:
         condition: service_healthy
+
   cc-app:
     container_name: cc-service-jetty-server-app
     image: cc-service-jetty-server-image

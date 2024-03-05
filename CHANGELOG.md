@@ -1,5 +1,13 @@
 # Catalog Counts Service Changelog
 
+## 2.1.0.2
+release date:  -
+
+### Comments
+- No official release
+- add 4.5 "Ahorro para Conferencias" - Catalog Count
+- modify CatalogCountEnumRepository to select AllRowsOrderBy (cc.identifier)
+
 ## 2.1.0.1
 release date:  - 
 
