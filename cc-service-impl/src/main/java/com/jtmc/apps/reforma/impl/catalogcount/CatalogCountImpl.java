@@ -174,6 +174,7 @@ public class CatalogCountImpl {
     }
 
     //todo: should I consider the timezone of each "user"?
+    // yes - lets consider time zones by branch, not by user
     private boolean validateCatalogCountEditableByRegistration(Instant catalogCountRegistration) {
         ZonedDateTime zonedDateTime = catalogCountRegistration.atZone(ZoneId.systemDefault());
 
@@ -184,7 +185,7 @@ public class CatalogCountImpl {
 
         ZonedDateTime minZonedDateTime = dateTime.atZone(ZoneId.systemDefault());
         //todo: missing "and not confirmed"
-        int maxDay = 10;
+        int maxDay = 16; //increase max day to 16 to support 15th day.
         if (currentDate.getDayOfMonth() <= maxDay) {
             return zonedDateTime.isAfter(minZonedDateTime
                     .minus(1, ChronoUnit.MONTHS)

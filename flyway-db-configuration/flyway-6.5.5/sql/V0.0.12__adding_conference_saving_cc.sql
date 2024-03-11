@@ -1,6 +1,7 @@
 INSERT INTO catalog_count_enum
 (
   identifier,
+  family,
   name,
   description,
   type,
@@ -9,6 +10,7 @@ INSERT INTO catalog_count_enum
 VALUES
 (
   '4.5',
+  'general',
   'Ahorro para Conferencias',
   'Ahorro del 5% de las ofrendas semanales',
   TRUE,
