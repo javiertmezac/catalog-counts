@@ -6,9 +6,11 @@ import com.jtmc.apps.reforma.domain.Branch;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,7 +35,8 @@ public class BranchApiImpl implements BranchApi {
     public BranchResponse getBranch(int branchId) {
         Branch branch = branchImpl.selectOneBranch(branchId);
         BranchResponse response = mapToBranchResponse(branch);
-        response.setInitialAmount(branchImpl.getInitialAmount(branchId));
+        Optional<BranchInitialAmount> initialAmount = branchImpl.getInitialAmount(branchId);
+        initialAmount.ifPresent(response::setInitialAmount);
         return response;
     }
 
@@ -62,14 +65,18 @@ public class BranchApiImpl implements BranchApi {
     }
 
     @Override
-    public void insertBranchInitialAmount(int branchId, BranchInitialAmount branchInitialAmount) {
+    public Response insertBranchInitialAmount(int branchId, BranchInitialAmount branchInitialAmount) {
         checkArgument(branchId > 0, "invalid branch");
         checkNotNull(branchInitialAmount);
         checkArgument(branchInitialAmount.getAmount() > 0.0,
                 "Invalid branch Initial Amount. should be > 0.0");
 
         Branch branchDetails = branchImpl.selectOneBranch(branchId);
-        branchImpl.getInitialAmount(branchId);
-        branchImpl.insertInitialAmount(branchDetails, branchInitialAmount.getAmount());
+        if (!branchImpl.getInitialAmount(branchId).isPresent()) {
+            branchImpl.insertInitialAmount(branchDetails, branchInitialAmount.getAmount());
+            return Response.noContent().build();
+        } else {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
     }
 }

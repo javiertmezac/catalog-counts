@@ -35,16 +35,18 @@ public class BranchImpl {
         }
         return branch.get();
     }
-    public BranchInitialAmount getInitialAmount(int branchId) {
+    public Optional<BranchInitialAmount> getInitialAmount(int branchId) {
         Optional<CustomCatalogCount> initialAmountCustomCatalog = catalogCountImpl
                 .selectInitialAmountForBranch(branchId);
-        BranchInitialAmount initialAmount = new BranchInitialAmount();
-        if(initialAmountCustomCatalog.isPresent()) {
-            initialAmount.setId(initialAmountCustomCatalog.get().getId());
-            initialAmount.setAmount(initialAmountCustomCatalog.get().getAmount());
-            initialAmount.setRegistration(initialAmountCustomCatalog.get().getRegistration().toString());
+        if (!initialAmountCustomCatalog.isPresent()) {
+            return Optional.empty();
         }
-        return  initialAmount;
+
+        BranchInitialAmount initialAmount = new BranchInitialAmount();
+        initialAmount.setId(initialAmountCustomCatalog.get().getId());
+        initialAmount.setAmount(initialAmountCustomCatalog.get().getAmount());
+        initialAmount.setRegistration(initialAmountCustomCatalog.get().getRegistration().toString());
+        return  Optional.of(initialAmount);
     }
 
     public List<Branch> selectBranches() {

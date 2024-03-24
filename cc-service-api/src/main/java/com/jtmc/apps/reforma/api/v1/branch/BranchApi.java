@@ -27,5 +27,5 @@ public interface BranchApi {
     @Path("/{branchId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void insertBranchInitialAmount(@PathParam("branchId") int branchId, BranchInitialAmount initialAmount);
+    Response insertBranchInitialAmount(@PathParam("branchId") int branchId, BranchInitialAmount initialAmount);
 }

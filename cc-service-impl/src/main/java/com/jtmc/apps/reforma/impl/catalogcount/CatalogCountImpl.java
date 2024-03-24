@@ -16,7 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
 import java.time.*;
+import java.time.Period;
+import java.time.chrono.ChronoPeriod;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,16 +60,9 @@ public class CatalogCountImpl {
         CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
         Stream<CustomCatalogCount> initialAmountList = all.stream()
                 .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()));
-        int itShouldBeOnlyOne = 1;
-        if (initialAmountList.count() > itShouldBeOnlyOne) {
-           String error = String.format("Found more than one initial Amount CatalogCount register for branch %d", branchId);
-//           throw new ImplementationException(error)
-           return Optional.empty();
-        } else {
-            return all.stream()
-                    .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()))
-                    .findFirst();
-        }
+        return all.stream()
+                .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()))
+                .findFirst();
     }
 
     //todo: improve this logic
@@ -130,7 +126,10 @@ public class CatalogCountImpl {
         catalogCount.setDetails(initialAmountEnum.getDescription());
         catalogCount.setCatalogcountenumid(initialAmountEnum.getId());
         catalogCount.setIsdeleted(false);
-        catalogCount.setRegistration(branch.getRegistration().minus(1, ChronoUnit.MONTHS));
+
+        ZonedDateTime zonedDateTime = branch.getRegistration().atZone(ZoneId.systemDefault());
+        catalogCount.setRegistration(zonedDateTime.minusMonths(1).withDayOfMonth(10).toInstant());
+
         catalogCount.setBranchid(branch.getId());
         catalogCountRepository.insert(catalogCount);
     }
