@@ -1,7 +1,16 @@
 # Catalog Counts Service Changelog
 
+## 2.2.x
+release date: -
+
+## Features
+- Add Branch Initial Amount
+
+## Improvements
+- Excel import : reads "comments" column
+
 ## 2.1.0.2
-release date:  -
+release date:  Mar 20, 2024
 
 ### Comments
 - No official release
@@ -12,7 +21,7 @@ release date:  -
 release date:  - 
 
 ### Comments
-- No official releas
+- No official release
 - Added ecs-service-desire-count.yml github action to update ECS service - based on cron schedule
 
 ## 2.1.0
