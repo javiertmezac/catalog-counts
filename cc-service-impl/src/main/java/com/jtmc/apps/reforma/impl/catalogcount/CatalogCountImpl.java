@@ -7,6 +7,7 @@ import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountLogicalDeleteException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotEditableException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotFoundException;
+import com.jtmc.apps.reforma.impl.exception.ImplementationException;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
@@ -15,7 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
 import java.time.*;
+import java.time.Period;
+import java.time.chrono.ChronoPeriod;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,15 +60,9 @@ public class CatalogCountImpl {
         CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
         Stream<CustomCatalogCount> initialAmountList = all.stream()
                 .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()));
-        int itShouldBeOnlyOne = 1;
-        if (initialAmountList.count() > itShouldBeOnlyOne) {
-           logger.warn("Found more than one initial Amount CatalogCount register for branch {}", branchId);
-           return Optional.empty();
-        } else {
-            return all.stream()
-                    .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()))
-                    .findFirst();
-        }
+        return all.stream()
+                .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()))
+                .findFirst();
     }
 
     //todo: improve this logic
@@ -117,6 +115,23 @@ public class CatalogCountImpl {
         Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         catalogCountRepository.insert(catalogCount);
         logger.debug("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branch.getId());
+    }
+
+    @Transactional
+    public void insertInitialAmountCatalogCount(Branch branch, double amount) {
+        CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
+
+        CatalogCount catalogCount = new CatalogCount();
+        catalogCount.setAmount(amount);
+        catalogCount.setDetails(initialAmountEnum.getDescription());
+        catalogCount.setCatalogcountenumid(initialAmountEnum.getId());
+        catalogCount.setIsdeleted(false);
+
+        ZonedDateTime zonedDateTime = branch.getRegistration().atZone(ZoneId.systemDefault());
+        catalogCount.setRegistration(zonedDateTime.minusMonths(1).withDayOfMonth(10).toInstant());
+
+        catalogCount.setBranchid(branch.getId());
+        catalogCountRepository.insert(catalogCount);
     }
 
     @Transactional

@@ -1,7 +1,5 @@
 package com.jtmc.apps.reforma.api.v1.branch;
 
-import java.time.Instant;
-
 public class BranchInitialAmount {
 
     private Integer id;
