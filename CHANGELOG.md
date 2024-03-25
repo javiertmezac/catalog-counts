@@ -1,5 +1,14 @@
 # Catalog Counts Service Changelog
 
+## 2.2.1
+release date: -
+
+## Features
+- Add Branch Initial Amount
+
+## Improvements
+- Excel import : reads "comments" column
+
 ## 2.1.0
 release date: Apr 9, 2023
 
