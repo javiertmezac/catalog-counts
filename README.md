@@ -2,6 +2,7 @@
 > Custom development
 
 [![ECS CatalogCount Service DesireCount](https://github.com/javiertmezac/catalog-counts/actions/workflows/ecs-service-desire-count.yml/badge.svg)](https://github.com/javiertmezac/catalog-counts/actions/workflows/ecs-service-desire-count.yml)
+[![Java CI with Maven](https://github.com/javiertmezac/catalog-counts/actions/workflows/maven.yml/badge.svg)](https://github.com/javiertmezac/catalog-counts/actions/workflows/maven.yml)
 
 ## Overall Tools
 - MyBatis
