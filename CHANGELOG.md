@@ -1,6 +1,6 @@
 # Catalog Counts Service Changelog
 
-## 2.2.1
+## 2.2.x
 release date: -
 
 ## Features
@@ -8,6 +8,21 @@ release date: -
 
 ## Improvements
 - Excel import : reads "comments" column
+
+## 2.1.0.2
+release date:  Mar 20, 2024
+
+### Comments
+- No official release
+- add 4.5 "Ahorro para Conferencias" - Catalog Count
+- modify CatalogCountEnumRepository to select AllRowsOrderBy (cc.identifier)
+
+## 2.1.0.1
+release date:  - 
+
+### Comments
+- No official release
+- Added ecs-service-desire-count.yml github action to update ECS service - based on cron schedule
 
 ## 2.1.0
 release date: Apr 9, 2023

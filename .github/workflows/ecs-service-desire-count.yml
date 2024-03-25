@@ -1,0 +1,33 @@
+name: ECS CatalogCount Service DesireCount
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *' # runs at 8am UTC, 12am PST
+    - cron: '0 15 * * *' # runs at 3pm UTC, 8am PST
+
+jobs:
+  modify-desire-count:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-1
+      - name: hello world
+        run: |
+          echo "Hello JTMC!"
+          aws --version
+          aws sts get-caller-identity
+      - name: firing up the service
+        if: github.event.schedule == '0 15 * * *'
+        run: |
+          echo "Hello I will change desire count to 1"
+          aws ecs update-service --cluster jtmc-cluster --service catalogcounts --desired-count 1
+      - name: Shutting down the service
+        if: github.event.schedule == '0 8 * * *'
+        run: |
+          echo "Hello I will change desire count to 0"
+          aws ecs update-service --cluster jtmc-cluster --service catalogcounts --desired-count 0

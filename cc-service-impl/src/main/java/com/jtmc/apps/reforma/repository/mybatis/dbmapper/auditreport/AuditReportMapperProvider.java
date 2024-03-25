@@ -4,12 +4,12 @@ import org.apache.ibatis.jdbc.SQL;
 
 public class AuditReportMapperProvider {
 
-    private String ccTable = "catalog_count";
+    private final String ccTable = "catalog_count";
     private final Integer TITHE = 1;
     private final Integer DONATIONS = 2;
     private final Integer OFFERING = 3;
 
-    private String whereCatalogCountEnum =
+    private final String whereCatalogCountEnum =
             String.format("(%s, %s, %s)", TITHE, DONATIONS, OFFERING);
 
     //todo: for now incomes ids are hardcoded

@@ -6,6 +6,7 @@
         <artifactId>catalog-counts-base-pom</artifactId>
         <groupId>com.jtmc.apps.reforma</groupId>
         <version>2.2.1</version>
+
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

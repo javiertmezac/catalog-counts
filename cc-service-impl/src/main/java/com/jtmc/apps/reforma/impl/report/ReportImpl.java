@@ -40,7 +40,9 @@ public class ReportImpl {
        int periodId = period.getId();
        Optional<Report> report = reportRepository.selectByPeriod(periodId);
        if (!report.isPresent()) {
-          logger.warn("Report for PeriodId {}, not found", periodId);
+           //this log was to notify that a report was not "stored" in the db. but nothing to worry about.
+           // save reports is not yet implemented.
+//          logger.warn("Report for PeriodId {}, not found", periodId);
        }
 
        List<PeriodDetails> periodConfirmationList = periodConfirmRepository.select(branchId, periodId);

@@ -22,11 +22,13 @@
             <artifactId>cc-service-api</artifactId>
             <version>2.2.1</version>
         </dependency>
+
         <dependency>
             <groupId>com.jtmc.apps.reforma</groupId>
             <artifactId>cc-service-mybatis-dynamic-sql</artifactId>
             <version>2.2.1</version>
         </dependency>
+
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -107,6 +109,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 
 </project>
