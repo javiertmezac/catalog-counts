@@ -1,10 +1,13 @@
 # Catalog Counts Service Changelog
 
-## 2.2.x
-release date: -
+## 2.2.1
+release date: Mar 30, 2024
 
 ## Features
 - Add Branch Initial Amount
+- update insomnia collection
+- add github workflow to deploy ECS fargate (cc-service)
+- add API to post branch initial amount
 
 ## Improvements
 - Excel import : reads "comments" column
