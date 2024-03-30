@@ -1,7 +1,19 @@
 # Catalog Counts Service Changelog
 
+## 2.2.1
+release date: Mar 30, 2024
+
+## Features
+- Add Branch Initial Amount
+- update insomnia collection
+- add github workflow to deploy ECS fargate (cc-service)
+- add API to post branch initial amount
+
+## Improvements
+- Excel import : reads "comments" column
+
 ## 2.1.0.2
-release date:  -
+release date:  Mar 20, 2024
 
 ### Comments
 - No official release
@@ -12,7 +24,7 @@ release date:  -
 release date:  - 
 
 ### Comments
-- No official releas
+- No official release
 - Added ecs-service-desire-count.yml github action to update ECS service - based on cron schedule
 
 ## 2.1.0

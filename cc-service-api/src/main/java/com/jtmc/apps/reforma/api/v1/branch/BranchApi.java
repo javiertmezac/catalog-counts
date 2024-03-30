@@ -22,4 +22,10 @@ public interface BranchApi {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response insertBranch(BranchRequest branchRequest);
+
+    @POST
+    @Path("/{branchId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response insertBranchInitialAmount(@PathParam("branchId") int branchId, BranchInitialAmount initialAmount);
 }
