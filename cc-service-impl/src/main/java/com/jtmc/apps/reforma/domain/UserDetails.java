@@ -4,9 +4,18 @@ import java.util.List;
 
 public class UserDetails {
     private List<Integer> roles;
+    private List<Integer> branches;
     private int defaultBranch;
     private String username;
     private int personaId;
+
+    public List<Integer> getBranches() {
+        return branches;
+    }
+
+    public void setBranches(List<Integer> branches) {
+        this.branches = branches;
+    }
 
     public int getPersonaId() {
         return personaId;
