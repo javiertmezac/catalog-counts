@@ -15,6 +15,5 @@ public interface UserApi {
 
     @PATCH
     @Path("/changeDefaultBranch")
-    @Produces(MediaType.APPLICATION_JSON)
     Response changeDefaultBranch(@QueryParam("defaultBranch") int defaultBranch);
 }
