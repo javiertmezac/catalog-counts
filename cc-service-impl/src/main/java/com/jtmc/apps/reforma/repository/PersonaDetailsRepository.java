@@ -41,7 +41,10 @@ public class PersonaDetailsRepository {
     public Optional<PersonaDetails> selectOne(int personaId) {
          try(SqlSession session = sqlSessionFactory.openSession()) {
             PersonaDetailsMapper mapper = session.getMapper(PersonaDetailsMapper.class);
-            return mapper.selectOne(x -> x.where(PersonaDetailsDynamicSqlSupport.personaid, SqlBuilder.isEqualTo(personaId)));
+            return mapper.selectOne(x -> x
+                    .where(PersonaDetailsDynamicSqlSupport.personaid, SqlBuilder.isEqualTo(personaId))
+                    .and(PersonaDetailsDynamicSqlSupport.status, SqlBuilder.isTrue())
+            );
         }
     }
 
