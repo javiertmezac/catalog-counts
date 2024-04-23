@@ -43,7 +43,7 @@ public class LoginImpl {
         try {
             personaImpl.selectOne(user.get().getPersonaid());
         } catch (PersonaNotFoundException ex) {
-            logger.error("found login registry fro username {}, but didn't get valid personaId {}",
+            logger.error("found login registry for username {}, but didn't get valid personaId {}",
                     inputUsername, user.get().getPersonaid());
             throw new BadRequestException();
         }
