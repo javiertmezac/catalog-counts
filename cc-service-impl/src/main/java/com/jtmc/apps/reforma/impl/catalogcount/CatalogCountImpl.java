@@ -47,6 +47,10 @@ public class CatalogCountImpl {
         return responseList;
     }
 
+    public Collection<CustomCatalogCount> selectAllWithTotalColumnDirect(Integer branchId) {
+        return catalogCountRepository.selectAllByBranchDirect(branchId);
+    }
+
     public Collection<CustomCatalogCount> selectAll(Integer branchId) {
         return catalogCountRepository.selectAllByBranch(branchId);
     }

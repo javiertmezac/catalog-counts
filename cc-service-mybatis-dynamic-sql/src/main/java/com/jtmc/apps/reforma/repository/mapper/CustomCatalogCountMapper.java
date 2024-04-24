@@ -1,11 +1,8 @@
 package com.jtmc.apps.reforma.repository.mapper;
 
-import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter;
@@ -28,4 +25,17 @@ public interface CustomCatalogCountMapper {
             @Result(column="name", property="name", jdbcType=JdbcType.VARCHAR)
     })
     List<CustomCatalogCount> selectMany(SelectStatementProvider selectStatement);
+
+    @Select(value = "{ call selectCumulativeSumByBranch(#{branchId, mode=IN, jdbcType=INTEGER}) }")
+    @Options(statementType = StatementType.CALLABLE)
+        @Results(id="CatalogCountResultDirect", value = {
+            @Result(column="id", property="id", jdbcType= JdbcType.INTEGER, id=true),
+            @Result(column="registration", property="registration", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="catalogCountEnum", property="catalogCountEnum", jdbcType=JdbcType.VARCHAR),
+            @Result(column="amount", property="amount", jdbcType=JdbcType.DOUBLE),
+            @Result(column="details", property="details", jdbcType=JdbcType.VARCHAR),
+            @Result(column="total", property="cumulativeSum", jdbcType=JdbcType.DOUBLE),
+            @Result(column="editable", property="editable", jdbcType=JdbcType.BOOLEAN),
+    })
+    List<CustomCatalogCount> selectManyDirect(Integer branchId);
 }

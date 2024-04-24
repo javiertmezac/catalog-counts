@@ -1,6 +1,7 @@
 package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
+import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
 import com.jtmc.apps.reforma.repository.mapper.CatalogCountDynamicSqlSupport;
@@ -44,6 +45,13 @@ public class CatalogCountRepository implements ICatalogCountRepository {
         } catch (Exception ex) {
             logger.error("{}", ex);
             throw ex;
+        }
+    }
+
+    public Collection<CustomCatalogCount> selectAllByBranchDirect(Integer branchId) {
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            CustomCatalogCountMapper mapper = session.getMapper(CustomCatalogCountMapper.class);
+            return mapper.selectManyDirect(branchId);
         }
     }
 

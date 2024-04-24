@@ -12,6 +12,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,7 +30,18 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         checkArgument(branchId > 0, "Invalid BranchId");
 
         CatalogCountResponseList responseList = new CatalogCountResponseList();
-        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumn(branchId));
+//        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumn(branchId));
+        responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumnDirect(branchId).stream().map(
+                cc -> new CatalogCountResponse(
+                        cc.getId(),
+                        cc.getRegistration().toString(),
+                        cc.getCatalogCountEnum(),
+                        cc.getAmount(),
+                        cc.getDetails(),
+                        cc.getCumulativeSum(),
+                        cc.isEditable()
+                )
+        ).collect(Collectors.toList()));
 
         return responseList;
     }
