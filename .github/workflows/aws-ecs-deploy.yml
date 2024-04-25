@@ -106,6 +106,7 @@ jobs:
             JDBC_PASSWORD=${{ secrets.JDBC_PASSWORD }}
             JDBC_PORT=3306
             key=${{ secrets.KEY }}
+            CC_SERVICE_DEADLINE_DAY=${{ vars.CC_SERVICE_DEADLINE_DAY }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
