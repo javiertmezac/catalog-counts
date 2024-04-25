@@ -12,7 +12,6 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
