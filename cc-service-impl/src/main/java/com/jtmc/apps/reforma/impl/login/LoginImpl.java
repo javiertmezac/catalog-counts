@@ -1,8 +1,6 @@
 package com.jtmc.apps.reforma.impl.login;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.domain.Login;
 import com.jtmc.apps.reforma.domain.Persona;
 import com.jtmc.apps.reforma.domain.UserDetails;
@@ -11,13 +9,9 @@ import com.jtmc.apps.reforma.impl.exception.PersonaNotFoundException;
 import com.jtmc.apps.reforma.impl.persona.PersonaImpl;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.LoginRepositoryImpl;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.jackson.io.JacksonSerializer;
-import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.crypto.SecretKey;
 import javax.ws.rs.BadRequestException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -49,7 +43,7 @@ public class LoginImpl {
         try {
             personaImpl.selectOne(user.get().getPersonaid());
         } catch (PersonaNotFoundException ex) {
-            logger.error("found login registry fro username {}, but didn't get valid personaId {}",
+            logger.error("found login registry for username {}, but didn't get valid personaId {}",
                     inputUsername, user.get().getPersonaid());
             throw new BadRequestException();
         }

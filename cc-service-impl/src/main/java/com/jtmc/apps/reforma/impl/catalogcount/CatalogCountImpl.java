@@ -7,7 +7,6 @@ import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountLogicalDeleteException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotEditableException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotFoundException;
-import com.jtmc.apps.reforma.impl.exception.ImplementationException;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
@@ -16,10 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.WebApplicationException;
 import java.time.*;
-import java.time.Period;
-import java.time.chrono.ChronoPeriod;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
