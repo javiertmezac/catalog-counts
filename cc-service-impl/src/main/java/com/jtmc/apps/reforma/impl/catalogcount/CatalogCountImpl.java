@@ -1,6 +1,7 @@
 package com.jtmc.apps.reforma.impl.catalogcount;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
@@ -36,15 +37,22 @@ public class CatalogCountImpl {
     @Inject
     private UserImpl userImpl;
 
-    //todo: selectAllWithTotalColumn needs some refactor.
-    // 1. many things happening under the hood. ie. calculateTotal is calculating but also transforming
-    // the response into CatalogCountResponse.
+    @Inject
+    @Named("deadLineDay")
+    private Integer deadLineDay;
+
     public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
-        Collection<CustomCatalogCount> catalogCounts = selectAll(branchId);
-        Stream<CatalogCountResponse> catalogCountResponseStream = calculateTotal(catalogCounts.stream());
-        List<CatalogCountResponse> responseList = catalogCountResponseStream.collect(Collectors.toList());
-        Collections.reverse(responseList);
-        return responseList;
+        return catalogCountRepository.selectAllCumulativeSumByBranch(branchId).stream().map(
+                cc -> new CatalogCountResponse(
+                        cc.getId(),
+                        cc.getRegistration().toString(),
+                        cc.getCatalogCountEnum(),
+                        cc.getAmount(),
+                        cc.getDetails(),
+                        cc.getCumulativeSum(),
+                        cc.isEditable()
+                )
+        ).collect(Collectors.toList());
     }
 
     public Collection<CustomCatalogCount> selectAll(Integer branchId) {
@@ -63,7 +71,7 @@ public class CatalogCountImpl {
 
     //todo: improve this logic
     public double getTotalBalanceUpToGivenDate(int branchId, Instant fromDate) {
-        Collection<CustomCatalogCount> catalogCounts = catalogCountRepository.selectAllByBranch(branchId);
+        Collection<CustomCatalogCount> catalogCounts = selectAll(branchId);
         Stream<CustomCatalogCount> filteredCatalogCounts = catalogCounts.stream()
                 .filter(x -> x.getRegistration().isBefore(fromDate));
         Stream<CatalogCountResponse> response = calculateTotal(filteredCatalogCounts);
@@ -163,8 +171,8 @@ public class CatalogCountImpl {
 
         CatalogCount ccFromDB = this.selectOneRecord(catalogCount.getId());
         if (ccFromDB.getIsdeleted()) {
-           logger.error("CatalogCount {} was already marked as deleted", ccFromDB.getId());
-           throw new IllegalArgumentException("No valid Request");
+            logger.error("CatalogCount {} was already marked as deleted", ccFromDB.getId());
+            throw new IllegalArgumentException("No valid Request");
         }
         isCatalogCountRegistrationDateValid(ccFromDB.getRegistration());
 
@@ -196,7 +204,7 @@ public class CatalogCountImpl {
 
         ZonedDateTime minZonedDateTime = dateTime.atZone(ZoneId.systemDefault());
         //todo: missing "and not confirmed"
-        int maxDay = 16; //increase max day to 16 to support 15th day.
+        int maxDay = deadLineDay;
         if (currentDate.getDayOfMonth() <= maxDay) {
             return zonedDateTime.isAfter(minZonedDateTime
                     .minus(1, ChronoUnit.MONTHS)
@@ -214,7 +222,7 @@ public class CatalogCountImpl {
 
     private void logCatalogCount(CatalogCount cc) {
         logger.info("CatalogCount - id: {}, registration: {}, ccEnumId: {}, " +
-                "amount: {}, details: {}, branchId: {}, isDeleted: {}", cc.getId(),
+                        "amount: {}, details: {}, branchId: {}, isDeleted: {}", cc.getId(),
                 cc.getRegistration().toString(), cc.getCatalogcountenumid(),
                 cc.getAmount(), cc.getDetails(), cc.getBranchid(), cc.getIsdeleted());
     }

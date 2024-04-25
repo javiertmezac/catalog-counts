@@ -1,7 +1,9 @@
 package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.domain.CatalogCount;
+import com.jtmc.apps.reforma.domain.CatalogCountCumulativeSumParams;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
 import com.jtmc.apps.reforma.repository.mapper.CatalogCountDynamicSqlSupport;
 import com.jtmc.apps.reforma.repository.mapper.CatalogCountEnumDynamicSqlSupport;
@@ -28,6 +30,10 @@ public class CatalogCountRepository implements ICatalogCountRepository {
     @Inject
     private SqlSessionFactory sqlSessionFactory;
 
+    @Inject
+    @Named("deadLineDay")
+    private Integer deadLineDay;
+
     @Override
     public int insert(CatalogCount catalogCount) {
         try(SqlSession session = sqlSessionFactory.openSession(true)) {
@@ -44,6 +50,16 @@ public class CatalogCountRepository implements ICatalogCountRepository {
         } catch (Exception ex) {
             logger.error("{}", ex);
             throw ex;
+        }
+    }
+
+    public Collection<CustomCatalogCount> selectAllCumulativeSumByBranch(Integer branchId) {
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            CustomCatalogCountMapper mapper = session.getMapper(CustomCatalogCountMapper.class);
+            CatalogCountCumulativeSumParams params = new CatalogCountCumulativeSumParams();
+            params.setBranchId(branchId);
+            params.setDeadLineDay(deadLineDay);
+            return mapper.selectManyDirect(params);
         }
     }
 

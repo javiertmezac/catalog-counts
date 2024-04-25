@@ -33,14 +33,6 @@ public class MyBatisConfigModule extends MyBatisModule {
         addMapperClass(ServiceMapper.class);
         addMapperClass(AuditReportMapper.class);
 
-//        addMapperClass(BranchMapper.class);
-//        addMapperClass(CatalogCountMapper.class);
-//        addMapperClass(CatalogCountEnumMapper.class);
-//        addMapperClass(LoginMapper.class);
-//        addMapperClass(PersonaMapper.class);
-//        addMapperClass(PersonaDetailsMapper.class);
-//        addMapperClass(RoleMapper.class);
-
         Names.bindProperties(binder(), setMyBatisProperties());
         bind(ICatalogCountEnumRepository.class).to(CatalogCountEnumRepository.class);
 
@@ -60,8 +52,6 @@ public class MyBatisConfigModule extends MyBatisModule {
         try {
             String systemEnv = getSystemEnvVariable();
 
-//            Logger.info(System.getenv("JDBC.url"));
-
             myBatisProperties.setProperty("mybatis.environment.id", systemEnv);
             myBatisProperties.setProperty("JDBC.driver", "com.mysql.cj.jdbc.Driver");
             myBatisProperties.setProperty("JDBC.url", System.getenv("JDBC_URL"));
@@ -78,12 +68,6 @@ public class MyBatisConfigModule extends MyBatisModule {
     private String getSystemEnvVariable() {
         String systemEnv = System.getenv("app_env");
         return  systemEnv == null ? "local" : systemEnv;
-    }
-
-    private Configuration propertiesConfiguration(String environment) throws ConfigurationException {
-        String filePath = String.format("mybatis-config/%s-config.properties", environment);
-        Configurations configurations = new Configurations();
-       return configurations.properties(new File(getClass().getClassLoader().getResource(filePath).getFile()));
     }
 }
 
