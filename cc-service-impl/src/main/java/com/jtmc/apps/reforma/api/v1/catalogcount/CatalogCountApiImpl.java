@@ -8,7 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
+
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -73,6 +76,9 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         checkArgument(branchId > 0, "branchId not valid");
 
         CatalogCount catalogCount = catalogCountImpl.selectOneRecord(id);
+        if (!Objects.equals(catalogCount.getBranchid(), branchId)) {
+            throw new BadRequestException();
+        }
         return new CatalogCountResponse(
                 catalogCount.getId(),
                 catalogCount.getRegistration().toString(),

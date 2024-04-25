@@ -1,15 +1,28 @@
 # Catalog Counts Service Changelog
 
+## 2.2.3
+release date: Apr 25, 2024
+
+### Features
+- multiple "branches/accounts" supported for the same user
+
+### Improvements
+- Fetch Catalog Count list cumulative sum by branch and cc editable as Stored Procedure
+  - Logic has been replaced to use Stored Procedure
+
+### Breaking Changes
+- Stored Procedure `V0.0.13__sp_cclist_cumulativesum_editable.sql` to fetch catalog count list
+
 ## 2.2.1
 release date: Mar 30, 2024
 
-## Features
+### Features
 - Add Branch Initial Amount
 - update insomnia collection
 - add github workflow to deploy ECS fargate (cc-service)
 - add API to post branch initial amount
 
-## Improvements
+### Improvements
 - Excel import : reads "comments" column
 
 ## 2.1.0.2

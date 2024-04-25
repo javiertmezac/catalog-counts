@@ -38,10 +38,14 @@ public class PersonaDetailsRepository {
         }
     }
 
-    public Optional<PersonaDetails> selectOne(int personaId) {
+    public Optional<PersonaDetails> selectOne(int personaId, int branchId) {
          try(SqlSession session = sqlSessionFactory.openSession()) {
             PersonaDetailsMapper mapper = session.getMapper(PersonaDetailsMapper.class);
-            return mapper.selectOne(x -> x.where(PersonaDetailsDynamicSqlSupport.personaid, SqlBuilder.isEqualTo(personaId)));
+            return mapper.selectOne(x -> x
+                    .where(PersonaDetailsDynamicSqlSupport.personaid, SqlBuilder.isEqualTo(personaId))
+                    .and(PersonaDetailsDynamicSqlSupport.branchid, SqlBuilder.isEqualTo(branchId))
+                    .and(PersonaDetailsDynamicSqlSupport.status, SqlBuilder.isTrue())
+            );
         }
     }
 
