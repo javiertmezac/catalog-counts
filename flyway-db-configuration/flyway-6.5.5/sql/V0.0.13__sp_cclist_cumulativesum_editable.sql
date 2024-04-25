@@ -3,11 +3,14 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS selectCumulativeSumByBranch //
 
 CREATE PROCEDURE selectCumulativeSumByBranch(
-    IN branchId INT
+    IN branchId INT,
+    IN deadLineDay INT
 )
 BEGIN
-    DECLARE deadline DATE DEFAULT CAST(CONCAT(YEAR(current_date()), '-', LPAD(MONTH(current_date()), 2, '0'), '-', '10') AS DATE);
-
+    DECLARE deadline DATE DEFAULT CAST(CONCAT(YEAR(current_date()), '-', LPAD(MONTH(current_date()), 2, '0'), '-', deadLineDay) AS DATE);
+    DECLARE prev_month_date DATE DEFAULT DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH);
+    DECLARE min_prev_date DATE DEFAULT CAST(CONCAT(YEAR(prev_month_date), '-', LPAD(MONTH(prev_month_date), 2, '0'), '-', '01') AS DATE);
+    DECLARE min_current_date DATE DEFAULT CAST(CONCAT(YEAR(current_date()), '-', LPAD(MONTH(current_date()), 2, '0'), '-', '01') AS DATE);
 SELECT
     cc.id,
     cc.registration,
@@ -22,9 +25,9 @@ SELECT
                 END
         ) OVER (ORDER BY cc.registration) AS total,
         CASE
-            WHEN cc.registration < deadline
-                AND current_date() > deadline THEN 0
-            ELSE 1
+            WHEN current_date() <= deadline AND cc.registration > min_prev_date THEN 1
+            WHEN cc.registration >= min_current_date THEN 1
+            ELSE 0
             END AS editable
 FROM
     catalog_count AS cc

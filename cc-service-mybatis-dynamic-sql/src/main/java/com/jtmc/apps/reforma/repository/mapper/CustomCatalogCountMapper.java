@@ -1,5 +1,6 @@
 package com.jtmc.apps.reforma.repository.mapper;
 
+import com.jtmc.apps.reforma.domain.CatalogCountCumulativeSumParams;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.StatementType;
@@ -26,7 +27,7 @@ public interface CustomCatalogCountMapper {
     })
     List<CustomCatalogCount> selectMany(SelectStatementProvider selectStatement);
 
-    @Select(value = "{ call selectCumulativeSumByBranch(#{branchId, mode=IN, jdbcType=INTEGER}) }")
+    @Select(value = "{ call selectCumulativeSumByBranch(#{branchId, mode=IN, jdbcType=INTEGER}, #{deadLineDay, mode=IN, jdbcType=INTEGER}) }")
     @Options(statementType = StatementType.CALLABLE)
         @Results(id="CatalogCountResultDirect", value = {
             @Result(column="id", property="id", jdbcType= JdbcType.INTEGER, id=true),
@@ -37,5 +38,5 @@ public interface CustomCatalogCountMapper {
             @Result(column="total", property="cumulativeSum", jdbcType=JdbcType.DOUBLE),
             @Result(column="editable", property="editable", jdbcType=JdbcType.BOOLEAN),
     })
-    List<CustomCatalogCount> selectManyDirect(Integer branchId);
+    List<CustomCatalogCount> selectManyDirect(CatalogCountCumulativeSumParams params);
 }

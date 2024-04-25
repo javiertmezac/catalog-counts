@@ -1,6 +1,7 @@
 package com.jtmc.apps.reforma.impl.catalogcount;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
@@ -35,6 +36,10 @@ public class CatalogCountImpl {
 
     @Inject
     private UserImpl userImpl;
+
+    @Inject
+    @Named("deadLineDay")
+    private Integer deadLineDay;
 
     //todo: selectAllWithTotalColumn needs some refactor.
     // 1. many things happening under the hood. ie. calculateTotal is calculating but also transforming
@@ -200,7 +205,7 @@ public class CatalogCountImpl {
 
         ZonedDateTime minZonedDateTime = dateTime.atZone(ZoneId.systemDefault());
         //todo: missing "and not confirmed"
-        int maxDay = 16; //increase max day to 16 to support 15th day.
+        int maxDay = deadLineDay;
         if (currentDate.getDayOfMonth() <= maxDay) {
             return zonedDateTime.isAfter(minZonedDateTime
                     .minus(1, ChronoUnit.MONTHS)

@@ -52,7 +52,7 @@ public class ReportImpl {
            confirmation.setPersonaId(x.getConfirmedby());
            confirmation.setConfirmationDate(x.getRegistration());
 
-           Optional<PersonaDetails> personaDetails = personaDetailsRepository.selectOne(x.getConfirmedby());
+           Optional<PersonaDetails> personaDetails = personaDetailsRepository.selectOne(x.getConfirmedby(), x.getBranchid());
            confirmation.setRole(personaDetails.map(pd ->
                    roleRepository.selectOne(pd.getRoleid())
                            .orElse(null))

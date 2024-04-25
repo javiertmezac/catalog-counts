@@ -40,9 +40,10 @@ services:
     environment:
       - app_env=local
       - key=${CC_SERVICE_KEY}
-      - JDBC_URL=jdbc:mysql://cc-db:3306/catalog_count?useUnicode=true&connectionCollation=utf8_unicode_ci&characterSetResults=utf8&characterEncoding=utf8&serverTimezone=UTC
+      - JDBC_URL=jdbc:mysql://cc-db:3306/catalog_count?useUnicode=true&serverTimezone=UTC
       - JDBC_USERNAME=root
       - JDBC_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - CC_SERVICE_DEADLINE_DAY=10
     build:
       context: .
     depends_on:
