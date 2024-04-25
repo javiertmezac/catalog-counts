@@ -2,7 +2,6 @@ package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CatalogCountCumulativeSumParams;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
@@ -54,7 +53,7 @@ public class CatalogCountRepository implements ICatalogCountRepository {
         }
     }
 
-    public Collection<CustomCatalogCount> selectAllByBranchDirect(Integer branchId) {
+    public Collection<CustomCatalogCount> selectAllCumulativeSumByBranch(Integer branchId) {
         try(SqlSession session = sqlSessionFactory.openSession()) {
             CustomCatalogCountMapper mapper = session.getMapper(CustomCatalogCountMapper.class);
             CatalogCountCumulativeSumParams params = new CatalogCountCumulativeSumParams();
