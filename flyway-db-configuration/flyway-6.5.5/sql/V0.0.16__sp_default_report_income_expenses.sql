@@ -1,0 +1,34 @@
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS selectDefaultReportIncomesOrExpenses //
+
+CREATE PROCEDURE selectDefaultReportIncomesOrExpenses(
+    IN isIncome BOOLEAN,
+    IN branchId INT,
+    IN reportMonth INT,
+    IN reportYear INT
+)
+BEGIN
+    DECLARE min_date DATETIME DEFAULT CAST(CONCAT(reportYear, '-', LPAD(reportMonth, 2, '0'), '-', '01') AS DATETIME);
+    DECLARE max_date DATETIME DEFAULT ADDTIME(LAST_DAY(min_date), '23:59:59');
+    DECLARE incomeFamily VARCHAR(5) DEFAULT '1.';
+    DECLARE initialAmount VARCHAR(5) DEFAULT '0.1';
+
+    SELECT
+        cce.family, COALESCE(SUM(cc.amount), 0) AS sumAmount
+    FROM
+        catalog_count as cc
+            LEFT JOIN catalog_count_enum as cce ON cc.catalogCountEnumId = cce.id
+            LEFT JOIN branch as b on cc.branchId = b.id
+            LEFT JOIN timezone_type as tt on b.timezoneId = tt.id
+    WHERE
+            cc.branchId = branchId
+      AND cc.isDeleted = false
+      AND CONVERT_TZ(cc.registration, 'UTC', tt.name) between  min_date and max_date
+      AND ((isIncome AND cce.identifier LIKE CONCAT(incomeFamily, '%')) OR
+           (NOT isIncome AND cce.identifier NOT LIKE CONCAT(incomeFamily, '%') AND cce.identifier <> initialAmount))
+    GROUP BY
+        cce.family;
+END//
+
+DELIMITER ;

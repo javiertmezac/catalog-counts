@@ -1,10 +1,7 @@
 package com.jtmc.apps.reforma.impl.report.audit;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.domain.Expenses;
-import com.jtmc.apps.reforma.domain.Incomes;
-import com.jtmc.apps.reforma.domain.MonthlyTotal;
-import com.jtmc.apps.reforma.domain.SumCatalogCountByFamily;
+import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.exception.MonthlyTotalNotFoundException;
 import com.jtmc.apps.reforma.repository.ReportRepository;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
@@ -13,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -42,8 +40,11 @@ public class AuditReportImpl {
         validateDates(fromDate, toDate);
         Incomes incomes = new Incomes();
 
+        DefaultReportRequest request = buildDefaultReportParams(true, fromDate);
+        request.setBranchId(branchId);
+
         List<SumCatalogCountByFamily> sumCatalogCountByFamily =
-                auditReportMapper.selectSumCatalogCountIncomes(branchId, fromDate.toString(), toDate.toString());
+                auditReportMapper.selectSumCatalogCountByFamily(request);
         sumCatalogCountByFamily.stream().forEach( c -> {
             switch (c.getFamily()) {
                 case TITHES:
@@ -61,12 +62,23 @@ public class AuditReportImpl {
         return incomes;
     }
 
+    private DefaultReportRequest buildDefaultReportParams(boolean isIncome, Instant date) {
+        DefaultReportRequest request = new DefaultReportRequest();
+        request.setIncome(isIncome);
+        request.setReportMonth(date.atZone(ZoneId.systemDefault()).getMonthValue());
+        request.setReportYear(date.atZone(ZoneId.systemDefault()).getYear());
+        return request;
+    }
+
     public Expenses getSumExpenses(int branchId, Instant fromDate, Instant toDate) {
         validateDates(fromDate, toDate);
         Expenses expenses = new Expenses();
 
+        DefaultReportRequest request = buildDefaultReportParams(false, fromDate);
+        request.setBranchId(branchId);
+
         List<SumCatalogCountByFamily> sumCatalogCountByFamilies =
-                auditReportMapper.selectSumCatalogCountExpenses(branchId, fromDate.toString(), toDate.toString());
+                auditReportMapper.selectSumCatalogCountByFamily(request);
 
         sumCatalogCountByFamilies.stream().forEach(c -> {
             switch (c.getFamily()) {
