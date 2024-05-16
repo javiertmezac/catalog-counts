@@ -2,9 +2,9 @@ package com.jtmc.apps.reforma.domain;
 
 public class DefaultReportRequest {
     private boolean isIncome;
-    private int branchId;
-    private int reportMonth;
-    private int reportYear;
+    private Integer branchId;
+    private Integer reportMonth;
+    private Integer reportYear;
 
     public boolean isIncome() {
         return isIncome;
@@ -14,27 +14,27 @@ public class DefaultReportRequest {
         isIncome = income;
     }
 
-    public int getBranchId() {
+    public Integer getBranchId() {
         return branchId;
     }
 
-    public void setBranchId(int branchId) {
+    public void setBranchId(Integer branchId) {
         this.branchId = branchId;
     }
 
-    public int getReportMonth() {
+    public Integer getReportMonth() {
         return reportMonth;
     }
 
-    public void setReportMonth(int reportMonth) {
+    public void setReportMonth(Integer reportMonth) {
         this.reportMonth = reportMonth;
     }
 
-    public int getReportYear() {
+    public Integer getReportYear() {
         return reportYear;
     }
 
-    public void setReportYear(int reportYear) {
+    public void setReportYear(Integer reportYear) {
         this.reportYear = reportYear;
     }
 }

@@ -41,7 +41,7 @@ class CatalogCountImplTest {
     @Test
     void testSelectAllRecords_callsRepository() {
        catalogCountImpl.selectAllWithTotalColumn(0);
-       verify(catalogCountRepository).selectAllByBranch(anyInt());
+       verify(catalogCountRepository).selectAllCumulativeSumByBranch(anyInt());
     }
 
     @Test

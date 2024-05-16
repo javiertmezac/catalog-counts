@@ -29,7 +29,7 @@ public interface CustomCatalogCountMapper {
 
     @Select(value = "{ call selectCumulativeSumByBranch(#{branchId, mode=IN, jdbcType=INTEGER}, #{deadLineDay, mode=IN, jdbcType=INTEGER}) }")
     @Options(statementType = StatementType.CALLABLE)
-        @Results(id="CatalogCountResultDirect", value = {
+    @Results(id="CatalogCountResultDirect", value = {
             @Result(column="id", property="id", jdbcType= JdbcType.INTEGER, id=true),
             @Result(column="registration", property="registration", jdbcType=JdbcType.TIMESTAMP),
             @Result(column="catalogCountEnum", property="catalogCountEnum", jdbcType=JdbcType.VARCHAR),

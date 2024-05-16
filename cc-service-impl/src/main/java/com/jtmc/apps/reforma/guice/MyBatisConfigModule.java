@@ -3,21 +3,15 @@ package com.jtmc.apps.reforma.guice;
 import com.google.inject.name.Names;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.ICatalogCountEnumRepository;
-import com.jtmc.apps.reforma.repository.mapper.*;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.attendance.AttendanceMapper;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.monthlytotal.MonthlyTotalMapper;
 import com.jtmc.apps.reforma.repository.mybatis.dbmapper.service.ServiceMapper;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
-import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.guice.MyBatisModule;
 import org.mybatis.guice.datasource.builtin.PooledDataSourceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.Properties;
 
 public class MyBatisConfigModule extends MyBatisModule {
@@ -31,7 +25,6 @@ public class MyBatisConfigModule extends MyBatisModule {
         addMapperClass(MonthlyTotalMapper.class);
         addMapperClass(AttendanceMapper.class);
         addMapperClass(ServiceMapper.class);
-        addMapperClass(AuditReportMapper.class);
 
         Names.bindProperties(binder(), setMyBatisProperties());
         bind(ICatalogCountEnumRepository.class).to(CatalogCountEnumRepository.class);

@@ -1,12 +1,10 @@
 package com.jtmc.apps.reforma.impl.report.audit;
 
+import com.jtmc.apps.reforma.domain.DefaultReportRequest;
 import com.jtmc.apps.reforma.domain.Expenses;
 import com.jtmc.apps.reforma.domain.Incomes;
-import com.jtmc.apps.reforma.domain.MonthlyTotal;
 import com.jtmc.apps.reforma.domain.SumCatalogCountByFamily;
-import com.jtmc.apps.reforma.impl.exception.MonthlyTotalNotFoundException;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
-import org.apache.ibatis.jdbc.Null;
+import com.jtmc.apps.reforma.repository.mapper.CustomReportMapper;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,13 +14,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class AuditReportImplTest {
 
@@ -43,7 +43,10 @@ class AuditReportImplTest {
     private AuditReportImpl auditReport;
 
     @Mock
-    private AuditReportMapper auditReportMapper;
+    private CustomReportMapper auditReportMapper;
+
+    private DefaultReportRequest expectedDefaultReportRequest;
+    private EasyRandom easyRandom;
 
     private Instant fromDate;
     private Instant toDate;
@@ -54,6 +57,9 @@ class AuditReportImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        easyRandom = new EasyRandom();
+        expectedDefaultReportRequest = easyRandom.nextObject(DefaultReportRequest.class);
+
         fromDate = Instant.now();
         toDate = Instant.from(fromDate.plus(10, ChronoUnit.DAYS));
     }
@@ -61,7 +67,7 @@ class AuditReportImplTest {
     @Test
     void testGetSumIncomes_shouldCall_auditReportMapper() {
         auditReport.getSumIncomes(branchId, fromDate, toDate);
-        verify(auditReportMapper).selectSumCatalogCountIncomes(anyInt(), anyString(), anyString());
+        verify(auditReportMapper).selectSumCatalogCountByFamily(any());
     }
 
     @Test
@@ -100,6 +106,8 @@ class AuditReportImplTest {
         Assertions.assertTrue(nullPointerException.getMessage().contains("toDate cannot be null"));
     }
 
+    //todo: improve unit testing on default report request parameters
+
     @Test
     void testGetSumIncomes_returns_correctValuesForEachFamily() {
         SumCatalogCountByFamily sumTithe = new SumCatalogCountByFamily();
@@ -114,7 +122,7 @@ class AuditReportImplTest {
         offering.setFamily(OFFERINGS);
         offering.setSumAmount(300);
 
-        when(auditReportMapper.selectSumCatalogCountIncomes(branchId, fromDate.toString(), toDate.toString()))
+        when(auditReportMapper.selectSumCatalogCountByFamily(any()))
                 .thenReturn(Arrays.asList(sumTithe, donations, offering));
 
         Incomes actualIncomes = auditReport.getSumIncomes(branchId, fromDate, toDate);
@@ -128,30 +136,34 @@ class AuditReportImplTest {
     @Test
     void testGetSumExpenses_callsAuditReportMapper() {
         auditReport.getSumExpenses(branchId, fromDate, toDate);
-        verify(auditReportMapper).selectSumCatalogCountExpenses(anyInt(), anyString(), anyString());
+        verify(auditReportMapper).selectSumCatalogCountByFamily(any());
     }
 
     @Test
     void testGetSumExpenses_returnsCorrectFamilyValue() {
-       List<String> families  = Arrays.asList(SERVICES, HELPS, GENERAL, FOOD, TRAVELING,
-               STATIONARY, IMMOVABLES, FEES);
+        List<String> families  = Arrays.asList(SERVICES, HELPS, GENERAL, FOOD, TRAVELING,
+                STATIONARY, IMMOVABLES, FEES);
 
-       int indexFamily = new Random().nextInt(families.size());
-       String family = families.get(indexFamily);
-       double expectedAmount = new Random().nextInt();
+        int indexFamily = new Random().nextInt(families.size());
+        String family = families.get(indexFamily);
+        double expectedAmount = new Random().nextInt();
 
-       SumCatalogCountByFamily expectedSumByFamily = new SumCatalogCountByFamily();
-       expectedSumByFamily.setFamily(family);
-       expectedSumByFamily.setSumAmount(expectedAmount);
+        SumCatalogCountByFamily expectedSumByFamily = new SumCatalogCountByFamily();
+        expectedSumByFamily.setFamily(family);
+        expectedSumByFamily.setSumAmount(expectedAmount);
 
-       when(auditReportMapper.selectSumCatalogCountExpenses(branchId, fromDate.toString(), toDate.toString()))
-               .thenReturn(Arrays.asList(expectedSumByFamily));
+        expectedDefaultReportRequest.setBranchId(branchId);
+        expectedDefaultReportRequest.setReportMonth(fromDate.atZone(ZoneId.systemDefault()).getMonthValue());
+        expectedDefaultReportRequest.setReportYear(fromDate.atZone(ZoneId.systemDefault()).getYear());
+        expectedDefaultReportRequest.setIncome(false);
+        when(auditReportMapper.selectSumCatalogCountByFamily(any()))
+                .thenReturn(Arrays.asList(expectedSumByFamily));
 
-       Expenses actualExpenses = auditReport.getSumExpenses(branchId, fromDate, toDate);
+        Expenses actualExpenses = auditReport.getSumExpenses(branchId, fromDate, toDate);
 
-       Assertions.assertNotNull(actualExpenses);
-       Assertions.assertEquals(expectedAmount, getCorrectFamilyExpense(family, actualExpenses));
-       assertNotAssignedAmountForOtherFamilies(family, families, actualExpenses);
+        Assertions.assertNotNull(actualExpenses);
+        Assertions.assertEquals(expectedAmount, getCorrectFamilyExpense(family, actualExpenses));
+        assertNotAssignedAmountForOtherFamilies(family, families, actualExpenses);
     }
 
     private void assertNotAssignedAmountForOtherFamilies(String selectedFamily, List<String> families,

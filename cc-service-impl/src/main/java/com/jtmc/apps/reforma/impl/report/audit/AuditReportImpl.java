@@ -2,16 +2,11 @@ package com.jtmc.apps.reforma.impl.report.audit;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.*;
-import com.jtmc.apps.reforma.impl.exception.MonthlyTotalNotFoundException;
-import com.jtmc.apps.reforma.repository.ReportRepository;
-import com.jtmc.apps.reforma.repository.mybatis.dbmapper.auditreport.AuditReportMapper;
-import org.apache.commons.lang3.StringUtils;
+import com.jtmc.apps.reforma.repository.mapper.CustomReportMapper;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -33,18 +28,20 @@ public class AuditReportImpl {
     private final String FEES = "fees";
 
     @Inject
-    private AuditReportMapper auditReportMapper;
+    private CustomReportMapper auditReportMapper;
 
     //todo: consider UTC time for from and to Dates!
     public Incomes getSumIncomes(int branchId, Instant fromDate, Instant toDate) {
         validateDates(fromDate, toDate);
         Incomes incomes = new Incomes();
 
-        DefaultReportRequest request = buildDefaultReportParams(true, fromDate);
+        boolean isIncome = true;
+        DefaultReportRequest request = buildDefaultReportParams(isIncome, fromDate);
         request.setBranchId(branchId);
 
         List<SumCatalogCountByFamily> sumCatalogCountByFamily =
                 auditReportMapper.selectSumCatalogCountByFamily(request);
+
         sumCatalogCountByFamily.stream().forEach( c -> {
             switch (c.getFamily()) {
                 case TITHES:
@@ -74,7 +71,8 @@ public class AuditReportImpl {
         validateDates(fromDate, toDate);
         Expenses expenses = new Expenses();
 
-        DefaultReportRequest request = buildDefaultReportParams(false, fromDate);
+        boolean isIncome = false;
+        DefaultReportRequest request = buildDefaultReportParams(isIncome, fromDate);
         request.setBranchId(branchId);
 
         List<SumCatalogCountByFamily> sumCatalogCountByFamilies =
