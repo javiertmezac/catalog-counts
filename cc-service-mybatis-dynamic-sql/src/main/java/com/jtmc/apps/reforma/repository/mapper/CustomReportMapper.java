@@ -13,7 +13,8 @@ public interface CustomReportMapper {
 
     @Select(value =  "{ call selectDefaultReportIncomesOrExpenses(" +
             "#{isIncome, mode=IN, jdbcType=TINYINT}, #{branchId, mode=IN, jdbcType=INTEGER}, " +
-            "#{reportMonth, mode=IN, jdbcType=INTEGER}, #{reportYear, mode=IN, jdbcType=INTEGER} ) }")
+            "#{reportFromMonth, mode=IN, jdbcType=INTEGER}, #{reportFromYear, mode=IN, jdbcType=INTEGER}, " +
+            "#{reportToMonth, mode=IN, jdbcType=INTEGER}, #{reportToYear, mode=IN, jdbcType=INTEGER} )}")
     @Options(statementType = StatementType.CALLABLE)
     @Results(value = {
             @Result(column = "family", property = "family", jdbcType = JdbcType.VARCHAR),

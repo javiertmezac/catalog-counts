@@ -16,6 +16,7 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,7 +42,7 @@ class CatalogCountImplTest {
     @Test
     void testSelectAllRecords_callsRepository() {
        catalogCountImpl.selectAllWithTotalColumn(0);
-       verify(catalogCountRepository).selectAllCumulativeSumByBranch(anyInt());
+       verify(catalogCountRepository).selectAllCumulativeSumByBranch(any());
     }
 
     @Test

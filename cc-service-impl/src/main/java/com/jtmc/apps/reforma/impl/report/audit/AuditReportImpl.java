@@ -4,13 +4,7 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.repository.mapper.CustomReportMapper;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AuditReportImpl {
 
@@ -30,15 +24,11 @@ public class AuditReportImpl {
     @Inject
     private CustomReportMapper auditReportMapper;
 
-    //todo: consider UTC time for from and to Dates!
-    public Incomes getSumIncomes(int branchId, Instant fromDate, Instant toDate) {
-        validateDates(fromDate, toDate);
+    public Incomes getSumIncomes(int branchId, ReportDateLimitsParams dateLimitsParams) {
         Incomes incomes = new Incomes();
 
         boolean isIncome = true;
-        DefaultReportRequest request = buildDefaultReportParams(isIncome, fromDate);
-        request.setBranchId(branchId);
-
+        DefaultReportRequest request = buildDefaultReportParams(branchId, isIncome, dateLimitsParams);
         List<SumCatalogCountByFamily> sumCatalogCountByFamily =
                 auditReportMapper.selectSumCatalogCountByFamily(request);
 
@@ -59,21 +49,22 @@ public class AuditReportImpl {
         return incomes;
     }
 
-    private DefaultReportRequest buildDefaultReportParams(boolean isIncome, Instant date) {
+    private DefaultReportRequest buildDefaultReportParams(int branchId, boolean isIncome, ReportDateLimitsParams params) {
         DefaultReportRequest request = new DefaultReportRequest();
+        request.setBranchId(branchId);
         request.setIncome(isIncome);
-        request.setReportMonth(date.atZone(ZoneId.systemDefault()).getMonthValue());
-        request.setReportYear(date.atZone(ZoneId.systemDefault()).getYear());
+        request.setReportFromMonth(params.getFromMonth());
+        request.setReportFromYear(params.getFromYear());
+        request.setReportToMonth(params.getToMonth());
+        request.setReportToYear(params.getToYear());
         return request;
     }
 
-    public Expenses getSumExpenses(int branchId, Instant fromDate, Instant toDate) {
-        validateDates(fromDate, toDate);
+    public Expenses getSumExpenses(int branchId, ReportDateLimitsParams dateLimitsParams) {
         Expenses expenses = new Expenses();
 
         boolean isIncome = false;
-        DefaultReportRequest request = buildDefaultReportParams(isIncome, fromDate);
-        request.setBranchId(branchId);
+        DefaultReportRequest request = buildDefaultReportParams(branchId, isIncome, dateLimitsParams);
 
         List<SumCatalogCountByFamily> sumCatalogCountByFamilies =
                 auditReportMapper.selectSumCatalogCountByFamily(request);
@@ -107,11 +98,5 @@ public class AuditReportImpl {
             }
         });
         return expenses;
-    }
-
-    private void validateDates(Instant fromDate, Instant toDate) {
-        checkNotNull(fromDate, "fromDate cannot be null");
-        checkNotNull(toDate, "toDate cannot be null");
-        checkArgument(fromDate.isBefore(toDate), "FromMonth cannot be greater than ToMonth");
     }
 }

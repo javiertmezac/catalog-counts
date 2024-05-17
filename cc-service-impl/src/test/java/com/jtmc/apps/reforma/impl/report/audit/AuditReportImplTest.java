@@ -1,21 +1,16 @@
 package com.jtmc.apps.reforma.impl.report.audit;
 
-import com.jtmc.apps.reforma.domain.DefaultReportRequest;
-import com.jtmc.apps.reforma.domain.Expenses;
-import com.jtmc.apps.reforma.domain.Incomes;
-import com.jtmc.apps.reforma.domain.SumCatalogCountByFamily;
+import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.repository.mapper.CustomReportMapper;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -45,68 +40,29 @@ class AuditReportImplTest {
     @Mock
     private CustomReportMapper auditReportMapper;
 
+    private ReportDateLimitsParams expectedReportDateLimitsParams;
     private DefaultReportRequest expectedDefaultReportRequest;
     private EasyRandom easyRandom;
-
-    private Instant fromDate;
-    private Instant toDate;
-    int branchId = 0;
-
+    int expectedBranchId = 0;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
         easyRandom = new EasyRandom();
-        expectedDefaultReportRequest = easyRandom.nextObject(DefaultReportRequest.class);
+        expectedBranchId = easyRandom.nextInt();
 
-        fromDate = Instant.now();
-        toDate = Instant.from(fromDate.plus(10, ChronoUnit.DAYS));
+        expectedReportDateLimitsParams = easyRandom.nextObject(ReportDateLimitsParams.class);
+
+        expectedDefaultReportRequest = easyRandom.nextObject(DefaultReportRequest.class);
+        expectedDefaultReportRequest.setBranchId(expectedBranchId);
     }
 
     @Test
     void testGetSumIncomes_shouldCall_auditReportMapper() {
-        auditReport.getSumIncomes(branchId, fromDate, toDate);
+        auditReport.getSumIncomes(expectedBranchId, expectedReportDateLimitsParams);
         verify(auditReportMapper).selectSumCatalogCountByFamily(any());
     }
-
-    @Test
-    void testGetSumIncomes_shouldThrowNullPointerException_whenDateFromNull() {
-        Assertions.assertThrows(NullPointerException.class, () ->
-                auditReport.getSumIncomes(branchId, null, toDate));
-    }
-
-    @Test
-    void testGetSumIncomes_shouldThrowNullPointerException_whenDateToNull() {
-        Assertions.assertThrows(NullPointerException.class, () ->
-                auditReport.getSumIncomes(branchId, fromDate, null));
-    }
-
-    @Test
-    void testGetSumIncomes_shouldValidate_toDateIsGreater_thanFromDate() {
-        IllegalArgumentException actualException =
-                Assertions.assertThrows(IllegalArgumentException.class, () ->
-                        auditReport.getSumIncomes(branchId, fromDate, Instant.MIN));
-
-        String expectedMessage = String.format("FromMonth cannot be greater than ToMonth");
-        Assertions.assertEquals(expectedMessage, actualException.getMessage());
-    }
-
-    @Test
-    void testValidateDateRange_returnsIllegalArgument_whenNoFromDateFormat() {
-        NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class, () ->
-                auditReport.getSumExpenses(branchId, null, Instant.MAX));
-        Assertions.assertTrue(nullPointerException.getMessage().contains("fromDate cannot be null"));
-    }
-
-    @Test
-    void testValidateDateRange_returnsIllegalArgument_whenNoToDateFormat() {
-        NullPointerException nullPointerException = Assertions.assertThrows(NullPointerException.class, () ->
-                auditReport.getSumExpenses(branchId,Instant.MIN, null));
-        Assertions.assertTrue(nullPointerException.getMessage().contains("toDate cannot be null"));
-    }
-
-    //todo: improve unit testing on default report request parameters
 
     @Test
     void testGetSumIncomes_returns_correctValuesForEachFamily() {
@@ -122,10 +78,10 @@ class AuditReportImplTest {
         offering.setFamily(OFFERINGS);
         offering.setSumAmount(300);
 
-        when(auditReportMapper.selectSumCatalogCountByFamily(any()))
+        when(auditReportMapper.selectSumCatalogCountByFamily(any(DefaultReportRequest.class)))
                 .thenReturn(Arrays.asList(sumTithe, donations, offering));
 
-        Incomes actualIncomes = auditReport.getSumIncomes(branchId, fromDate, toDate);
+        Incomes actualIncomes = auditReport.getSumIncomes(expectedBranchId, expectedReportDateLimitsParams);
 
         Assertions.assertNotNull(actualIncomes);
         Assertions.assertEquals(sumTithe.getSumAmount(), actualIncomes.getTithe());
@@ -134,8 +90,19 @@ class AuditReportImplTest {
     }
 
     @Test
+    void testGetSumIncomes_callsSelectSumCatalogCountByFamily_correctParams() {
+        auditReport.getSumIncomes(expectedBranchId, expectedReportDateLimitsParams);
+
+        ArgumentCaptor<DefaultReportRequest> captor = ArgumentCaptor.forClass(DefaultReportRequest.class);
+        verify(auditReportMapper).selectSumCatalogCountByFamily(captor.capture());
+        Assertions.assertEquals(expectedBranchId, expectedDefaultReportRequest.getBranchId());
+        Assertions.assertTrue(captor.getValue().isIncome());
+        assertSelectSumCatalogCountByFamilyCapture(captor);
+    }
+
+    @Test
     void testGetSumExpenses_callsAuditReportMapper() {
-        auditReport.getSumExpenses(branchId, fromDate, toDate);
+        auditReport.getSumExpenses(expectedBranchId, expectedReportDateLimitsParams);
         verify(auditReportMapper).selectSumCatalogCountByFamily(any());
     }
 
@@ -152,18 +119,36 @@ class AuditReportImplTest {
         expectedSumByFamily.setFamily(family);
         expectedSumByFamily.setSumAmount(expectedAmount);
 
-        expectedDefaultReportRequest.setBranchId(branchId);
-        expectedDefaultReportRequest.setReportMonth(fromDate.atZone(ZoneId.systemDefault()).getMonthValue());
-        expectedDefaultReportRequest.setReportYear(fromDate.atZone(ZoneId.systemDefault()).getYear());
-        expectedDefaultReportRequest.setIncome(false);
-        when(auditReportMapper.selectSumCatalogCountByFamily(any()))
+        when(auditReportMapper.selectSumCatalogCountByFamily(any(DefaultReportRequest.class)))
                 .thenReturn(Arrays.asList(expectedSumByFamily));
 
-        Expenses actualExpenses = auditReport.getSumExpenses(branchId, fromDate, toDate);
+        Expenses actualExpenses = auditReport.getSumExpenses(expectedBranchId, expectedReportDateLimitsParams);
 
         Assertions.assertNotNull(actualExpenses);
         Assertions.assertEquals(expectedAmount, getCorrectFamilyExpense(family, actualExpenses));
         assertNotAssignedAmountForOtherFamilies(family, families, actualExpenses);
+    }
+
+    @Test
+    void testGetSumExpenses_callSelectSumCatalogCountByFamily_correctParams() {
+        auditReport.getSumExpenses(expectedBranchId, expectedReportDateLimitsParams);
+
+        ArgumentCaptor<DefaultReportRequest> captor = ArgumentCaptor.forClass(DefaultReportRequest.class);
+        verify(auditReportMapper).selectSumCatalogCountByFamily(captor.capture());
+        Assertions.assertEquals(expectedBranchId, expectedDefaultReportRequest.getBranchId());
+        Assertions.assertFalse(captor.getValue().isIncome());
+        assertSelectSumCatalogCountByFamilyCapture(captor);
+    }
+
+    private void assertSelectSumCatalogCountByFamilyCapture(ArgumentCaptor<DefaultReportRequest> captor) {
+        Assertions.assertEquals(expectedReportDateLimitsParams.getFromMonth(),
+                captor.getValue().getReportFromMonth());
+        Assertions.assertEquals(expectedReportDateLimitsParams.getFromYear(),
+                captor.getValue().getReportFromYear());
+        Assertions.assertEquals(expectedReportDateLimitsParams.getToMonth(),
+                captor.getValue().getReportToMonth());
+        Assertions.assertEquals(expectedReportDateLimitsParams.getToYear(),
+                captor.getValue().getReportToYear());
     }
 
     private void assertNotAssignedAmountForOtherFamilies(String selectedFamily, List<String> families,

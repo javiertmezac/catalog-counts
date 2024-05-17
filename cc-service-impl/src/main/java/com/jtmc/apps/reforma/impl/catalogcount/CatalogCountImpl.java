@@ -42,7 +42,10 @@ public class CatalogCountImpl {
     private Integer deadLineDay;
 
     public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
-        return catalogCountRepository.selectAllCumulativeSumByBranch(branchId).stream().map(
+        CatalogCountCumulativeSumParams params = new CatalogCountCumulativeSumParams();
+        params.setBranchId(branchId);
+        params.setDeadLineDay(deadLineDay);
+        return catalogCountRepository.selectAllCumulativeSumByBranch(params).stream().map(
                 cc -> new CatalogCountResponse(
                         cc.getId(),
                         cc.getRegistration().toString(),
@@ -81,6 +84,20 @@ public class CatalogCountImpl {
 
         Optional<CatalogCountResponse> optionalResponse = responseList.stream().findFirst();
         return optionalResponse.map(CatalogCountResponse::getTotal).orElse(0.0);
+    }
+
+    public double getTotalBalanceUpToGivenDate(int branchId, int fromMonth, int fromYear) {
+        CatalogCountCumulativeSumParams params = new CatalogCountCumulativeSumParams();
+        params.setBranchId(branchId);
+        params.setDeadLineDay(deadLineDay);
+        Collection<CustomCatalogCount> customCatalogCountsCumulativeSum = catalogCountRepository.selectAllCumulativeSumByBranch(params);
+
+        LocalDate firstDayCurrentDate = LocalDate.of(fromYear, fromMonth, 1);
+        LocalDateTime dateTime = LocalDateTime.of(firstDayCurrentDate, LocalTime.MIN);
+        Stream<CustomCatalogCount> stream = customCatalogCountsCumulativeSum.stream()
+                .filter(x -> x.getRegistration().isBefore(dateTime.toInstant(ZoneOffset.UTC)));
+        Optional<CustomCatalogCount>  firstOrEmpty = stream.findFirst();
+        return firstOrEmpty.map(CustomCatalogCount::getCumulativeSum).orElse(0.0);
     }
 
     private Stream<CatalogCountResponse> calculateTotal(Stream<CustomCatalogCount> catalogCounts) {

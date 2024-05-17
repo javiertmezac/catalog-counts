@@ -5,12 +5,15 @@ DROP PROCEDURE IF EXISTS selectDefaultReportIncomesOrExpenses //
 CREATE PROCEDURE selectDefaultReportIncomesOrExpenses(
     IN isIncome BIT,
     IN branchId INT,
-    IN reportMonth INT,
-    IN reportYear INT
+    IN reportFromMonth INT,
+    IN reportFromYear INT,
+    IN reportToMonth INT,
+    IN reportToYear INT
 )
 BEGIN
-    DECLARE min_date DATETIME DEFAULT CAST(CONCAT(reportYear, '-', LPAD(reportMonth, 2, '0'), '-', '01') AS DATETIME);
-    DECLARE max_date DATETIME DEFAULT ADDTIME(LAST_DAY(min_date), '23:59:59');
+    DECLARE min_date DATETIME DEFAULT CAST(CONCAT(reportFromYear, '-', LPAD(reportFromMonth, 2, '0'), '-', '01') AS DATETIME);
+    DECLARE max_date_first_day DATETIME DEFAULT CAST(CONCAT(reportToYear, '-', LPAD(reportToMonth, 2, '0'), '-', '01') AS DATETIME);
+    DECLARE max_date DATETIME DEFAULT ADDTIME(LAST_DAY(max_date_first_day), '23:59:59');
     DECLARE incomeFamily VARCHAR(5) DEFAULT '1.';
     DECLARE initialAmount VARCHAR(5) DEFAULT '0.1';
     DECLARE timezone_name VARCHAR(100);

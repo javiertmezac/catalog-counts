@@ -7,9 +7,7 @@ import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.period.PeriodImpl;
 import com.jtmc.apps.reforma.impl.report.ReportImpl;
 import com.jtmc.apps.reforma.impl.report.audit.AuditReportImpl;
-import com.jtmc.apps.reforma.impl.user.UserImpl;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,26 +49,29 @@ public class ReportApiImpl implements ReportApi {
                 "fromMonth not valid");
         checkArgument(reportRequest.getToMonth() >= 1 && reportRequest.getToMonth() <= 12 ,
                 "toMonth not valid");
+        checkArgument(reportRequest.getFromYear() > 2020);
+        checkArgument(reportRequest.getToYear() > 2020);
+        checkArgument(reportRequest.getToYear() >= reportRequest.getFromYear(),
+                "invalid year(s) configuration");
+        checkArgument(reportRequest.getToMonth() >= reportRequest.getFromMonth(),
+                "invalid mont(s) configuration");
 
         ReportResponse response = new ReportResponse();
         response.setTitle("Reporte");
         response.setMision(branch.selectOneBranch(branchId).getName());
 
-        int fromMonth = reportRequest.getFromMonth();
-        int toMonth = reportRequest.getToMonth();
-        int year = reportRequest.getYear();
-        response.setPeriod(String.format("%s - %s %s",
-                Months.valueOfNumber(fromMonth),
-                Months.valueOfNumber(toMonth),
-                year));
+        ReportDateLimitsParams reportDateLimitsParams = new ReportDateLimitsParams();
+        reportDateLimitsParams.setFromMonth(reportRequest.getFromMonth());
+        reportDateLimitsParams.setFromYear(reportRequest.getFromYear());
+        reportDateLimitsParams.setToMonth(reportRequest.getToMonth());
+        reportDateLimitsParams.setToYear(reportRequest.getToYear());
 
-        Instant fromDate = report.buildFromDate(fromMonth, year);
-        Instant toDate = report.buildToDate(toMonth, year);
+        response.setPeriod(reportDateLimitsParams.getPeriodTitle());
 
-        double previousBalance = report.calculatePreviousBalance(branchId, fromDate);
+        double previousBalance = report.calculatePreviousBalance(branchId, reportDateLimitsParams);
         response.setPreviousBalance(previousBalance);
 
-        Incomes incomes = auditReport.getSumIncomes(branchId, fromDate, toDate);
+        Incomes incomes = auditReport.getSumIncomes(branchId, reportDateLimitsParams);
         SumIncomes sumIncomes = new SumIncomes();
         sumIncomes.setDonations(incomes.getDonations());
         sumIncomes.setTithe(incomes.getTithe());
@@ -78,7 +79,7 @@ public class ReportApiImpl implements ReportApi {
         sumIncomes.setSumIncomesTotal(incomes.getTotal());
         response.setSumIncomes(sumIncomes);
 
-        Expenses expenses = auditReport.getSumExpenses(branchId, fromDate, toDate);
+        Expenses expenses = auditReport.getSumExpenses(branchId, reportDateLimitsParams);
         SumExpenses sumExpenses = new SumExpenses();
         sumExpenses.setServices(expenses.getServices());
         sumExpenses.setHelps(expenses.getHelps());

@@ -55,5 +55,8 @@
             <property name="virtualKeyColumns" value="id"/>
             <columnOverride column="registration" javaType="java.time.Instant" />
         </table>
+        <table tableName="timezone_type" >
+            <property name="virtualKeyColumns" value="id"/>
+        </table>
     </context>
 </generatorConfiguration>

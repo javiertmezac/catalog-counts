@@ -97,6 +97,10 @@ public class ReportImpl {
         return catalogCountImpl.getTotalBalanceUpToGivenDate(branchId, fromDate);
     }
 
+    public double calculatePreviousBalance(int branchId, ReportDateLimitsParams params) {
+        return catalogCountImpl.getTotalBalanceUpToGivenDate(branchId, params.getFromMonth(), params.getFromYear());
+    }
+
     public Map<String, String> fetchBranchPersonaByRole(int branchId) {
         List<PersonaDetails> personaDetails = personaDetailsRepository.select(branchId);
         List<Role> roles = roleRepository.selectAll();
