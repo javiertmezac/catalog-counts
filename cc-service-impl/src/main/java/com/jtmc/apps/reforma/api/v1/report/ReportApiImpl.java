@@ -29,7 +29,7 @@ public class ReportApiImpl implements ReportApi {
     private PeriodImpl period;
 
     @Inject
-    private BranchImpl branch;
+    private BranchImpl branchImpl;
 
     @Override
     public PeriodReportResponseList periodReportStatus(int branchId) {
@@ -58,7 +58,9 @@ public class ReportApiImpl implements ReportApi {
 
         ReportResponse response = new ReportResponse();
         response.setTitle("Reporte");
-        response.setMision(branch.selectOneBranch(branchId).getName());
+
+        BranchDetails branchDetails = branchImpl.selectOneBranch(branchId);
+        response.setMision(branchDetails.getBranch().getName());
 
         ReportDateLimitsParams reportDateLimitsParams = new ReportDateLimitsParams();
         reportDateLimitsParams.setFromMonth(reportRequest.getFromMonth());
@@ -68,7 +70,7 @@ public class ReportApiImpl implements ReportApi {
 
         response.setPeriod(reportDateLimitsParams.getPeriodTitle());
 
-        double previousBalance = report.calculatePreviousBalance(branchId, reportDateLimitsParams);
+        double previousBalance = report.calculatePreviousBalance(branchDetails, reportDateLimitsParams);
         response.setPreviousBalance(previousBalance);
 
         Incomes incomes = auditReport.getSumIncomes(branchId, reportDateLimitsParams);

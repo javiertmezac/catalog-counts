@@ -2,9 +2,15 @@ package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Branch;
+import com.jtmc.apps.reforma.domain.BranchDetails;
+import com.jtmc.apps.reforma.domain.TimezoneType;
+import com.jtmc.apps.reforma.repository.mapper.BranchDynamicSqlSupport;
 import com.jtmc.apps.reforma.repository.mapper.BranchMapper;
+import com.jtmc.apps.reforma.repository.mapper.TimezoneTypeDynamicSqlSupport;
+import com.jtmc.apps.reforma.repository.mapper.TimezoneTypeMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +30,17 @@ public class BranchRepository {
             return mapper.selectByPrimaryKey(branchId);
         }
     }
+
+    public Optional<TimezoneType> getBranchTimeZone(int branchId) {
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            TimezoneTypeMapper mapper = session.getMapper(TimezoneTypeMapper.class);
+            return mapper.selectOne(x -> x.join(BranchDynamicSqlSupport.branch)
+                    .on(BranchDynamicSqlSupport.timezoneid, SqlBuilder.equalTo(TimezoneTypeDynamicSqlSupport.id))
+                    .where(BranchDynamicSqlSupport.id, SqlBuilder.isEqualTo(branchId))
+            );
+        }
+    }
+
     public List<Branch> selectAll(){
         try(SqlSession session = sqlSessionFactory.openSession()) {
             BranchMapper mapper = session.getMapper(BranchMapper.class);
