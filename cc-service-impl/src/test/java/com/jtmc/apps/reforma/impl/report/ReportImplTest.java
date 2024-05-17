@@ -17,6 +17,5 @@ class ReportImplTest {
 
     @Test
     void name() {
-        report.buildFromDate(5,2022 );
     }
 }

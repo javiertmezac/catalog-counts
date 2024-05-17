@@ -42,7 +42,10 @@ public class CatalogCountImpl {
     private Integer deadLineDay;
 
     public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId) {
-        return catalogCountRepository.selectAllCumulativeSumByBranch(branchId).stream().map(
+        CatalogCountCumulativeSumParams params = new CatalogCountCumulativeSumParams();
+        params.setBranchId(branchId);
+        params.setDeadLineDay(deadLineDay);
+        return catalogCountRepository.selectAllCumulativeSumByBranch(params).stream().map(
                 cc -> new CatalogCountResponse(
                         cc.getId(),
                         cc.getRegistration().toString(),
@@ -69,18 +72,16 @@ public class CatalogCountImpl {
                 .findFirst();
     }
 
-    //todo: improve this logic
-    public double getTotalBalanceUpToGivenDate(int branchId, Instant fromDate) {
-        Collection<CustomCatalogCount> catalogCounts = selectAll(branchId);
-        Stream<CustomCatalogCount> filteredCatalogCounts = catalogCounts.stream()
-                .filter(x -> x.getRegistration().isBefore(fromDate));
-        Stream<CatalogCountResponse> response = calculateTotal(filteredCatalogCounts);
+    public double getTotalBalanceUpToGivenDate(int branchId, Instant instantWithZoneOffset) {
+        CatalogCountCumulativeSumParams params = new CatalogCountCumulativeSumParams();
+        params.setBranchId(branchId);
+        params.setDeadLineDay(deadLineDay);
+        Collection<CustomCatalogCount> customCatalogCountsCumulativeSum = catalogCountRepository.selectAllCumulativeSumByBranch(params);
 
-        List<CatalogCountResponse> responseList = response.collect(Collectors.toList());
-        Collections.reverse(responseList);
-
-        Optional<CatalogCountResponse> optionalResponse = responseList.stream().findFirst();
-        return optionalResponse.map(CatalogCountResponse::getTotal).orElse(0.0);
+        Stream<CustomCatalogCount> stream = customCatalogCountsCumulativeSum.stream()
+                .filter(x -> x.getRegistration().isBefore(instantWithZoneOffset));
+        Optional<CustomCatalogCount>  firstOrEmpty = stream.findFirst();
+        return firstOrEmpty.map(CustomCatalogCount::getCumulativeSum).orElse(0.0);
     }
 
     private Stream<CatalogCountResponse> calculateTotal(Stream<CustomCatalogCount> catalogCounts) {
@@ -116,9 +117,9 @@ public class CatalogCountImpl {
 
         isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
 
-        Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        BranchDetails branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         catalogCountRepository.insert(catalogCount);
-        logger.debug("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branch.getId());
+        logger.debug("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branch.getBranch().getId());
     }
 
     @Transactional
@@ -144,14 +145,14 @@ public class CatalogCountImpl {
         validateCatalogCountEnum(catalogCount);
 
         isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
-        Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        BranchDetails branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         CatalogCount ccToBeUpdated = this.selectOneRecord(catalogCount.getId());
         logger.info("CatalogCount #{} to be updated", ccToBeUpdated.getId());
         logCatalogCount(ccToBeUpdated);
 
         catalogCountRepository.update(catalogCount);
         logger.info("User '{}' updated CatalogCount #{} on branch #{}",
-                userDetails.getUsername(), catalogCount.getId(), branch.getId()
+                userDetails.getUsername(), catalogCount.getId(), branch.getBranch().getId()
         );
         logCatalogCount(catalogCount);
     }
@@ -176,12 +177,12 @@ public class CatalogCountImpl {
         }
         isCatalogCountRegistrationDateValid(ccFromDB.getRegistration());
 
-        Branch branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        BranchDetails branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         if (catalogCountRepository.logicalDelete(catalogCount) != 1) {
             logger.error("logicalDelete for record catalog-count {} was not successfully done", catalogCount.getId());
             throw new CatalogCountLogicalDeleteException("something wrong happened on deletion for catalog-count", 500);
         } else {
-            logger.info("User {} deleted CatalogCount #{} on branch #{}", userDetails.getUsername(), catalogCount.getId(), branch.getId());
+            logger.info("User {} deleted CatalogCount #{} on branch #{}", userDetails.getUsername(), catalogCount.getId(), branch.getBranch().getId());
         }
     }
 
