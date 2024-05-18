@@ -1,5 +1,6 @@
 package com.jtmc.apps.reforma.domain;
 
+import java.time.ZoneId;
 import java.util.Optional;
 
 public class BranchDetails {
@@ -20,5 +21,9 @@ public class BranchDetails {
 
     public void setTimezoneType(Optional<TimezoneType> timezoneType) {
         this.timezoneType = timezoneType;
+    }
+
+    public ZoneId getZoneIdFromBranchTimeZone() {
+        return ZoneId.of(this.timezoneType.map(TimezoneType::getName).orElse("UTC"));
     }
 }

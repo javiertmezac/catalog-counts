@@ -41,6 +41,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         checkNotNull(catalogCountRequest.getRegistrationDate(), "registration is not provided");
         checkNotNull(branchId, "branch is not provided");
         checkArgument(StringUtils.isNotBlank(catalogCountRequest.getDetails()), "please provide some details");
+        checkArgument(catalogCountRequest.getAmount() > 0, "Amount should not be zero");
 
         CatalogCount catalogCount = new CatalogCount();
         catalogCount.setAmount(catalogCountRequest.getAmount());
@@ -58,6 +59,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
     public Response updateCatalogCount(Integer branchId, CatalogCountRequest catalogCountRequest) {
         checkNotNull(catalogCountRequest, "invalid Catalog Count payload");
         checkArgument(branchId > 0, "invalid branchId");
+        checkArgument(catalogCountRequest.getAmount() > 0, "Amount should not be zero");
 
         CatalogCount catalogCount = new CatalogCount();
         catalogCount.setId(catalogCountRequest.getId());
