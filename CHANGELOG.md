@@ -1,7 +1,7 @@
 # Catalog Counts Service Changelog
 
-## 2.3.x
-release date: -
+## 2.3.0
+release date: May 20, 2024
 
 ### Features
 - improve "default" report type
