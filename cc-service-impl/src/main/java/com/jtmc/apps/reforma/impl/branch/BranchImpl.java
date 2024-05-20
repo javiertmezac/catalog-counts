@@ -2,9 +2,7 @@ package com.jtmc.apps.reforma.impl.branch;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.branch.BranchInitialAmount;
-import com.jtmc.apps.reforma.domain.Branch;
-import com.jtmc.apps.reforma.domain.CustomCatalogCount;
-import com.jtmc.apps.reforma.domain.UserDetails;
+import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.BranchRepository;
@@ -27,14 +25,19 @@ public class BranchImpl {
     @Inject
     private UserImpl userImpl;
 
-    public Branch selectOneBranch(int branchId) {
+    public BranchDetails selectOneBranch(int branchId) {
         Optional<Branch> branch = branchRepository.selectOneBranch(branchId);
         if (!branch.isPresent()) {
             logger.error("Branch #{} not found", branchId);
             throw new BranchNotFoundException("Branch not found", 404);
         }
-        return branch.get();
+        Optional<TimezoneType> branchTimeZone = branchRepository.getBranchTimeZone(branch.get().getId());
+        BranchDetails details = new BranchDetails();
+        details.setBranch(branch.get());
+        details.setTimezoneType(branchTimeZone);
+        return details;
     }
+
     public Optional<BranchInitialAmount> getInitialAmount(int branchId) {
         Optional<CustomCatalogCount> initialAmountCustomCatalog = catalogCountImpl
                 .selectInitialAmountForBranch(branchId);

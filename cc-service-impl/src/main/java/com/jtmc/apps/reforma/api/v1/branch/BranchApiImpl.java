@@ -3,6 +3,8 @@ package com.jtmc.apps.reforma.api.v1.branch;
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.Branch;
+import com.jtmc.apps.reforma.domain.BranchDetails;
+import com.jtmc.apps.reforma.domain.TimezoneType;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import org.apache.commons.lang3.StringUtils;
 
@@ -33,8 +35,8 @@ public class BranchApiImpl implements BranchApi {
 
     @Override
     public BranchResponse getBranch(int branchId) {
-        Branch branch = branchImpl.selectOneBranch(branchId);
-        BranchResponse response = mapToBranchResponse(branch);
+        BranchDetails branch = branchImpl.selectOneBranch(branchId);
+        BranchResponse response = mapToBranchResponse(branch.getBranch());
         Optional<BranchInitialAmount> initialAmount = branchImpl.getInitialAmount(branchId);
         initialAmount.ifPresent(response::setInitialAmount);
         return response;
@@ -71,9 +73,9 @@ public class BranchApiImpl implements BranchApi {
         checkArgument(branchInitialAmount.getAmount() > 0.0,
                 "Invalid branch Initial Amount. should be > 0.0");
 
-        Branch branchDetails = branchImpl.selectOneBranch(branchId);
+        BranchDetails branchDetails = branchImpl.selectOneBranch(branchId);
         if (!branchImpl.getInitialAmount(branchId).isPresent()) {
-            branchImpl.insertInitialAmount(branchDetails, branchInitialAmount.getAmount());
+            branchImpl.insertInitialAmount(branchDetails.getBranch(), branchInitialAmount.getAmount());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.CONFLICT).build();

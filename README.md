@@ -21,17 +21,10 @@
 - Mysql Engine: 8.0.28
 
 ### Deployment to ECS - Fargate
-just run the [push_to_ecr.sh](./provision/push_to_ecr.sh) file
-to create a new docker image of the code and after
-that upload the image to ECR.
+every push to main branch a github workflow gets executed
+and performs deployment to ECS
 
-Once docker image is uploaded, we just need to change
-the ECS Task definition, so new tasks are updated with
-new image.
-
-1. Log in into AWS Console
-2. update Task definition - create new task definition with correct image tag
-3. ECS Service, should update the task and include the new IP into TARGET GROUP.
+- [github workflow](.github/workflows/aws-ecs-deploy.yml)
 
 ## How to launch cc-service locally
 just run the [local-provision.sh](./local-provision.sh) file
@@ -68,6 +61,7 @@ Manual process to "update" previous month's movements
 3. `docker exec -it cc-service-db`
 4. `mysqldump -p --no-create-info catalog_count catalog_count > data_dump.sql`
 5. `docker cp cc-service-db:/data_dump.sql .`
+
 ---
 ### Digital Ocean Manual Deployment - deprecated
 > Digital Ocean App: docker image

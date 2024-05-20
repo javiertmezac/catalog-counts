@@ -1,4 +1,10 @@
 services:
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9000:8080
+
   cc-db:
     container_name: cc-service-db
     platform: linux/x86_64

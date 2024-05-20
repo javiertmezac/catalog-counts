@@ -1,10 +1,7 @@
 package com.jtmc.apps.reforma.impl.periodconfirm;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.domain.Branch;
-import com.jtmc.apps.reforma.domain.Period;
-import com.jtmc.apps.reforma.domain.PeriodDetails;
-import com.jtmc.apps.reforma.domain.UserDetails;
+import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.exception.PeriodConfirmException;
 import com.jtmc.apps.reforma.impl.period.PeriodImpl;
@@ -33,7 +30,7 @@ public class PeriodConfirmImpl {
 
     public void confirmPeriod(int branchId, int periodId) {
         UserDetails userDetails = userImpl.getLoggedInUserDetails();
-        Branch branch = branchImpl.selectOneBranch(branchId);
+        BranchDetails branchDetails = branchImpl.selectOneBranch(branchId);
         Period period = periodImpl.getPeriodById(periodId);
 
         if (userDetails.getDefaultBranch() != branchId) {
@@ -51,7 +48,7 @@ public class PeriodConfirmImpl {
         int validInsertion = 1;
         if (repository.insert(details) != validInsertion) {
             logger.error("PeriodConfirm for branchId {}, periodId {} and confirmedBy {} was not registered",
-                    branch.getName(), period.getDescription(), userDetails.getUsername());
+                    branchDetails.getBranch().getName(), period.getDescription(), userDetails.getUsername());
             throw new PeriodConfirmException("Internal Error on PeriodConfirm", 500);
         }
     }
