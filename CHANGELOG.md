@@ -6,6 +6,11 @@ release date: May 20, 2024
 ### Features
 - improve "default" report type
   - consider timezones when generating report
+ 
+### Breaking Changes
+- Stored Procedure `V0.0.14__timezone_table.sql` to store timezones
+- Stored Procedure `V0.0.15__branch_timezone_aware.sql` to alter branch table and add timezone column
+- Stored Procedure `V0.0.16__sp_default_report_income_expenses.sql` get incomes or expenses considering branch timezone
 
 ## 2.2.3
 release date: Apr 25, 2024
