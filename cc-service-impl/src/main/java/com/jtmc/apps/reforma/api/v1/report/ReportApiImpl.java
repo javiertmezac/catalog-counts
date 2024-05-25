@@ -53,7 +53,7 @@ public class ReportApiImpl implements ReportApi {
         checkArgument(reportRequest.getToYear() > 2020);
         checkArgument(reportRequest.getToYear() >= reportRequest.getFromYear(),
                 "invalid year(s) configuration");
-        checkArgument(reportRequest.getToMonth() >= reportRequest.getFromMonth(),
+        checkArgument(validateMonthAndYear(reportRequest),
                 "invalid mont(s) configuration");
 
         ReportResponse response = new ReportResponse();
@@ -111,6 +111,14 @@ public class ReportApiImpl implements ReportApi {
 
         //todo: save report..
         return response;
+    }
+
+    private boolean validateMonthAndYear(ReportRequest request){
+
+        if (request.getFromYear() == request.getToYear()) {
+            return request.getFromMonth() <= request.getToMonth();
+        }
+        return true;
     }
 
     private PeriodReportResponse convert(PeriodReport periodReport) {
