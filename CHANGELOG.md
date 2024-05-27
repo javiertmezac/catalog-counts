@@ -1,5 +1,16 @@
 # Catalog Counts Service Changelog
 
+## 2.3.2
+release date: n/a
+
+### Features
+- improve CC insert and update: now it considers timezones to verify still able to upsert
+- CC insert and update: validate period not confirmed
+
+## 2.3.1
+release date: May 27, 2023
+- validate range date on default report create
+ 
 ## 2.3.0
 release date: May 20, 2024
 
