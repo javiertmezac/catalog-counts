@@ -5,9 +5,18 @@ import java.util.List;
 public class UserResponse {
     private List<Integer> roles;
     private List<Integer> branches;
+    private String defaultRole;
     private int defaultBranch;
     private String username;
     private int userId;
+
+    public String getDefaultRole() {
+        return defaultRole;
+    }
+
+    public void setDefaultRole(String defaultRole) {
+        this.defaultRole = defaultRole;
+    }
 
     public List<Integer> getBranches() {
         return branches;

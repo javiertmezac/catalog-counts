@@ -86,6 +86,7 @@ public class Launcher {
             Properties myProperties = new Properties();
             myProperties.setProperty("key", System.getenv("key"));
             myProperties.setProperty("deadLineDay", System.getenv("CC_SERVICE_DEADLINE_DAY"));
+            myProperties.setProperty("defaultExpiration", System.getenv("CC_SERVICE_DEFAULT_EXPIRATION_SECS"));
             Names.bindProperties(binder(), myProperties);
         }
     }

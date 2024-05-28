@@ -79,7 +79,7 @@ public class ReportImpl {
     }
 
     public Map<String, String> fetchBranchPersonaByRole(int branchId) {
-        List<PersonaDetails> personaDetails = personaDetailsRepository.select(branchId);
+        List<PersonaDetails> personaDetails = personaDetailsRepository.selectByBranch(branchId);
         List<Role> roles = roleRepository.selectAll();
         List<Persona> personas = personaRepository.selectAll();
         Map<String, String> personaRoleMap = new HashMap<>();
