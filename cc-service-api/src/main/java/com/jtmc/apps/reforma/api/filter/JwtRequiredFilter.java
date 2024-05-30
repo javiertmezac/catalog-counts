@@ -49,7 +49,8 @@ public class JwtRequiredFilter implements ContainerRequestFilter {
                     .parseClaimsJws(jwsString);
 
             userClaim.setSubject(claims.getBody().getSubject());
-            userClaim.setId(claims.getBody().getId());
+            userClaim.setId((Integer)claims.getBody().get("uid"));
+
         } catch (ExpiredJwtException ex) {
             throw new WebApplicationException(Response.Status.UNAUTHORIZED);
         } catch (JwtException exception) {

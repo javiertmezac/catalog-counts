@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.domain.Login;
-import com.jtmc.apps.reforma.domain.PersonaDetails;
 import com.jtmc.apps.reforma.impl.login.LoginImpl;
 import com.jtmc.apps.reforma.impl.personadetails.PersonaDetailsImpl;
 import io.jsonwebtoken.Jwts;
@@ -19,7 +18,6 @@ import javax.ws.rs.core.Response;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -50,17 +48,14 @@ public class LoginApiImpl implements LoginApi {
         checkArgument(StringUtils.isNotBlank(password));
 
         Login user = loginApp.selectUser(email, password);
-        Optional<PersonaDetails> personaDetails = personaDetailsImpl.selectFirstOrDefaultByPersona(user.getPersonaid());
-        int noRoleAssigned = 0;
-        String jws = buildJWS(user.getUsername(), user.getPersonaid(),
-                personaDetails.map(PersonaDetails::getRoleid).orElse(noRoleAssigned));
+        String jws = buildJWS(user.getUsername(), user.getPersonaid());
 
         LoginResponse response = new LoginResponse();
         response.setId_token(jws);
         return  response;
     }
 
-    private String buildJWS(String username, int userId, int roleId) {
+    private String buildJWS(String username, int userId) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         Instant now = Instant.now();
@@ -70,9 +65,8 @@ public class LoginApiImpl implements LoginApi {
         return Jwts
                 .builder()
                 .serializeToJsonWith(new JacksonSerializer(objectMapper))
-                .claim("user_role", roleId)
+                .claim("uid", userId)
                 .setSubject(username)
-                .setId(String.valueOf(userId))
                 .setIssuedAt(issueAtDate)
                 .setExpiration(expirationDate)
                 .signWith(key)

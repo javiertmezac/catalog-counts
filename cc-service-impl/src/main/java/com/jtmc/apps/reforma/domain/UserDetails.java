@@ -1,7 +1,6 @@
 package com.jtmc.apps.reforma.domain;
 
 import java.util.List;
-import java.util.Optional;
 
 public class UserDetails {
     private List<Integer> roles;

@@ -49,17 +49,16 @@ public class UserImpl {
         return selectUser(userClaim.getSubject(), userClaim.getId());
     }
 
-    private UserDetails selectUser(String username, String userId) {
+    private UserDetails selectUser(String username, int userId) {
         UserDetails userDetails = new UserDetails();
 
-        int personaId = Integer.parseInt(userId);
-        Persona persona = personaImpl.selectOne(personaId);
+        Persona persona = personaImpl.selectOne(userId);
 
         userDetails.setPersonaId(persona.getId());
         userDetails.setUsername(username);
 
         //todo: what to return when no role is assigned?
-        Collection<PersonaDetails> personaDetails = userRepository.selectUserRoles(personaId);
+        Collection<PersonaDetails> personaDetails = userRepository.selectUserRoles(userId);
         Stream<Integer> rolesId = personaDetails.stream().map(PersonaDetails::getRoleid);
         userDetails.setRoles(rolesId.collect(Collectors.toList()));
 
