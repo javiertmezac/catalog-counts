@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PersonaDetailsImpl {
     private Logger logger = LoggerFactory.getLogger(PersonaDetailsImpl.class);
@@ -28,5 +29,9 @@ public class PersonaDetailsImpl {
             logger.error("PersonaDetails was not inserted. {}", persona);
             throw new RuntimeException("PersonaDetails was not inserted.");
         }
+    }
+
+    public Optional<PersonaDetails> selectFirstOrDefaultByPersona(int personaId) {
+        return repository.selectByPersonaId(personaId).stream().findFirst();
     }
 }

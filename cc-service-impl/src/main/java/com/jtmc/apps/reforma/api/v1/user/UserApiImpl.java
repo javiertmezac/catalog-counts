@@ -19,6 +19,8 @@ public class UserApiImpl implements UserApi {
         response.setUserId(userDetails.getPersonaId());
         response.setRoles(userDetails.getRoles());
         response.setBranches(userDetails.getBranches());
+
+        response.setDefaultRole(userDetails.getDefaultRole().getDescription());
         int firstOption = 0;
         response.setDefaultBranch(userDetails.getBranches().get(firstOption));
 

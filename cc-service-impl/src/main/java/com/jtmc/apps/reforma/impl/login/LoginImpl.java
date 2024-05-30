@@ -5,7 +5,6 @@ import com.jtmc.apps.reforma.domain.Login;
 import com.jtmc.apps.reforma.domain.Persona;
 import com.jtmc.apps.reforma.domain.UserDetails;
 import com.jtmc.apps.reforma.impl.exception.ImplementationException;
-import com.jtmc.apps.reforma.impl.exception.PersonaNotFoundException;
 import com.jtmc.apps.reforma.impl.persona.PersonaImpl;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.LoginRepositoryImpl;
@@ -22,7 +21,7 @@ public class LoginImpl {
     final private Logger logger = LoggerFactory.getLogger(LoginImpl.class);
 
     @Inject
-    private LoginRepositoryImpl userRepository;
+    private LoginRepositoryImpl loginRepository;
 
     @Inject
     private PersonaImpl personaImpl;
@@ -34,19 +33,12 @@ public class LoginImpl {
     public Login selectUser(String inputUsername, String inputPassword) {
         logger.debug("Provided Username for login: {}", inputUsername);
 
-        Optional<Login> user = userRepository.selectUser(inputUsername, base64Encode(inputPassword));
+        Optional<Login> user = loginRepository.selectUser(inputUsername, base64Encode(inputPassword));
         if (!user.isPresent()) {
             logger.warn("UserLogin not found for provided credentials");
             throw new BadRequestException();
         }
 
-        try {
-            personaImpl.selectOne(user.get().getPersonaid());
-        } catch (PersonaNotFoundException ex) {
-            logger.error("found login registry for username {}, but didn't get valid personaId {}",
-                    inputUsername, user.get().getPersonaid());
-            throw new BadRequestException();
-        }
         return user.get();
     }
 
@@ -64,7 +56,7 @@ public class LoginImpl {
         registration.setRegistration(Instant.now());
 
         int successfulInsertion = 1;
-        if(userRepository.insert(registration) != successfulInsertion) {
+        if(loginRepository.insert(registration) != successfulInsertion) {
            logger.error("could not insert new login registration for new username {} and personaId {}",
                    username, personaId);
            throw new ImplementationException("Error inserting registry", 500);

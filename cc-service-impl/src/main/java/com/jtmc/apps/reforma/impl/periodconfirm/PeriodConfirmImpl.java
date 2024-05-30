@@ -33,7 +33,7 @@ public class PeriodConfirmImpl {
         BranchDetails branchDetails = branchImpl.selectOneBranch(branchId);
         Period period = periodImpl.getPeriodById(periodId);
 
-        if (userDetails.getDefaultBranch() != branchId) {
+        if (!userDetails.getBranches().contains(branchId)) {
             logger.error("LoggedInUser's default branchId {} does not match with given branchId {}",
                     userDetails.getDefaultBranch(), branchId);
             throw new IllegalArgumentException("Wrong default branch selection");

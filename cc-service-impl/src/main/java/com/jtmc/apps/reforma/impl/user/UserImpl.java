@@ -5,10 +5,13 @@ import com.jtmc.apps.reforma.api.v1.annotations.JwtUserClaim;
 import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.exception.ImplementationException;
 import com.jtmc.apps.reforma.impl.exception.NoWritePermissionsException;
+import com.jtmc.apps.reforma.impl.persona.PersonaImpl;
 import com.jtmc.apps.reforma.repository.PersonaRepository;
+import com.jtmc.apps.reforma.repository.RoleRepository;
 import com.jtmc.apps.reforma.repository.UserRepositoryImpl;
 import com.jtmc.apps.reforma.repository.exception.UnauthorizedUserException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.impl.xb.ltgfmt.impl.FileDescImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,48 +37,37 @@ public class UserImpl {
     @Inject
     private PersonaRepository personaRepository;
 
+    @Inject
+    private RoleRepository roleRepository;
+
+    @Inject
+    private PersonaImpl personaImpl;
+
     public UserDetails getLoggedInUserDetails() {
         checkNotNull(userClaim, "UserClaim Empty");
         checkArgument(StringUtils.isNotBlank(userClaim.getSubject()), "UserClaim not Valid");
-        return selectUser(userClaim.getSubject());
+        return selectUser(userClaim.getSubject(), userClaim.getId());
     }
 
-    private UserDetails selectUser(String username) {
+    private UserDetails selectUser(String username, int userId) {
         UserDetails userDetails = new UserDetails();
 
-        Login loggedInUser = fetchLoggedInUser(username);
+        Persona persona = personaImpl.selectOne(userId);
+
+        userDetails.setPersonaId(persona.getId());
         userDetails.setUsername(username);
 
-        Persona persona = fetchLoggedInPersona(loggedInUser);
-        userDetails.setPersonaId(persona.getId());
-
         //todo: what to return when no role is assigned?
-        Collection<PersonaDetails> personaDetails = userRepository.selectUserRoles(loggedInUser.getPersonaid());
+        Collection<PersonaDetails> personaDetails = userRepository.selectUserRoles(userId);
         Stream<Integer> rolesId = personaDetails.stream().map(PersonaDetails::getRoleid);
         userDetails.setRoles(rolesId.collect(Collectors.toList()));
+
+        Optional<Integer> firstRole = userDetails.getRoles().stream().findFirst();
+        firstRole.ifPresent(integer -> userDetails.setDefaultRole(roleRepository.selectOne(integer).orElse(new Role())));
 
         Stream<Integer> branches = personaDetails.stream().map(PersonaDetails::getBranchid);
         userDetails.setBranches(branches.collect(Collectors.toList()));
         return userDetails;
-    }
-
-    private Login fetchLoggedInUser(String username) {
-        Optional<Login> loggedInUser = userRepository.selectLoggedInUser(username);
-        if(!loggedInUser.isPresent()) {
-            logger.error("Login registration for username {}, not found", username);
-            throw new UnauthorizedUserException("No valid LoggedInUser", 401);
-        }
-        return loggedInUser.get();
-    }
-
-    private Persona fetchLoggedInPersona(Login loggedInUser) {
-        Optional<Persona> persona = personaRepository.selectOne(loggedInUser.getPersonaid());
-        if(!persona.isPresent()) {
-            logger.error("No persona found (either no active or doesn't exist) " +
-                    "for username {} and personaId {}", loggedInUser.getUsername(), loggedInUser.getPersonaid());
-            throw new ImplementationException("No valid LoggedInUser", 400);
-        }
-        return persona.get();
     }
 
     //todo: these might me in "some permissions implementation class"
