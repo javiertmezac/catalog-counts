@@ -107,6 +107,7 @@ jobs:
             JDBC_PORT=3306
             key=${{ secrets.KEY }}
             CC_SERVICE_DEADLINE_DAY=${{ vars.CC_SERVICE_DEADLINE_DAY }}
+            CC_SERVICE_DEFAULT_EXPIRATION_SECS=${{ vars.CC_SERVICE_DEFAULT_EXPIRATION_SECS }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1

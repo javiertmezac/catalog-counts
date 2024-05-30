@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.domain.Login;
 import com.jtmc.apps.reforma.impl.login.LoginImpl;
+import com.jtmc.apps.reforma.impl.personadetails.PersonaDetailsImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.jackson.io.JacksonSerializer;
 import io.jsonwebtoken.security.Keys;
@@ -14,8 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.SecretKey;
 import javax.ws.rs.core.Response;
-
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -27,8 +29,15 @@ public class LoginApiImpl implements LoginApi {
     private LoginImpl loginApp;
 
     @Inject
+    private PersonaDetailsImpl personaDetailsImpl;
+
+    @Inject
     @Named("key")
     private String secretKey;
+
+    @Inject
+    @Named("defaultExpiration")
+    private int defaultExpiration;
 
     @Inject
     private ObjectMapper objectMapper;
@@ -39,20 +48,27 @@ public class LoginApiImpl implements LoginApi {
         checkArgument(StringUtils.isNotBlank(password));
 
         Login user = loginApp.selectUser(email, password);
-        String jws = buildJWS(user.getUsername());
+        String jws = buildJWS(user.getUsername(), user.getPersonaid());
 
         LoginResponse response = new LoginResponse();
         response.setId_token(jws);
         return  response;
     }
 
-    private String buildJWS(String username) {
+    private String buildJWS(String username, int userId) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+
+        Instant now = Instant.now();
+        Date issueAtDate = new Date(now.toEpochMilli());
+        Date expirationDate = new Date(now.plusSeconds(defaultExpiration).toEpochMilli());
 
         return Jwts
                 .builder()
                 .serializeToJsonWith(new JacksonSerializer(objectMapper))
+                .claim("uid", userId)
                 .setSubject(username)
+                .setIssuedAt(issueAtDate)
+                .setExpiration(expirationDate)
                 .signWith(key)
                 .compact();
     }

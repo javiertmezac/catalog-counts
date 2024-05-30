@@ -3,11 +3,16 @@ package com.jtmc.apps.reforma.impl.catalogcount;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
+import com.jtmc.apps.reforma.domain.Period;
 import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountLogicalDeleteException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotEditableException;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountNotFoundException;
+import com.jtmc.apps.reforma.impl.exception.PeriodNotFoundException;
+import com.jtmc.apps.reforma.impl.period.PeriodImpl;
+import com.jtmc.apps.reforma.impl.periodconfirm.PeriodConfirmImpl;
+import com.jtmc.apps.reforma.impl.periodconfirm.PeriodDetailsConfirmationNotFoundException;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
@@ -16,9 +21,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ForbiddenException;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,6 +44,12 @@ public class CatalogCountImpl {
 
     @Inject
     private UserImpl userImpl;
+
+    @Inject
+    private PeriodImpl periodImpl;
+
+    @Inject
+    private PeriodConfirmImpl periodConfirmImpl;
 
     @Inject
     @Named("deadLineDay")
@@ -76,7 +90,8 @@ public class CatalogCountImpl {
         CatalogCountCumulativeSumParams params = new CatalogCountCumulativeSumParams();
         params.setBranchId(branchId);
         params.setDeadLineDay(deadLineDay);
-        Collection<CustomCatalogCount> customCatalogCountsCumulativeSum = catalogCountRepository.selectAllCumulativeSumByBranch(params);
+        Collection<CustomCatalogCount> customCatalogCountsCumulativeSum =
+                catalogCountRepository.selectAllCumulativeSumByBranch(params);
 
         Stream<CustomCatalogCount> stream = customCatalogCountsCumulativeSum.stream()
                 .filter(x -> x.getRegistration().isBefore(instantWithZoneOffset));
@@ -84,43 +99,32 @@ public class CatalogCountImpl {
         return firstOrEmpty.map(CustomCatalogCount::getCumulativeSum).orElse(0.0);
     }
 
-    private Stream<CatalogCountResponse> calculateTotal(Stream<CustomCatalogCount> catalogCounts) {
-        final double[] total = {0};
-        return catalogCounts.map((cc) -> {
-            total[0] = calculateTotalColumn(cc, total[0]);
-            return new CatalogCountResponse(
-                    cc.getId(),
-                    cc.getRegistration().toString(),
-                    String.format("%s - %s", cc.getIdentifier(), cc.getName()),
-                    cc.getAmount(),
-                    cc.getDetails(),
-                    total[0],
-                    validateCatalogCountEditableByRegistration(cc.getRegistration())
-            );
-        });
-    }
-
-    private double calculateTotalColumn(CatalogCount catalogCount, double saldo) {
-        Stream<CatalogCountEnum> catalogCountEnumStream = catalogCountEnumRepository.getIncomeCatalogCountEnums();
-        if (catalogCountEnumStream.anyMatch(x -> Objects.equals(x.getId(), catalogCount.getCatalogcountenumid()))) {
-            saldo = saldo + catalogCount.getAmount();
-        } else {
-            saldo = saldo - catalogCount.getAmount();
-        }
-        return saldo;
-    }
-
     @Transactional
     public void insertIntoCatalogCount(CatalogCount catalogCount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
         validateCatalogCountEnum(catalogCount);
 
-        isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
-
-        BranchDetails branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        BranchDetails branchDetails = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        validateCurrentPeriodNotConfirmed(branchDetails, catalogCount, userDetails);
+        isCatalogCountRegistrationDateValid(branchDetails, catalogCount.getRegistration());
         catalogCountRepository.insert(catalogCount);
-        logger.debug("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branch.getBranch().getId());
+        logger.debug("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branchDetails.getBranch().getId());
     }
+
+    private void validateCurrentPeriodNotConfirmed(BranchDetails branchDetails, CatalogCount catalogCount, UserDetails userDetails) {
+        Branch branch = branchDetails.getBranch();
+        ZonedDateTime zonedDateTime = catalogCount.getRegistration().atZone(branchDetails.getZoneIdFromBranchTimeZone());
+        try {
+            Period period = periodImpl.getPeriodByQueryParams(zonedDateTime.getMonthValue(), zonedDateTime.getYear());
+            periodConfirmImpl.selectOne(branch.getId(), period.getId(), userDetails.getPersonaId());
+            throw new ForbiddenException("Current Period has been confirmed, not allowed to submit CatalogCount Movements");
+        } catch (PeriodNotFoundException ex){
+            this.logger.debug("Period still not registered in DB for date: {}", zonedDateTime);
+        }catch (PeriodDetailsConfirmationNotFoundException ex) {
+           logger.debug("Period confirmation still not registered in DB for date: {}", zonedDateTime);
+        }
+    }
+
 
     @Transactional
     public void insertInitialAmountCatalogCount(Branch branch, double amount) {
@@ -143,16 +147,17 @@ public class CatalogCountImpl {
     public void updateCatalogCount(CatalogCount catalogCount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
         validateCatalogCountEnum(catalogCount);
+        BranchDetails branchDetails = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        validateCurrentPeriodNotConfirmed(branchDetails, catalogCount, userDetails);
+        isCatalogCountRegistrationDateValid(branchDetails, catalogCount.getRegistration());
 
-        isCatalogCountRegistrationDateValid(catalogCount.getRegistration());
-        BranchDetails branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         CatalogCount ccToBeUpdated = this.selectOneRecord(catalogCount.getId());
         logger.info("CatalogCount #{} to be updated", ccToBeUpdated.getId());
         logCatalogCount(ccToBeUpdated);
 
         catalogCountRepository.update(catalogCount);
         logger.info("User '{}' updated CatalogCount #{} on branch #{}",
-                userDetails.getUsername(), catalogCount.getId(), branch.getBranch().getId()
+                userDetails.getUsername(), catalogCount.getId(), branchDetails.getBranch().getId()
         );
         logCatalogCount(catalogCount);
     }
@@ -175,43 +180,40 @@ public class CatalogCountImpl {
             logger.error("CatalogCount {} was already marked as deleted", ccFromDB.getId());
             throw new IllegalArgumentException("No valid Request");
         }
-        isCatalogCountRegistrationDateValid(ccFromDB.getRegistration());
+        BranchDetails branchDetails = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        isCatalogCountRegistrationDateValid(branchDetails, ccFromDB.getRegistration());
 
-        BranchDetails branch = branchImpl.selectOneBranch(catalogCount.getBranchid());
         if (catalogCountRepository.logicalDelete(catalogCount) != 1) {
             logger.error("logicalDelete for record catalog-count {} was not successfully done", catalogCount.getId());
             throw new CatalogCountLogicalDeleteException("something wrong happened on deletion for catalog-count", 500);
         } else {
-            logger.info("User {} deleted CatalogCount #{} on branch #{}", userDetails.getUsername(), catalogCount.getId(), branch.getBranch().getId());
+            logger.info("User {} deleted CatalogCount #{} on branch #{}", userDetails.getUsername(),
+                    catalogCount.getId(), branchDetails.getBranch().getId());
         }
     }
 
-    private void isCatalogCountRegistrationDateValid(Instant registration) {
-        if(!validateCatalogCountEditableByRegistration(registration)) {
+    private void isCatalogCountRegistrationDateValid(BranchDetails branchDetails, Instant registration) {
+        if(!validateCatalogCountEditableByRegistration(branchDetails, registration)) {
             logger.error("Cannot Insert CatalogCount as Registration date is out of range");
             throw new CatalogCountNotEditableException("CatalogCount with no valid registration dateRange", 400);
         }
     }
 
-    //todo: should I consider the timezone of each "user"?
-    // yes - lets consider time zones by branch, not by user
-    private boolean validateCatalogCountEditableByRegistration(Instant catalogCountRegistration) {
-        ZonedDateTime zonedDateTime = catalogCountRegistration.atZone(ZoneId.systemDefault());
+    private boolean validateCatalogCountEditableByRegistration(BranchDetails branchDetails, Instant catalogCountRegistration) {
 
-        LocalDate currentDate = LocalDate.now();
+        ZonedDateTime catalogCountRegistrationAtZoneDateTime = catalogCountRegistration.atZone(branchDetails.getZoneIdFromBranchTimeZone());
+        ZonedDateTime nowAtZoneDateTime = Instant.now().atZone(branchDetails.getZoneIdFromBranchTimeZone());
+
         int firstDay = 1;
-        LocalDate firstDayCurrentDate = LocalDate.of(currentDate.getYear(), currentDate.getMonth(), firstDay);
-        LocalDateTime dateTime = LocalDateTime.of(firstDayCurrentDate, LocalTime.MAX);
+        LocalDateTime firstDayCurrentDate = LocalDate.of(nowAtZoneDateTime.getYear(), nowAtZoneDateTime.getMonth(), firstDay).atStartOfDay();
+        ZonedDateTime minZonedDateTime = firstDayCurrentDate.atZone(branchDetails.getZoneIdFromBranchTimeZone()) ;
 
-        ZonedDateTime minZonedDateTime = dateTime.atZone(ZoneId.systemDefault());
-        //todo: missing "and not confirmed"
         int maxDay = deadLineDay;
-        if (currentDate.getDayOfMonth() <= maxDay) {
-            return zonedDateTime.isAfter(minZonedDateTime
-                    .minus(1, ChronoUnit.MONTHS)
-                    .minus(1, ChronoUnit.DAYS));
+        if (nowAtZoneDateTime.getDayOfMonth() <= maxDay) {
+            return catalogCountRegistrationAtZoneDateTime.isAfter(minZonedDateTime
+                    .minus(1, ChronoUnit.MONTHS));
         }
-        return zonedDateTime.isAfter(minZonedDateTime.minus(1, ChronoUnit.DAYS));
+        return catalogCountRegistrationAtZoneDateTime.isAfter(minZonedDateTime.minus(1, ChronoUnit.DAYS));
     }
 
     private void validateCatalogCountEnum(CatalogCount catalogCount) {

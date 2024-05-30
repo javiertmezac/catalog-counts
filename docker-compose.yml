@@ -50,6 +50,7 @@ services:
       - JDBC_USERNAME=root
       - JDBC_PASSWORD=$MYSQL_ROOT_PASSWORD
       - CC_SERVICE_DEADLINE_DAY=10
+      - CC_SERVICE_DEFAULT_EXPIRATION_SECS=3600
     build:
       context: .
     depends_on:

@@ -2,10 +2,7 @@ package com.jtmc.apps.reforma.api.filter;
 
 import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtUserClaim;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
 import javax.annotation.Priority;
@@ -50,7 +47,12 @@ public class JwtRequiredFilter implements ContainerRequestFilter {
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(jwsString);
+
             userClaim.setSubject(claims.getBody().getSubject());
+            userClaim.setId((Integer)claims.getBody().get("uid"));
+
+        } catch (ExpiredJwtException ex) {
+            throw new WebApplicationException(Response.Status.UNAUTHORIZED);
         } catch (JwtException exception) {
             exception.printStackTrace();
             throw new WebApplicationException(Response.Status.BAD_REQUEST);

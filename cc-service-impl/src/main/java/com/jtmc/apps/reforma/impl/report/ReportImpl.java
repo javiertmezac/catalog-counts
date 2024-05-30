@@ -70,17 +70,16 @@ public class ReportImpl {
     }
 
     public double calculatePreviousBalance(BranchDetails branchDetails, ReportDateLimitsParams params) {
-        ZoneId zoneId = ZoneId.of(branchDetails.getTimezoneType().map(TimezoneType::getName).orElse("UTC"));
         ZonedDateTime firstDayCurrentDate = LocalDate
                 .of(params.getFromYear(), params.getFromMonth(), 1)
-                .atStartOfDay(zoneId);
+                .atStartOfDay(branchDetails.getZoneIdFromBranchTimeZone());
         return catalogCountImpl.getTotalBalanceUpToGivenDate(
                 branchDetails.getBranch().getId(), firstDayCurrentDate.toInstant()
         );
     }
 
     public Map<String, String> fetchBranchPersonaByRole(int branchId) {
-        List<PersonaDetails> personaDetails = personaDetailsRepository.select(branchId);
+        List<PersonaDetails> personaDetails = personaDetailsRepository.selectByBranch(branchId);
         List<Role> roles = roleRepository.selectAll();
         List<Persona> personas = personaRepository.selectAll();
         Map<String, String> personaRoleMap = new HashMap<>();

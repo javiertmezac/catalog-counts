@@ -4,10 +4,19 @@ import java.util.List;
 
 public class UserDetails {
     private List<Integer> roles;
+    private Role defaultRole;
     private List<Integer> branches;
     private int defaultBranch;
     private String username;
     private int personaId;
+
+    public Role getDefaultRole() {
+        return defaultRole;
+    }
+
+    public void setDefaultRole(Role defaultRole) {
+        this.defaultRole = defaultRole;
+    }
 
     public List<Integer> getBranches() {
         return branches;

@@ -49,10 +49,17 @@ public class PersonaDetailsRepository {
         }
     }
 
-    public List<PersonaDetails> select(int branchId) {
+    public List<PersonaDetails> selectByBranch(int branchId) {
          try(SqlSession session = sqlSessionFactory.openSession()) {
             PersonaDetailsMapper mapper = session.getMapper(PersonaDetailsMapper.class);
             return mapper.select(x -> x.where(PersonaDetailsDynamicSqlSupport.branchid, SqlBuilder.isEqualTo(branchId)));
+        }
+    }
+
+    public List<PersonaDetails> selectByPersonaId(int personaId) {
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            PersonaDetailsMapper mapper = session.getMapper(PersonaDetailsMapper.class);
+            return mapper.select(x -> x.where(PersonaDetailsDynamicSqlSupport.personaid, SqlBuilder.isEqualTo(personaId)));
         }
     }
 }
