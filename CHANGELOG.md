@@ -1,11 +1,15 @@
 # Catalog Counts Service Changelog
 
 ## 2.3.2
-release date: n/a
+release date: May 30, 2024
 
 ### Features
 - improve CC insert and update: now it considers timezones to verify still able to upsert
 - CC insert and update: validate period not confirmed
+- JWT login
+  - add expiration time (default to CC_SERVICE_DEFAULT_EXPIRATION_SECS env var)
+  - set uid as claim
+  - improve userimpl to fetch persona based on uid claim
 
 ## 2.3.1
 release date: May 27, 2023
