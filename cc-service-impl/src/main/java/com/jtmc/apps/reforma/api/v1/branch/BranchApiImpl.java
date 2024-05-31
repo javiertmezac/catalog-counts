@@ -47,11 +47,14 @@ public class BranchApiImpl implements BranchApi {
         checkNotNull(branchRequest, "Invalid payload for Branch");
         checkArgument(StringUtils.isNotBlank(branchRequest.getName()), "Invalid NAme for branch");
         checkArgument(StringUtils.isNotBlank(branchRequest.getAddress()), "Invalid Address for branch");
+        checkNotNull(branchRequest.getTimezoneId(), "Invalid timezone");
+        checkArgument(branchRequest.getTimezoneId() > 0, "Invalid timezone");
 
         Branch b = new Branch();
         b.setAddress(branchRequest.getAddress());
         b.setName(branchRequest.getName());
         b.setRegistration(Instant.now());
+        b.setTimezoneid(branchRequest.getTimezoneId());
         branchImpl.insertBranch(b);
         return Response.noContent().build();
     }
