@@ -4,11 +4,9 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.Branch;
 import com.jtmc.apps.reforma.domain.BranchDetails;
-import com.jtmc.apps.reforma.domain.TimezoneType;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.List;
@@ -66,6 +64,7 @@ public class BranchApiImpl implements BranchApi {
         response.setAddress(branch.getAddress());
         response.setRegistration(branch.getRegistration().toString());
         response.setStatus(branch.getStatus());
+        response.setTimezoneId(branch.getTimezoneid());
         return response;
     }
 
