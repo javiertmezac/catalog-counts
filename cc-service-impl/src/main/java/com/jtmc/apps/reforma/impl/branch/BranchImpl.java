@@ -2,6 +2,7 @@ package com.jtmc.apps.reforma.impl.branch;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.branch.BranchInitialAmount;
+import com.jtmc.apps.reforma.api.v1.branch.BranchRequest;
 import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
@@ -57,10 +58,18 @@ public class BranchImpl {
     }
 
     public void insertBranch(Branch branch) {
-        userImpl.getLoggedInUserDetails();
+        userImpl.validateAdminPermissionsForLoggedInUser();
         if (branchRepository.insertBranch(branch) != 1) {
             logger.error("Branch was not inserted. {}", branch);
             throw new RuntimeException("Branch was not inserted.");
+        }
+    }
+
+    public void updateBranch(Branch branch) {
+        userImpl.validateAdminPermissionsForLoggedInUser();
+        if (branchRepository.updateBranch(branch) != 1) {
+            logger.error("Branch was not updated. {}", branch);
+            throw new RuntimeException("Branch was not updated.");
         }
     }
 

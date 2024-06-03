@@ -42,11 +42,7 @@ public class BranchApiImpl implements BranchApi {
 
     @Override
     public Response insertBranch(BranchRequest branchRequest) {
-        checkNotNull(branchRequest, "Invalid payload for Branch");
-        checkArgument(StringUtils.isNotBlank(branchRequest.getName()), "Invalid NAme for branch");
-        checkArgument(StringUtils.isNotBlank(branchRequest.getAddress()), "Invalid Address for branch");
-        checkNotNull(branchRequest.getTimezoneId(), "Invalid timezone");
-        checkArgument(branchRequest.getTimezoneId() > 0, "Invalid timezone");
+        validateBranchRequest(branchRequest);
 
         Branch b = new Branch();
         b.setAddress(branchRequest.getAddress());
@@ -55,6 +51,30 @@ public class BranchApiImpl implements BranchApi {
         b.setTimezoneid(branchRequest.getTimezoneId());
         branchImpl.insertBranch(b);
         return Response.noContent().build();
+    }
+
+    @Override
+    public Response updateBranch(int id, BranchRequest branchRequest) {
+        validateBranchRequest(branchRequest);
+
+        Branch b = new Branch();
+        b.setId(id);
+        b.setAddress(branchRequest.getAddress());
+        b.setName(branchRequest.getName());
+        b.setTimezoneid(branchRequest.getTimezoneId());
+        branchImpl.updateBranch(b);
+        return Response.noContent().build();
+    }
+
+    private void validateBranchRequest(BranchRequest branchRequest) {
+        checkNotNull(branchRequest, "Invalid payload for Branch");
+        checkArgument(StringUtils.isNotBlank(branchRequest.getName()), "Invalid Name for branch");
+        checkArgument(StringUtils.isNotBlank(branchRequest.getAddress()), "Invalid Address for branch");
+        int maxInput = 45;
+        checkArgument(branchRequest.getAddress().length() <= maxInput, "Max 45 chars");
+        checkArgument(branchRequest.getName().length() <= maxInput, "Max 45 chars");
+        checkNotNull(branchRequest.getTimezoneId(), "Invalid timezone");
+        checkArgument(branchRequest.getTimezoneId() > 0, "Invalid timezone");
     }
 
     private BranchResponse mapToBranchResponse(Branch branch) {

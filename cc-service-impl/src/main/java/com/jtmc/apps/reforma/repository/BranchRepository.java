@@ -54,8 +54,18 @@ public class BranchRepository {
             branch.setStatus(true);
             return mapper.insertSelective(branch);
         } catch (Exception ex) {
-            logger.error("Error when inserting a new Branch.. Details {}: {}", branch, ex);
+            logger.error("Error when inserting a new Branch.. Details: ", ex);
            throw ex;
+        }
+    }
+
+    public int updateBranch(Branch branch) {
+        try(SqlSession session = sqlSessionFactory.openSession(true)) {
+            BranchMapper mapper = session.getMapper(BranchMapper.class);
+            return mapper.updateByPrimaryKeySelective(branch);
+        } catch (Exception ex) {
+            logger.error("Error updating Branch.. Details: ", ex);
+            throw ex;
         }
     }
 }
