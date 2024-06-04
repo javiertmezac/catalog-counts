@@ -97,7 +97,7 @@ public class BranchApiImpl implements BranchApi {
 
         BranchDetails branchDetails = branchImpl.selectOneBranch(branchId);
         if (!branchImpl.getInitialAmount(branchId).isPresent()) {
-            branchImpl.insertInitialAmount(branchDetails.getBranch(), branchInitialAmount.getAmount());
+            branchImpl.insertInitialAmount(branchDetails, branchInitialAmount.getAmount());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.CONFLICT).build();

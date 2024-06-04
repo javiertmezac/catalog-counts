@@ -73,8 +73,8 @@ public class BranchImpl {
         }
     }
 
-    public void insertInitialAmount(Branch branch, double amount) {
+    public void insertInitialAmount(BranchDetails branchDetails, double amount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
-        catalogCountImpl.insertInitialAmountCatalogCount(branch, amount);
+        catalogCountImpl.insertInitialAmountCatalogCount(branchDetails, amount);
     }
 }
