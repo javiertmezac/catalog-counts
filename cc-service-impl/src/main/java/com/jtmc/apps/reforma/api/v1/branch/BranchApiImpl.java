@@ -62,6 +62,7 @@ public class BranchApiImpl implements BranchApi {
         b.setAddress(branchRequest.getAddress());
         b.setName(branchRequest.getName());
         b.setTimezoneid(branchRequest.getTimezoneId());
+        b.setStatus(branchRequest.isStatus());
         branchImpl.updateBranch(b);
         return Response.noContent().build();
     }
