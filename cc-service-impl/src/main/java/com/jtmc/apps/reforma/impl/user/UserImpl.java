@@ -75,7 +75,7 @@ public class UserImpl {
         UserDetails userDetails = this.getLoggedInUserDetails();
         if (!userDetails.getRoles().contains(Roles.SECRETARY.getValue())) {
             logger.error("No write permissions for user {}", userDetails.getUsername());
-            throw new NoWritePermissionsException("No write permissions for user", 401);
+            throw new NoWritePermissionsException("No write permissions for user", 403);
         }
         return userDetails;
     }

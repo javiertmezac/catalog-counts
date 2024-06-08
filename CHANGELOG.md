@@ -1,5 +1,13 @@
 # Catalog Counts Service Changelog
 
+## 2.4.0
+release date: -
+
+### Features
+- change initial-amount POST action to it's own api endpoint
+- add timezoneId and status to branch request
+  - this will allow basic branch/account setup
+
 ## 2.3.2
 release date: May 30, 2024
 
