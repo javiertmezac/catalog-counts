@@ -1,13 +1,20 @@
 package com.jtmc.apps.reforma.api.v1.persona;
 
-import java.time.Instant;
-
 public class PersonaResponse {
 
     private int id;
-    private String completeName;
+    private String name;
+    private String lastname;
     private String registration;
     private  boolean status;
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
 
     public String getRegistration() {
         return registration;
@@ -33,11 +40,11 @@ public class PersonaResponse {
         this.id = id;
     }
 
-    public String getCompleteName() {
-        return completeName;
+    public String getName() {
+        return name;
     }
 
-    public void setCompleteName(String completeName) {
-        this.completeName = completeName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -33,7 +33,8 @@ public class PersonaApiImpl implements PersonaApi {
 
     private PersonaResponse mapToPersonaResponse(Persona p) {
         PersonaResponse r = new PersonaResponse();
-        r.setCompleteName(String.format("%s %s", p.getName(), p.getLastname()));
+        r.setName(p.getName());
+        r.setLastname(p.getLastname());
         r.setId(p.getId());
         r.setRegistration(p.getRegistration().toString());
         r.setStatus(p.getStatus());
