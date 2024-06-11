@@ -24,23 +24,32 @@ public class PersonaApiImpl implements PersonaApi {
     @Override
     public PersonaResponseList selectAll() {
         List<Persona> personas = implementation.select();
-        Stream<PersonaResponse> personaResponseStream = personas.stream().map(p -> {
-            PersonaResponse r = new PersonaResponse();
-            r.setCompleteName(String.format("%s %s", p.getName(), p.getLastname()));
-            r.setId(p.getId());
-            return r;
-        });
+        Stream<PersonaResponse> personaResponseStream = personas.stream().map(this::mapToPersonaResponse);
 
         PersonaResponseList response = new PersonaResponseList();
         response.setPersonas(personaResponseStream.collect(Collectors.toList()));
         return response;
     }
 
+    private PersonaResponse mapToPersonaResponse(Persona p) {
+        PersonaResponse r = new PersonaResponse();
+        r.setName(p.getName());
+        r.setLastname(p.getLastname());
+        r.setId(p.getId());
+        r.setRegistration(p.getRegistration().toString());
+        r.setStatus(p.getStatus());
+        return r;
+    }
+
+    @Override
+    public PersonaResponse selectOne(int personaId) {
+        Persona persona = implementation.selectOne(personaId);
+        return mapToPersonaResponse(persona);
+    }
+
     @Override
     public Response insert(PersonaRequest personaRequest) {
-        checkNotNull(personaRequest, "Invalid persona request");
-        checkArgument(StringUtils.isNotBlank(personaRequest.getName()),"Invalid Persona name");
-        checkArgument(StringUtils.isNotBlank(personaRequest.getLastname()),"Invalid Persona lastname");
+        validatePersonaRequest(personaRequest);
 
         Persona persona = new Persona();
         persona.setLastname(personaRequest.getLastname());
@@ -49,5 +58,25 @@ public class PersonaApiImpl implements PersonaApi {
 
         implementation.insert(persona);
        return Response.noContent().build();
+    }
+
+    private void validatePersonaRequest(PersonaRequest personaRequest) {
+        checkNotNull(personaRequest, "Invalid persona request");
+        checkArgument(StringUtils.isNotBlank(personaRequest.getName()),"Invalid Persona name");
+        checkArgument(StringUtils.isNotBlank(personaRequest.getLastname()),"Invalid Persona lastname");
+    }
+
+    @Override
+    public Response update(int personaId, PersonaRequest personaRequest) {
+        validatePersonaRequest(personaRequest);
+
+        Persona persona = new Persona();
+        persona.setId(personaId);
+        persona.setLastname(personaRequest.getLastname());
+        persona.setName(personaRequest.getName());
+        persona.setStatus(personaRequest.isStatus());
+
+        implementation.update(persona);
+        return Response.noContent().build();
     }
 }
