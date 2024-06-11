@@ -4,6 +4,15 @@ public class PersonaRequest {
 
     private String name;
     private String lastname;
+    private boolean status;
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public String getName() {
         return name;

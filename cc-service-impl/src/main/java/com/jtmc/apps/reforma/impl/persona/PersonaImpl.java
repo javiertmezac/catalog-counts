@@ -40,4 +40,12 @@ public class PersonaImpl {
             throw new RuntimeException("Persona was not inserted.");
         }
     }
+
+    public void update(Persona persona) {
+        userImpl.validateAdminPermissionsForLoggedInUser();
+        if (repository.update(persona) != 1) {
+            logger.error("Persona was not updated. {}", persona);
+            throw new RuntimeException("Persona was not inserted.");
+        }
+    }
 }

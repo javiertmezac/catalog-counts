@@ -39,7 +39,7 @@ public class ServiceImpl {
     private PersonaResponse convertToPersonaResponse(Persona p) {
         PersonaResponse personaResponse = new PersonaResponse();
         personaResponse.setId(p.getId());
-        personaResponse.setCompleteName(
+        personaResponse.setName(
                 String.format("%s %s", p.getName(), p.getLastname())
         );
         return personaResponse;

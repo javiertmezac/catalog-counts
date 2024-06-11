@@ -5,6 +5,15 @@ public class BranchResponse extends BranchBase {
     private Integer id;
     private String registration;
     private boolean status;
+    private Integer timezoneId;
+
+    public Integer getTimezoneId() {
+        return timezoneId;
+    }
+
+    public void setTimezoneId(Integer timezoneId) {
+        this.timezoneId = timezoneId;
+    }
 
     private BranchInitialAmount initialAmount;
 

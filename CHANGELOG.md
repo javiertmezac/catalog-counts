@@ -1,5 +1,14 @@
 # Catalog Counts Service Changelog
 
+## 2.4.0
+release date: -
+
+### Features
+- change initial-amount POST action to it's own api endpoint
+- add timezoneId and status to branch request
+  - this will allow basic branch/account setup
+- Persona API to allow CRUD operations
+
 ## 2.3.2
 release date: May 30, 2024
 
