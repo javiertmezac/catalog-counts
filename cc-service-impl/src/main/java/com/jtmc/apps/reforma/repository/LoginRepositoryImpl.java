@@ -42,4 +42,16 @@ public class LoginRepositoryImpl {
             return mapper.insert(login);
         }
     }
+
+    public Optional<Login> selectLoginByPersona(int id) {
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            LoginMapper mapper = session.getMapper(LoginMapper.class);
+            SelectStatementProvider statementProvider =
+                    select(LoginMapper.selectList, login,
+                            c -> c.where(personaid, SqlBuilder.isEqualTo(id))
+                                    .and(status, isTrue())
+                    );
+            return mapper.selectOne(statementProvider);
+        }
+    }
 }
