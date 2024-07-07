@@ -94,6 +94,17 @@ public class ReportApiImpl implements ReportApi {
         sumExpenses.setSumExpensesTotal(expenses.getTotal());
         response.setSumExpenses(sumExpenses);
 
+        List<SumCatalogCountByCceIdentifier> sumExpensesByIdentifier =
+                auditReport.getSumExpensesByIdentifier(branchId, reportDateLimitsParams);
+        Stream<SumExpensesDetails> expensesDetailsStream = sumExpensesByIdentifier.stream().map(x -> {
+            SumExpensesDetails details = new SumExpensesDetails();
+            details.setFamily(x.getFamily());
+            details.setName(x.getName());
+            details.setSumAmount(x.getSumAmount());
+            return details;
+        });
+        sumExpenses.setSumExpensesDetails(expensesDetailsStream.collect(Collectors.toList()));
+
         //todo: get uncheckedExpenses from DB
         response.setUncheckedExpenses(0.0);
         //todo: get loans from DB

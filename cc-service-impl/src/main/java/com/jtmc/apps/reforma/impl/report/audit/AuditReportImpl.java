@@ -99,4 +99,9 @@ public class AuditReportImpl {
         });
         return expenses;
     }
+
+    public List<SumCatalogCountByCceIdentifier> getSumExpensesByIdentifier(int branchId, ReportDateLimitsParams dateLimitsParams) {
+        DefaultReportRequest request = buildDefaultReportParams(branchId, false, dateLimitsParams);
+        return auditReportMapper.selectDefaultReportByCceIdentifier(request);
+    }
 }
