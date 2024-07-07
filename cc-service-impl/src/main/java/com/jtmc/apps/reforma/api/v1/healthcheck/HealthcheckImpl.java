@@ -1,7 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.healthcheck;
 
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 public class HealthcheckImpl implements HealthcheckApi {
 

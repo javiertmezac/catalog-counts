@@ -2,9 +2,9 @@ package com.jtmc.apps.reforma.api.v1.login;
 
 import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/login")
 public interface LoginApi {

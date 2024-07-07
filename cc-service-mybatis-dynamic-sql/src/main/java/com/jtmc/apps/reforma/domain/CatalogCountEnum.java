@@ -1,6 +1,6 @@
 package com.jtmc.apps.reforma.domain;
 
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 public class CatalogCountEnum {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-04-04T20:26:07.075229-07:00", comments="Source field: catalog_count_enum.id")

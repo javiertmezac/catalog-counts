@@ -6,7 +6,7 @@ import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.PeriodDetails;
 import com.jtmc.apps.reforma.impl.periodconfirm.PeriodConfirmImpl;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
