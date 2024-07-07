@@ -1,5 +1,11 @@
 # Catalog Counts Service Changelog
 
+## 2.3.3
+release date: Jul 6, 2024
+
+### Features
+- Improve Default Report to include SumExpensesDetails.
+
 ## 2.3.2
 release date: May 30, 2024
 
