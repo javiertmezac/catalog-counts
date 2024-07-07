@@ -1,7 +1,7 @@
 package com.jtmc.apps.reforma.domain;
 
 import java.time.Instant;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 public class Branch {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2024-05-17T12:42:56.975227-07:00", comments="Source field: branch.id")

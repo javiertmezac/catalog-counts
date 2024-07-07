@@ -1,8 +1,8 @@
 package com.jtmc.apps.reforma.api.v1.periodconfirm;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/v1/branch/{branchId}/period/{periodId}")
 public interface PeriodConfirmApi {

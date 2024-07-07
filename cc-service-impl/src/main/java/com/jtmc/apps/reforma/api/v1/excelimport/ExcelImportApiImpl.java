@@ -3,7 +3,7 @@ package com.jtmc.apps.reforma.api.v1.excelimport;
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.service.excelimport.ExcelImportService;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.util.UUID;
 
 public class ExcelImportApiImpl implements ExcelImportApi {

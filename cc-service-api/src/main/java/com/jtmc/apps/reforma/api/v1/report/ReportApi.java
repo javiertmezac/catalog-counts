@@ -1,7 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.report;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/v1/branch")
 public interface ReportApi {
