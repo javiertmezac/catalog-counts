@@ -76,6 +76,7 @@ public class CatalogCountImpl {
         return catalogCountRepository.selectAllByBranch(branchId);
     }
 
+    //todo: stop calling selectAll [refactor]
     public Optional<CustomCatalogCount> selectInitialAmountForBranch(Integer branchId) {
         Collection<CustomCatalogCount> all = selectAll(branchId);
         CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();

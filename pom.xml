@@ -11,9 +11,9 @@
 
     <properties>
         <mockito.version>3.2.4</mockito.version>
-        <junit.version>5.6.2</junit.version>
-        <junit-platform.version>1.6.2</junit-platform.version>
-        <easy-random.version>4.2.0</easy-random.version>
+        <junit.version>5.10.3</junit.version>
+        <junit-platform.version>1.10.3</junit-platform.version>
+        <easy-random.version>5.0.0</easy-random.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
     </properties>
 
