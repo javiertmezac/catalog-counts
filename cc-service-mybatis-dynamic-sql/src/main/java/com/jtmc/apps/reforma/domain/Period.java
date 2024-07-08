@@ -1,6 +1,6 @@
 package com.jtmc.apps.reforma.domain;
 
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 public class Period {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2022-06-03T20:44:31.793344-07:00", comments="Source field: period.id")

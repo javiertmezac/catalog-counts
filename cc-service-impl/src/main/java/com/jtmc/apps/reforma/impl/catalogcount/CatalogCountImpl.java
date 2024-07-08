@@ -20,8 +20,8 @@ import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ForbiddenException;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ForbiddenException;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
@@ -76,6 +76,7 @@ public class CatalogCountImpl {
         return catalogCountRepository.selectAllByBranch(branchId);
     }
 
+    //todo: stop calling selectAll [refactor]
     public Optional<CustomCatalogCount> selectInitialAmountForBranch(Integer branchId) {
         Collection<CustomCatalogCount> all = selectAll(branchId);
         CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();

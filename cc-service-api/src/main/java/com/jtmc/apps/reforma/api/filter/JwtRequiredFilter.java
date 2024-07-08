@@ -4,18 +4,18 @@ import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtUserClaim;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.Priority;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 
-import javax.annotation.Priority;
 import javax.crypto.SecretKey;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -43,13 +43,12 @@ public class JwtRequiredFilter implements ContainerRequestFilter {
             String jwsString = authHeader.substring(authPrefix.length()).trim();
 
             SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-            Jws<Claims> claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
+            Jws<Claims> claims = Jwts.parser().verifyWith(key)
                     .build()
-                    .parseClaimsJws(jwsString);
+                    .parseSignedClaims(jwsString);
 
-            userClaim.setSubject(claims.getBody().getSubject());
-            userClaim.setId((Integer)claims.getBody().get("uid"));
+            userClaim.setSubject(claims.getPayload().getSubject());
+            userClaim.setId((Integer)claims.getPayload().get("uid"));
 
         } catch (ExpiredJwtException ex) {
             throw new WebApplicationException(Response.Status.UNAUTHORIZED);

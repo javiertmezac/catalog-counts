@@ -2,7 +2,7 @@ package com.jtmc.apps.reforma.repository.mapper;
 
 import java.sql.JDBCType;
 import java.time.Instant;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 import org.mybatis.dynamic.sql.SqlColumn;
 import org.mybatis.dynamic.sql.SqlTable;
 
