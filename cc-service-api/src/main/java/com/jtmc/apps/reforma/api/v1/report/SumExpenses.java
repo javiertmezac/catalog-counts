@@ -1,5 +1,7 @@
 package com.jtmc.apps.reforma.api.v1.report;
 
+import java.util.List;
+
 public class SumExpenses {
     private double services;
     private double helps;
@@ -10,6 +12,15 @@ public class SumExpenses {
     private double fees;
     private double immovables;
     private double sumExpensesTotal;
+    private List<SumExpensesDetails> sumExpensesDetails;
+
+    public List<SumExpensesDetails> getSumExpensesDetails() {
+        return sumExpensesDetails;
+    }
+
+    public void setSumExpensesDetails(List<SumExpensesDetails> sumExpensesDetails) {
+        this.sumExpensesDetails = sumExpensesDetails;
+    }
 
     public double getServices() {
         return services;
