@@ -23,7 +23,7 @@ BEGIN
     WHERE b.id = branchId;
 
     SELECT
-        cce.identifier, cce.name, COALESCE(SUM(cc.amount), 0) AS sumAmount
+        cce.identifier, cce.name, cce.family, COALESCE(SUM(cc.amount), 0) AS sumAmount
     FROM
         catalog_count AS cc
     LEFT JOIN catalog_count_enum AS cce ON cc.catalogCountEnumId = cce.id
@@ -32,9 +32,10 @@ BEGIN
         AND cc.isDeleted = false
         AND CONVERT_TZ(cc.registration, 'UTC', timezone_name) BETWEEN min_date AND max_date
     GROUP BY
-        cce.identifier, cce.name
+        cce.identifier, cce.name, cce.family
    ORDER BY
         cce.identifier;
+
 END//
 
 DELIMITER ;
