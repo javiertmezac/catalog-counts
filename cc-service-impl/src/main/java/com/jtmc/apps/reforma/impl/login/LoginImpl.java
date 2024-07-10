@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
@@ -42,24 +43,22 @@ public class LoginImpl {
         return user.get();
     }
 
-    public void insert(String password, String username, int personaId) {
+    public void insert(String password, String username, Persona persona) {
 
         UserDetails userDetails = userImpl.validateAdminPermissionsForLoggedInUser();
         logger.info("username {}", userDetails.getUsername());
 
-        Persona persona = personaImpl.selectOne(personaId);
-
         Login registration = new Login();
         registration.setPassword(base64Encode(password));
         registration.setUsername(username);
-        registration.setPersonaid(personaId);
+        registration.setPersonaid(persona.getId());
         registration.setRegistration(Instant.now());
 
         int successfulInsertion = 1;
         if(loginRepository.insert(registration) != successfulInsertion) {
-           logger.error("could not insert new login registration for new username {} and personaId {}",
-                   username, personaId);
-           throw new ImplementationException("Error inserting registry", 500);
+            logger.error("could not insert new login registration for new username {} and personaId {}",
+                    username, persona.getId());
+            throw new ImplementationException("Error inserting registry", 500);
         }
 
         logger.info("new login registry successfully inserted for username {} and persona {}",
@@ -70,5 +69,12 @@ public class LoginImpl {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] toEncode = value.getBytes(StandardCharsets.UTF_8);
         return encoder.encodeToString(toEncode);
+    }
+
+    public void validatePersonaHasActiveAccount(int personaId) {
+        Optional<Login> loginDetails = loginRepository.selectLoginByPersona(personaId);
+        if (loginDetails.isPresent()) {
+            throw new ImplementationException("duplicated", 409);
+        }
     }
 }
