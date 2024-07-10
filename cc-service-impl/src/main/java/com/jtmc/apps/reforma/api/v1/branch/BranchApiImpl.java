@@ -4,11 +4,9 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.Branch;
 import com.jtmc.apps.reforma.domain.BranchDetails;
-import com.jtmc.apps.reforma.domain.TimezoneType;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.List;
@@ -44,16 +42,40 @@ public class BranchApiImpl implements BranchApi {
 
     @Override
     public Response insertBranch(BranchRequest branchRequest) {
-        checkNotNull(branchRequest, "Invalid payload for Branch");
-        checkArgument(StringUtils.isNotBlank(branchRequest.getName()), "Invalid NAme for branch");
-        checkArgument(StringUtils.isNotBlank(branchRequest.getAddress()), "Invalid Address for branch");
+        validateBranchRequest(branchRequest);
 
         Branch b = new Branch();
         b.setAddress(branchRequest.getAddress());
         b.setName(branchRequest.getName());
         b.setRegistration(Instant.now());
+        b.setTimezoneid(branchRequest.getTimezoneId());
         branchImpl.insertBranch(b);
         return Response.noContent().build();
+    }
+
+    @Override
+    public Response updateBranch(int id, BranchRequest branchRequest) {
+        validateBranchRequest(branchRequest);
+
+        Branch b = new Branch();
+        b.setId(id);
+        b.setAddress(branchRequest.getAddress());
+        b.setName(branchRequest.getName());
+        b.setTimezoneid(branchRequest.getTimezoneId());
+        b.setStatus(branchRequest.isStatus());
+        branchImpl.updateBranch(b);
+        return Response.noContent().build();
+    }
+
+    private void validateBranchRequest(BranchRequest branchRequest) {
+        checkNotNull(branchRequest, "Invalid payload for Branch");
+        checkArgument(StringUtils.isNotBlank(branchRequest.getName()), "Invalid Name for branch");
+        checkArgument(StringUtils.isNotBlank(branchRequest.getAddress()), "Invalid Address for branch");
+        int maxInput = 45;
+        checkArgument(branchRequest.getAddress().length() <= maxInput, "Max 45 chars");
+        checkArgument(branchRequest.getName().length() <= maxInput, "Max 45 chars");
+        checkNotNull(branchRequest.getTimezoneId(), "Invalid timezone");
+        checkArgument(branchRequest.getTimezoneId() > 0, "Invalid timezone");
     }
 
     private BranchResponse mapToBranchResponse(Branch branch) {
@@ -63,6 +85,7 @@ public class BranchApiImpl implements BranchApi {
         response.setAddress(branch.getAddress());
         response.setRegistration(branch.getRegistration().toString());
         response.setStatus(branch.getStatus());
+        response.setTimezoneId(branch.getTimezoneid());
         return response;
     }
 
@@ -75,7 +98,7 @@ public class BranchApiImpl implements BranchApi {
 
         BranchDetails branchDetails = branchImpl.selectOneBranch(branchId);
         if (!branchImpl.getInitialAmount(branchId).isPresent()) {
-            branchImpl.insertInitialAmount(branchDetails.getBranch(), branchInitialAmount.getAmount());
+            branchImpl.insertInitialAmount(branchDetails, branchInitialAmount.getAmount());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.CONFLICT).build();

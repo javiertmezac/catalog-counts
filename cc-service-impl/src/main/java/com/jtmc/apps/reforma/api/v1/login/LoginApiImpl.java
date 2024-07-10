@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.domain.Login;
+import com.jtmc.apps.reforma.domain.Persona;
 import com.jtmc.apps.reforma.impl.login.LoginImpl;
+import com.jtmc.apps.reforma.impl.persona.PersonaImpl;
 import com.jtmc.apps.reforma.impl.personadetails.PersonaDetailsImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.jackson.io.JacksonSerializer;
@@ -26,10 +28,13 @@ public class LoginApiImpl implements LoginApi {
     final private Logger logger = LoggerFactory.getLogger(LoginApiImpl.class);
 
     @Inject
-    private LoginImpl loginApp;
+    private LoginImpl loginImpl;
 
     @Inject
     private PersonaDetailsImpl personaDetailsImpl;
+
+    @Inject
+    private PersonaImpl personaImpl;
 
     @Inject
     @Named("key")
@@ -47,7 +52,7 @@ public class LoginApiImpl implements LoginApi {
         checkArgument(StringUtils.isNotBlank(email));
         checkArgument(StringUtils.isNotBlank(password));
 
-        Login user = loginApp.selectUser(email, password);
+        Login user = loginImpl.selectUser(email, password);
         String jws = buildJWS(user.getUsername(), user.getPersonaid());
 
         LoginResponse response = new LoginResponse();
@@ -80,7 +85,10 @@ public class LoginApiImpl implements LoginApi {
         checkArgument(StringUtils.isNotBlank(request.getUsername()), "Invalid username");
         checkArgument(request.getPersonaId() > 0, "Invalid personaId");
 
-        loginApp.insert(request.getPassword(), request.getUsername(), request.getPersonaId());
+        Persona persona = personaImpl.selectOne(request.getPersonaId());
+        loginImpl.validatePersonaHasActiveAccount(persona.getId());
+
+        loginImpl.insert(request.getPassword(), request.getUsername(), persona);
         return Response.noContent().build();
     }
 }

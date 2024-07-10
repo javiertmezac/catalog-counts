@@ -2,7 +2,6 @@ package com.jtmc.apps.reforma.repository;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.domain.Branch;
-import com.jtmc.apps.reforma.domain.BranchDetails;
 import com.jtmc.apps.reforma.domain.TimezoneType;
 import com.jtmc.apps.reforma.repository.mapper.BranchDynamicSqlSupport;
 import com.jtmc.apps.reforma.repository.mapper.BranchMapper;
@@ -27,16 +26,20 @@ public class BranchRepository {
     public Optional<Branch> selectOneBranch(int branchId){
         try(SqlSession session = sqlSessionFactory.openSession()) {
             BranchMapper mapper = session.getMapper(BranchMapper.class);
-            return mapper.selectByPrimaryKey(branchId);
+            return mapper.selectOne(x -> x
+                    .where(BranchDynamicSqlSupport.id, SqlBuilder.isEqualTo(branchId))
+                    .and(BranchDynamicSqlSupport.status, SqlBuilder.isTrue()));
         }
     }
 
     public Optional<TimezoneType> getBranchTimeZone(int branchId) {
         try(SqlSession session = sqlSessionFactory.openSession()) {
             TimezoneTypeMapper mapper = session.getMapper(TimezoneTypeMapper.class);
-            return mapper.selectOne(x -> x.join(BranchDynamicSqlSupport.branch)
+            return mapper.selectOne(x -> x
+                    .join(BranchDynamicSqlSupport.branch)
                     .on(BranchDynamicSqlSupport.timezoneid, SqlBuilder.equalTo(TimezoneTypeDynamicSqlSupport.id))
                     .where(BranchDynamicSqlSupport.id, SqlBuilder.isEqualTo(branchId))
+                    .and(BranchDynamicSqlSupport.status, SqlBuilder.isTrue())
             );
         }
     }
@@ -54,8 +57,18 @@ public class BranchRepository {
             branch.setStatus(true);
             return mapper.insertSelective(branch);
         } catch (Exception ex) {
-            logger.error("Error when inserting a new Branch.. Details {}: {}", branch, ex);
-           throw ex;
+            logger.error("Error when inserting a new Branch.. Details: ", ex);
+            throw ex;
+        }
+    }
+
+    public int updateBranch(Branch branch) {
+        try(SqlSession session = sqlSessionFactory.openSession(true)) {
+            BranchMapper mapper = session.getMapper(BranchMapper.class);
+            return mapper.updateByPrimaryKeySelective(branch);
+        } catch (Exception ex) {
+            logger.error("Error updating Branch.. Details: ", ex);
+            throw ex;
         }
     }
 }

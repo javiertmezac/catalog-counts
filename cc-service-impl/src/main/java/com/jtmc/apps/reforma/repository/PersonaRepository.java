@@ -41,8 +41,18 @@ public class PersonaRepository {
             persona.setStatus(true);
             return mapper.insertSelective(persona);
         } catch (Exception ex) {
-            logger.error("Error when inserting a new persona.. Details {}: {}", persona, ex);
+            logger.error("Error when inserting a new persona.. Details: ", ex);
            throw ex;
+        }
+    }
+
+    public int update(Persona persona) {
+        try(SqlSession session = sqlSessionFactory.openSession(true)) {
+            PersonaMapper mapper = session.getMapper(PersonaMapper.class);
+            return mapper.updateByPrimaryKeySelective(persona);
+        } catch (Exception ex) {
+            logger.error("Error when inserting a new persona.. Details: ",ex);
+            throw ex;
         }
     }
 }

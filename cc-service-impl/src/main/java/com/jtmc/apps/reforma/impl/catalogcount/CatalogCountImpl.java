@@ -79,8 +79,7 @@ public class CatalogCountImpl {
     public Optional<CustomCatalogCount> selectInitialAmountForBranch(Integer branchId) {
         Collection<CustomCatalogCount> all = selectAll(branchId);
         CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
-        Stream<CustomCatalogCount> initialAmountList = all.stream()
-                .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()));
+
         return all.stream()
                 .filter(x -> x.getIdentifier().equals(initialAmountEnum.getIdentifier()))
                 .findFirst();
@@ -127,7 +126,7 @@ public class CatalogCountImpl {
 
 
     @Transactional
-    public void insertInitialAmountCatalogCount(Branch branch, double amount) {
+    public void insertInitialAmountCatalogCount(BranchDetails branchDetails, double amount) {
         CatalogCountEnum initialAmountEnum = catalogCountEnumRepository.getInitialAmountEnum();
 
         CatalogCount catalogCount = new CatalogCount();
@@ -136,10 +135,17 @@ public class CatalogCountImpl {
         catalogCount.setCatalogcountenumid(initialAmountEnum.getId());
         catalogCount.setIsdeleted(false);
 
-        ZonedDateTime zonedDateTime = branch.getRegistration().atZone(ZoneId.systemDefault());
-        catalogCount.setRegistration(zonedDateTime.minusMonths(1).withDayOfMonth(10).toInstant());
+        Branch b = branchDetails.getBranch();
+        ZonedDateTime bRegistration = b.getRegistration().atZone(branchDetails.getZoneIdFromBranchTimeZone());
 
-        catalogCount.setBranchid(branch.getId());
+        ZonedDateTime backOneMonthFirstDay = LocalDate
+                .of(bRegistration.getYear(), bRegistration.getMonth(), 1)
+                .minusMonths(1)
+                .atStartOfDay(branchDetails.getZoneIdFromBranchTimeZone());
+
+        catalogCount.setRegistration(backOneMonthFirstDay.toInstant());
+
+        catalogCount.setBranchid(branchDetails.getBranch().getId());
         catalogCountRepository.insert(catalogCount);
     }
 
