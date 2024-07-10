@@ -7,6 +7,7 @@
         <groupId>com.jtmc.apps.reforma</groupId>
         <version>2.4.0</version>
     </parent>
+  
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>catalog-counts-service-impl</artifactId>

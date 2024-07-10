@@ -1,5 +1,6 @@
 # Catalog Counts Service Changelog
 
+
 ## 2.4.0
 release date: -
 
@@ -8,6 +9,15 @@ release date: -
 - add timezoneId and status to branch request
   - this will allow basic branch/account setup
 - Persona API to allow CRUD operations
+
+## 2.3.3
+release date: Jul 7, 2024
+
+### Features
+- Improve Default Report to include SumExpensesDetails.
+
+### Breaking Changes
+- Stored Procedure `V0.0.17__sp_default_report_by_cce_identifier.sql` to extend sum expenses with details (catalog_counts)
 
 ## 2.3.2
 release date: May 30, 2024
