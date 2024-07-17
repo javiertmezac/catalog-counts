@@ -33,13 +33,16 @@ public class ExcelImportService {
 
     //todo: get file name from storage service. Current local file: excel-import/example1.xlsx
     private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
-        File file = new File(getClass().getClassLoader().getResource(fileStorageKey).getFile());
+//        File file = new File(getClass().getClassLoader().getResource(fileStorageKey).getFile());
+        File file = new File(fileStorageKey);
         return new FileInputStream(file);
     }
 
     public void execute(String fileStorageKey, String tabSheetName) {
 
         try {
+
+            StringBuilder stringBuilder = new StringBuilder();
 
             XSSFWorkbook wb = new XSSFWorkbook(getExcelFile(fileStorageKey));
 
@@ -74,7 +77,8 @@ public class ExcelImportService {
                     break;
                 }
 
-                CatalogCount catalogCount = new CatalogCount();
+//                CatalogCount catalogCount = new CatalogCount();
+                CatalogCountExcelSheet catalogCount = new CatalogCountExcelSheet();
                 if (secondsToAdd == 60) {
                     secondsToAdd = 0;
                     minutesToAdd++;
@@ -107,12 +111,18 @@ public class ExcelImportService {
                 catalogCount.setIsdeleted(false);
                 catalogCount.setBranchid(1);
 
-                repository.insert(catalogCount);
+//                repository.insert(catalogCount);
+                stringBuilder.append(catalogCount.printInsertSqlStatement());
             }
+
+            System.out.println(stringBuilder);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new ExcelImportException("Something went wrong during ExcelImport", e);
         }
+
+
     }
 
     private CatalogCountEnum mapCatalogCountWithDB(String catalogCountIdentifier) {
