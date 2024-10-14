@@ -2,7 +2,7 @@
 
 
 ## 2.4.0
-release date: -
+release date: Oct 13, 2024
 
 ### Features
 - change initial-amount POST action to it's own api endpoint
