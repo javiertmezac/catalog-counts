@@ -70,3 +70,9 @@ Manual process to "update" previous month's movements
 2. Push image: `docker push registry.digitalocean.com/cc-service/cc-service-image:<tag>`
 3. `doctl apps list` : and make sure to pick correct app id
 4. `doctl apps update <id> --spec /path/to/spec.yaml`
+
+### Digital Ocean - Single Droplet
+1. command to run application - (java -jar )
+   1. [/etc/systemd/system/cc-service.service](/documentation/digital_ocean/cc-service.service), systemctl enabled cc-service (reboot)
+   2. Nginx - [configuration_file](/documentation/digital_ocean/nginx.conf)
+2. environment variables, .env, profile `set -o allexport; source /home/.env; set +o allexport` (cmd)
