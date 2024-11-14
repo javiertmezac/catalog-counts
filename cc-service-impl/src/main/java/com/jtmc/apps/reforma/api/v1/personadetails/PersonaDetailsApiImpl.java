@@ -5,7 +5,7 @@ import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.PersonaDetails;
 import com.jtmc.apps.reforma.impl.personadetails.PersonaDetailsImpl;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import java.time.Instant;
 import java.util.List;

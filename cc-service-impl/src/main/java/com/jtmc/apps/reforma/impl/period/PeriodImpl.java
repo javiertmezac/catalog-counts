@@ -9,7 +9,7 @@ import com.jtmc.apps.reforma.repository.PeriodRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.BadRequestException;
+import jakarta.ws.rs.BadRequestException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +25,7 @@ public class PeriodImpl {
     public Period getPeriodByQueryParams(int toMonth, int year) {
        Optional<Period> period = periodRepository.selectOne(toMonth, year);
        if (!period.isPresent()) {
-           logger.error("Period for toMonth {} and year {}, not found", toMonth, year);
+           logger.debug("Period for toMonth {} and year {}, not found", toMonth, year);
            throw new PeriodNotFoundException("Period Not Found", 404);
        }
        return period.get();
@@ -34,7 +34,7 @@ public class PeriodImpl {
     public Period getPeriodById(int periodId) {
         Optional<Period> period = periodRepository.selectOne(periodId);
         if (!period.isPresent()) {
-            logger.error("Period {} not found", periodId);
+            logger.debug("Period {} not found", periodId);
             throw new PeriodNotFoundException("Period Not Found", 404);
         }
         return period.get();

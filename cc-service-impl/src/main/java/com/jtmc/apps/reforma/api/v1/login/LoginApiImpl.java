@@ -9,14 +9,13 @@ import com.jtmc.apps.reforma.impl.login.LoginImpl;
 import com.jtmc.apps.reforma.impl.persona.PersonaImpl;
 import com.jtmc.apps.reforma.impl.personadetails.PersonaDetailsImpl;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.jackson.io.JacksonSerializer;
 import io.jsonwebtoken.security.Keys;
+import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.SecretKey;
-import javax.ws.rs.core.Response;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
@@ -69,11 +68,10 @@ public class LoginApiImpl implements LoginApi {
 
         return Jwts
                 .builder()
-                .serializeToJsonWith(new JacksonSerializer(objectMapper))
                 .claim("uid", userId)
-                .setSubject(username)
-                .setIssuedAt(issueAtDate)
-                .setExpiration(expirationDate)
+                .subject(username)
+                .issuedAt(issueAtDate)
+                .expiration(expirationDate)
                 .signWith(key)
                 .compact();
     }

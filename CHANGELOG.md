@@ -1,5 +1,10 @@
 # Catalog Counts Service Changelog
 
+## 3.0.0
+release date: Nov 13, 2024
+
+### Improvements
+- update java 8 to java 21. ( fix imports, dependencies, etc)
 
 ## 2.4.0
 release date: Oct 13, 2024

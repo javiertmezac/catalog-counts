@@ -1,6 +1,6 @@
 package com.jtmc.apps.reforma.domain;
 
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 public class TimezoneType {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2024-05-17T12:07:38.239-07:00", comments="Source field: timezone_type.id")
