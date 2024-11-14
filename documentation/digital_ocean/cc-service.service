@@ -1,0 +1,13 @@
+ [Unit]
+ Description="Catalog Count Service (Java 8)"
+ After=network.target
+
+ [Service]
+ User=<user>
+ Group=<user_group>
+ WorkingDirectory=<working_directory>
+ EnvironmentFile=<working_directory>
+ ExecStart="java -jar cc-service.jar com.jtmc.apps.reforma.infrastructure.jetty.Launcher"
+
+ [Install]
+ WantedBy=multi-user.target

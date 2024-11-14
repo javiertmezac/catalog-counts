@@ -6,6 +6,10 @@ release date: Nov 13, 2024
 ### Improvements
 - update java 8 to java 21. ( fix imports, dependencies, etc)
 
+### Infrastructure
+- change deployment to Digital Ocean (so far nov 2024, manual deployment)
+- de-activated ECS Deployment and ECS Service Desire Count github workflows on main branch
+
 ## 2.4.0
 release date: Oct 13, 2024
 
