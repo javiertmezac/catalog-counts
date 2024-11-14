@@ -35,8 +35,8 @@ public class LoginImpl {
         logger.debug("Provided Username for login: {}", inputUsername);
 
         Optional<Login> user = loginRepository.selectUser(inputUsername, base64Encode(inputPassword));
-        if (!user.isPresent()) {
-            logger.warn("UserLogin not found for provided credentials");
+        if (user.isEmpty()) {
+            logger.warn("UserLogin not found for provided credentials: {}", inputUsername);
             throw new BadRequestException();
         }
 
