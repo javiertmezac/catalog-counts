@@ -7,13 +7,13 @@
     <groupId>com.jtmc.apps.reforma</groupId>
     <artifactId>catalog-counts-base-pom</artifactId>
     <packaging>pom</packaging>
-    <version>2.4.0</version>
+    <version>3.0.0</version>
 
     <properties>
         <mockito.version>3.2.4</mockito.version>
-        <junit.version>5.6.2</junit.version>
-        <junit-platform.version>1.6.2</junit-platform.version>
-        <easy-random.version>4.2.0</easy-random.version>
+        <junit.version>5.10.3</junit.version>
+        <junit-platform.version>1.10.3</junit-platform.version>
+        <easy-random.version>5.0.0</easy-random.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
     </properties>
 
@@ -28,28 +28,26 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
+            <version>2.0.13</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.2</version>
+            <artifactId>slf4j-reload4j</artifactId>
+            <version>2.0.13</version>
         </dependency>
+
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>4.1.0</version>
+            <version>7.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>19.0</version>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-            <version>3.1.6</version>
+            <version>4.0.4</version>
         </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -99,8 +97,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
         </plugins>

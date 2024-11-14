@@ -15,7 +15,7 @@ import org.apache.xmlbeans.impl.xb.ltgfmt.impl.FileDescImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.ForbiddenException;
+import jakarta.ws.rs.ForbiddenException;
 
 import java.util.Collection;
 import java.util.Optional;
