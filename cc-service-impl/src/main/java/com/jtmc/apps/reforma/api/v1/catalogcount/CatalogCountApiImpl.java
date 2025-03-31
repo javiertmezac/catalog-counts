@@ -4,13 +4,13 @@ import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
-import org.apache.commons.lang3.StringUtils;
-import org.mybatis.guice.transactional.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.core.Response;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -19,10 +19,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @JwtRequired
 public class CatalogCountApiImpl implements CatalogCountApi {
-    final private Logger logger = LoggerFactory.getLogger(CatalogCountApiImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(CatalogCountApiImpl.class);
 
     @Inject
     private CatalogCountImpl catalogCountImpl;
+
+    @Inject
+    private SqlSession sqlSession;
 
     @Override
     public CatalogCountResponseList getList(Integer branchId) {
@@ -31,12 +34,9 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
         CatalogCountResponseList responseList = new CatalogCountResponseList();
         responseList.setCatalogCountResponseCollection(catalogCountImpl.selectAllWithTotalColumn(branchId));
-
-        return responseList;
-    }
+        return responseList; }
 
     @Override
-    @Transactional
     public Response insert(Integer branchId, CatalogCountRequest catalogCountRequest) {
 
         checkNotNull(catalogCountRequest, "request object cannot be null");
@@ -53,9 +53,14 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         catalogCount.setRegistration(catalogCountRequest.getRegistrationDate());
         catalogCount.setBranchid(branchId);
 
-        catalogCountImpl.insertIntoCatalogCount(catalogCount);
-        if (catalogCountImpl.validateIfTransferRegistryRequired(catalogCountRequest.getCatalogCountEnumId())) {
-            catalogCountImpl.insertTransfer(catalogCount, catalogCountRequest.getTransferToAccountId());
+        try{
+            catalogCountImpl.insertIntoCatalogCount(catalogCount);
+            if (catalogCountImpl.validateIfTransferRegistryRequired(catalogCountRequest.getCatalogCountEnumId())) {
+                catalogCountImpl.insertTransfer(catalogCount, catalogCountRequest.getTransferToAccountId());
+            }
+            sqlSession.commit();
+        } catch (Exception e) {
+            sqlSession.rollback();
         }
         return Response.noContent().build();
     }

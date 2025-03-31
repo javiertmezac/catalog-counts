@@ -15,8 +15,10 @@ import com.jtmc.apps.reforma.impl.periodconfirm.PeriodDetailsConfirmationNotFoun
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
+import com.jtmc.apps.reforma.repository.TransferRegistryRepository;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.ForbiddenException;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +38,15 @@ import java.util.stream.Stream;
 public class CatalogCountImpl {
     private final Logger logger = LoggerFactory.getLogger(CatalogCountImpl.class);
 
+
     @Inject
     private CatalogCountRepository catalogCountRepository;
 
     @Inject
     private CatalogCountEnumRepository catalogCountEnumRepository;
+
+    @Inject
+    private TransferRegistryRepository transferRegistryRepository;
 
     @Inject
     private BranchImpl branchImpl;
@@ -274,30 +280,22 @@ public class CatalogCountImpl {
     public void insertTransfer(CatalogCount catalogCount, int transferToAccountId) {
         BranchDetails branchDetails = branchImpl.selectOneBranch(transferToAccountId);
         UserDetails loggedInUserDetails = userImpl.getLoggedInUserDetails();
-        /*
-          new table: transferRegistry
-            1. transferRegistryId (uuid)
-            2. fromAccount fk to branch
-            3. toAccount fk to branch
-            4. description (string)
-            5. account (decimal)
-            5. entryPersonId (fk to person Id)
-            6. entryDate
-            7. state (pending to accept, accepted)
-            8. acceptedPersonId (fk to person Id)
-            9. acceptedDate
-            10. transferRegistryStatus (on, off)
-         */
+        Optional<CatalogCountEnum> byFamilyAndName = catalogCountEnumRepository
+                .getByFamilyAndName("donations", "Donaciones");
+        int ccEnumId = byFamilyAndName.orElseThrow().getId();
+
         TransferRegistry transferRegistry = new TransferRegistry();
         transferRegistry.setTransferRegistryId(UUID.randomUUID());
         transferRegistry.setFromAccountId(catalogCount.getBranchid());
         transferRegistry.setToAccountId(transferToAccountId);
+        transferRegistry.setCatalogCountEnumId(ccEnumId);
         transferRegistry.setDetails(catalogCount.getDetails());
         transferRegistry.setAmount(catalogCount.getAmount());
         transferRegistry.setEntryPersonId(loggedInUserDetails.getPersonaId());
         transferRegistry.setEntryDate(catalogCount.getRegistration());
         transferRegistry.setTransferRegistryState(false);
         transferRegistry.setTransferRegistryState(true);
+        transferRegistryRepository.insert(transferRegistry);
     }
 
     public boolean validateIfTransferRegistryRequired(int catalogCountEnumId) {

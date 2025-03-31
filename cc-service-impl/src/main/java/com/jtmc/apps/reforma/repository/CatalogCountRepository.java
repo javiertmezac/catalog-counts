@@ -8,6 +8,7 @@ import com.jtmc.apps.reforma.repository.mapper.CatalogCountDynamicSqlSupport;
 import com.jtmc.apps.reforma.repository.mapper.CatalogCountEnumDynamicSqlSupport;
 import com.jtmc.apps.reforma.repository.mapper.CatalogCountMapper;
 import com.jtmc.apps.reforma.repository.mapper.CustomCatalogCountMapper;
+import com.mysql.cj.Session;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.dynamic.sql.BasicColumn;
@@ -29,12 +30,18 @@ public class CatalogCountRepository implements ICatalogCountRepository {
     @Inject
     private SqlSessionFactory sqlSessionFactory;
 
+    @Inject
+    private SqlSession session;
+
     @Override
     public int insert(CatalogCount catalogCount) {
-        try(SqlSession session = sqlSessionFactory.openSession(true)) {
-            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
-            return mapper.insert(catalogCount);
-        }
+//        try(SqlSession session = sqlSessionFactory.openSession()) {
+//            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
+//            return mapper.insert(catalogCount);
+//        }
+
+        CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
+        return mapper.insert(catalogCount);
     }
 
     @Override

@@ -23,7 +23,7 @@ public final class BranchDynamicSqlSupport {
     public static final SqlColumn<Boolean> status = branch.status;
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:42:42.139396-07:00", comments="Source field: branch.timezoneId")
-    public static final SqlColumn<Integer> timezoneid = branch.timezoneid;
+    public static final SqlColumn<Integer> timezoneId = branch.timezoneId;
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:42:42.139427-07:00", comments="Source field: branch.address")
     public static final SqlColumn<String> address = branch.address;
@@ -38,7 +38,7 @@ public final class BranchDynamicSqlSupport {
 
         public final SqlColumn<Boolean> status = column("status", JDBCType.BIT);
 
-        public final SqlColumn<Integer> timezoneid = column("timezoneId", JDBCType.INTEGER);
+        public final SqlColumn<Integer> timezoneId = column("timezoneId", JDBCType.INTEGER);
 
         public final SqlColumn<String> address = column("address", JDBCType.LONGVARCHAR);
 

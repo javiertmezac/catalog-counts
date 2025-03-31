@@ -8,6 +8,8 @@ import jakarta.annotation.Generated;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
@@ -36,25 +38,25 @@ public interface TransferRegistryMapper extends CommonCountMapper, CommonDeleteM
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244609-07:00", comments="Source Table: transferRegistry")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
-    @Results(id="TransferregistryResult", value = {
-        @Result(column="transferRegistryId", property="transferregistryid", jdbcType=JdbcType.BINARY, id=true),
-        @Result(column="fromAccountId", property="fromaccountid", jdbcType=JdbcType.INTEGER),
-        @Result(column="toAccountId", property="toaccountid", jdbcType=JdbcType.INTEGER),
+    @Results(id="TransferRegistryResult", value = {
+        @Result(column="transferRegistryId", property="transferRegistryId", jdbcType=JdbcType.BINARY, id=true),
+        @Result(column="fromAccountId", property="fromAccountId", jdbcType=JdbcType.INTEGER),
+        @Result(column="toAccountId", property="toAccountId", jdbcType=JdbcType.INTEGER),
         @Result(column="amount", property="amount", jdbcType=JdbcType.DOUBLE),
-        @Result(column="catalogCountEnumId", property="catalogcountenumid", jdbcType=JdbcType.INTEGER),
-        @Result(column="entryPersonId", property="entrypersonid", jdbcType=JdbcType.INTEGER),
-        @Result(column="entryDate", property="entrydate", jdbcType=JdbcType.TIMESTAMP),
-        @Result(column="transferRegistryState", property="transferregistrystate", jdbcType=JdbcType.BIT),
-        @Result(column="acceptedPersonId", property="acceptedpersonid", jdbcType=JdbcType.INTEGER),
-        @Result(column="acceptedDate", property="accepteddate", jdbcType=JdbcType.TIMESTAMP),
-        @Result(column="transferRegistryStatus", property="transferregistrystatus", jdbcType=JdbcType.BIT),
+        @Result(column="catalogCountEnumId", property="catalogCountEnumId", jdbcType=JdbcType.INTEGER),
+        @Result(column="entryPersonId", property="entryPersonId", jdbcType=JdbcType.INTEGER),
+        @Result(column="entryDate", property="entryDate", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="transferRegistryState", property="transferRegistryState", jdbcType=JdbcType.BIT),
+        @Result(column="acceptedPersonId", property="acceptedPersonId", jdbcType=JdbcType.INTEGER),
+        @Result(column="acceptedDate", property="acceptedDate", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="transferRegistryStatus", property="transferRegistryStatus", jdbcType=JdbcType.BIT),
         @Result(column="details", property="details", jdbcType=JdbcType.LONGVARCHAR)
     })
     List<TransferRegistry> selectMany(SelectStatementProvider selectStatement);
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244655-07:00", comments="Source Table: transferRegistry")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
-    @ResultMap("TransferregistryResult")
+    @ResultMap("TransferRegistryResult")
     Optional<TransferRegistry> selectOne(SelectStatementProvider selectStatement);
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244672-07:00", comments="Source Table: transferRegistry")
@@ -68,26 +70,26 @@ public interface TransferRegistryMapper extends CommonCountMapper, CommonDeleteM
     }
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244698-07:00", comments="Source Table: transferRegistry")
-    default int deleteByPrimaryKey(byte[] transferregistryid_) {
+    default int deleteByPrimaryKey(UUID transferRegistryId_) {
         return delete(c -> 
-            c.where(transferRegistryId, isEqualTo(transferregistryid_))
+            c.where(transferRegistryId, isEqualTo(transferRegistryId_))
         );
     }
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244715-07:00", comments="Source Table: transferRegistry")
     default int insert(TransferRegistry row) {
         return MyBatis3Utils.insert(this::insert, row, transferRegistry, c ->
-            c.map(transferRegistryId).toProperty("transferregistryid")
-            .map(fromAccountId).toProperty("fromaccountid")
-            .map(toAccountId).toProperty("toaccountid")
+            c.map(transferRegistryId).toProperty("transferRegistryId")
+            .map(fromAccountId).toProperty("fromAccountId")
+            .map(toAccountId).toProperty("toAccountId")
             .map(amount).toProperty("amount")
-            .map(catalogCountEnumId).toProperty("catalogcountenumid")
-            .map(entryPersonId).toProperty("entrypersonid")
-            .map(entryDate).toProperty("entrydate")
-            .map(transferRegistryState).toProperty("transferregistrystate")
-            .map(acceptedPersonId).toProperty("acceptedpersonid")
-            .map(acceptedDate).toProperty("accepteddate")
-            .map(transferRegistryStatus).toProperty("transferregistrystatus")
+            .map(catalogCountEnumId).toProperty("catalogCountEnumId")
+            .map(entryPersonId).toProperty("entryPersonId")
+            .map(entryDate).toProperty("entryDate")
+            .map(transferRegistryState).toProperty("transferRegistryState")
+            .map(acceptedPersonId).toProperty("acceptedPersonId")
+            .map(acceptedDate).toProperty("acceptedDate")
+            .map(transferRegistryStatus).toProperty("transferRegistryStatus")
             .map(details).toProperty("details")
         );
     }
@@ -95,17 +97,17 @@ public interface TransferRegistryMapper extends CommonCountMapper, CommonDeleteM
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244745-07:00", comments="Source Table: transferRegistry")
     default int insertMultiple(Collection<TransferRegistry> records) {
         return MyBatis3Utils.insertMultiple(this::insertMultiple, records, transferRegistry, c ->
-            c.map(transferRegistryId).toProperty("transferregistryid")
-            .map(fromAccountId).toProperty("fromaccountid")
-            .map(toAccountId).toProperty("toaccountid")
+            c.map(transferRegistryId).toProperty("transferRegistryId")
+            .map(fromAccountId).toProperty("fromAccountId")
+            .map(toAccountId).toProperty("toAccountId")
             .map(amount).toProperty("amount")
-            .map(catalogCountEnumId).toProperty("catalogcountenumid")
-            .map(entryPersonId).toProperty("entrypersonid")
-            .map(entryDate).toProperty("entrydate")
-            .map(transferRegistryState).toProperty("transferregistrystate")
-            .map(acceptedPersonId).toProperty("acceptedpersonid")
-            .map(acceptedDate).toProperty("accepteddate")
-            .map(transferRegistryStatus).toProperty("transferregistrystatus")
+            .map(catalogCountEnumId).toProperty("catalogCountEnumId")
+            .map(entryPersonId).toProperty("entryPersonId")
+            .map(entryDate).toProperty("entryDate")
+            .map(transferRegistryState).toProperty("transferRegistryState")
+            .map(acceptedPersonId).toProperty("acceptedPersonId")
+            .map(acceptedDate).toProperty("acceptedDate")
+            .map(transferRegistryStatus).toProperty("transferRegistryStatus")
             .map(details).toProperty("details")
         );
     }
@@ -113,17 +115,17 @@ public interface TransferRegistryMapper extends CommonCountMapper, CommonDeleteM
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244773-07:00", comments="Source Table: transferRegistry")
     default int insertSelective(TransferRegistry row) {
         return MyBatis3Utils.insert(this::insert, row, transferRegistry, c ->
-            c.map(transferRegistryId).toPropertyWhenPresent("transferregistryid", row::getTransferRegistryId)
-            .map(fromAccountId).toPropertyWhenPresent("fromaccountid", row::getFromAccountId)
-            .map(toAccountId).toPropertyWhenPresent("toaccountid", row::getToAccountId)
+            c.map(transferRegistryId).toPropertyWhenPresent("transferRegistryId", row::getTransferRegistryId)
+            .map(fromAccountId).toPropertyWhenPresent("fromAccountId", row::getFromAccountId)
+            .map(toAccountId).toPropertyWhenPresent("toAccountId", row::getToAccountId)
             .map(amount).toPropertyWhenPresent("amount", row::getAmount)
-            .map(catalogCountEnumId).toPropertyWhenPresent("catalogcountenumid", row::getCatalogCountEnumId)
-            .map(entryPersonId).toPropertyWhenPresent("entrypersonid", row::getEntryPersonId)
-            .map(entryDate).toPropertyWhenPresent("entrydate", row::getEntryDate)
-            .map(transferRegistryState).toPropertyWhenPresent("transferregistrystate", row::getTransferRegistryState)
-            .map(acceptedPersonId).toPropertyWhenPresent("acceptedpersonid", row::getAcceptedPersonId)
-            .map(acceptedDate).toPropertyWhenPresent("accepteddate", row::getAcceptedDate)
-            .map(transferRegistryStatus).toPropertyWhenPresent("transferregistrystatus", row::getTransferRegistryStatus)
+            .map(catalogCountEnumId).toPropertyWhenPresent("catalogCountEnumId", row::getCatalogCountEnumId)
+            .map(entryPersonId).toPropertyWhenPresent("entryPersonId", row::getEntryPersonId)
+            .map(entryDate).toPropertyWhenPresent("entryDate", row::getEntryDate)
+            .map(transferRegistryState).toPropertyWhenPresent("transferRegistryState", row::getTransferRegistryState)
+            .map(acceptedPersonId).toPropertyWhenPresent("acceptedPersonId", row::getAcceptedPersonId)
+            .map(acceptedDate).toPropertyWhenPresent("acceptedDate", row::getAcceptedDate)
+            .map(transferRegistryStatus).toPropertyWhenPresent("transferRegistryStatus", row::getTransferRegistryStatus)
             .map(details).toPropertyWhenPresent("details", row::getDetails)
         );
     }
@@ -144,7 +146,7 @@ public interface TransferRegistryMapper extends CommonCountMapper, CommonDeleteM
     }
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244893-07:00", comments="Source Table: transferRegistry")
-    default Optional<TransferRegistry> selectByPrimaryKey(byte[] transferregistryid_) {
+    default Optional<TransferRegistry> selectByPrimaryKey(UUID transferregistryid_) {
         return selectOne(c ->
             c.where(transferRegistryId, isEqualTo(transferregistryid_))
         );

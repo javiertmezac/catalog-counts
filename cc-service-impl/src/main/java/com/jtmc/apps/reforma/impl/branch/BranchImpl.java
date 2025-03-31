@@ -2,7 +2,6 @@ package com.jtmc.apps.reforma.impl.branch;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.branch.BranchInitialAmount;
-import com.jtmc.apps.reforma.api.v1.branch.BranchRequest;
 import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import com.jtmc.apps.reforma.impl.user.UserImpl;

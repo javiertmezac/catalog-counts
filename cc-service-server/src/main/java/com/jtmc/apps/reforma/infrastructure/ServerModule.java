@@ -6,8 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.ICatalogCountRepository;
+import jakarta.ws.rs.ext.Provider;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 public class ServerModule extends AbstractModule {
 
@@ -24,5 +28,10 @@ public class ServerModule extends AbstractModule {
         bind(ObjectMapper.class).toInstance(objectMapper);
         bind(JacksonJsonProvider.class).toInstance(jsonProvider);
         bind(ICatalogCountRepository.class).to(CatalogCountRepository.class);
+    }
+
+    @Inject
+    public SqlSession sqlSession(SqlSessionFactory factory) {
+        return factory.openSession(false);
     }
 }

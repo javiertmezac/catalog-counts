@@ -3,6 +3,8 @@ package com.jtmc.apps.reforma.repository.mapper;
 import jakarta.annotation.Generated;
 import java.sql.JDBCType;
 import java.time.Instant;
+import java.util.UUID;
+
 import org.mybatis.dynamic.sql.AliasableSqlTable;
 import org.mybatis.dynamic.sql.SqlColumn;
 
@@ -11,7 +13,7 @@ public final class TransferRegistryDynamicSqlSupport {
     public static final TransferRegistry transferRegistry = new TransferRegistry();
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244413-07:00", comments="Source field: transferRegistry.transferRegistryId")
-    public static final SqlColumn<byte[]> transferRegistryId = transferRegistry.transferRegistryId;
+    public static final SqlColumn<UUID> transferRegistryId = transferRegistry.transferRegistryId;
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244431-07:00", comments="Source field: transferRegistry.fromAccountId")
     public static final SqlColumn<Integer> fromAccountId = transferRegistry.fromAccountId;
@@ -48,7 +50,7 @@ public final class TransferRegistryDynamicSqlSupport {
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:40:32.244393-07:00", comments="Source Table: transferRegistry")
     public static final class TransferRegistry extends AliasableSqlTable<TransferRegistry> {
-        public final SqlColumn<byte[]> transferRegistryId = column("transferRegistryId", JDBCType.BINARY);
+        public final SqlColumn<UUID> transferRegistryId = column("transferRegistryId", JDBCType.BINARY);
 
         public final SqlColumn<Integer> fromAccountId = column("fromAccountId", JDBCType.INTEGER);
 

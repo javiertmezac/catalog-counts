@@ -32,7 +32,7 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 @Mapper
 public interface BranchMapper extends CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<Branch>, CommonUpdateMapper {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:42:42.142474-07:00", comments="Source Table: branch")
-    BasicColumn[] selectList = BasicColumn.columnList(id, name, registration, status, timezoneid, address);
+    BasicColumn[] selectList = BasicColumn.columnList(id, name, registration, status, timezoneId, address);
 
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-03-30T20:42:42.139679-07:00", comments="Source Table: branch")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
@@ -41,7 +41,7 @@ public interface BranchMapper extends CommonCountMapper, CommonDeleteMapper, Com
         @Result(column="name", property="name", jdbcType=JdbcType.VARCHAR),
         @Result(column="registration", property="registration", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="status", property="status", jdbcType=JdbcType.BIT),
-        @Result(column="timezoneId", property="timezoneid", jdbcType=JdbcType.INTEGER),
+        @Result(column="timezoneId", property="timezoneId", jdbcType=JdbcType.INTEGER),
         @Result(column="address", property="address", jdbcType=JdbcType.LONGVARCHAR)
     })
     List<Branch> selectMany(SelectStatementProvider selectStatement);
@@ -75,7 +75,7 @@ public interface BranchMapper extends CommonCountMapper, CommonDeleteMapper, Com
             .map(name).toProperty("name")
             .map(registration).toProperty("registration")
             .map(status).toProperty("status")
-            .map(timezoneid).toProperty("timezoneid")
+            .map(timezoneId).toProperty("timezoneId")
             .map(address).toProperty("address")
         );
     }
@@ -87,7 +87,7 @@ public interface BranchMapper extends CommonCountMapper, CommonDeleteMapper, Com
             .map(name).toProperty("name")
             .map(registration).toProperty("registration")
             .map(status).toProperty("status")
-            .map(timezoneid).toProperty("timezoneid")
+            .map(timezoneId).toProperty("timezoneId")
             .map(address).toProperty("address")
         );
     }
@@ -99,7 +99,7 @@ public interface BranchMapper extends CommonCountMapper, CommonDeleteMapper, Com
             .map(name).toPropertyWhenPresent("name", row::getName)
             .map(registration).toPropertyWhenPresent("registration", row::getRegistration)
             .map(status).toPropertyWhenPresent("status", row::getStatus)
-            .map(timezoneid).toPropertyWhenPresent("timezoneid", row::getTimezoneId)
+            .map(timezoneId).toPropertyWhenPresent("timezoneId", row::getTimezoneId)
             .map(address).toPropertyWhenPresent("address", row::getAddress)
         );
     }
@@ -137,7 +137,7 @@ public interface BranchMapper extends CommonCountMapper, CommonDeleteMapper, Com
                 .set(name).equalTo(row::getName)
                 .set(registration).equalTo(row::getRegistration)
                 .set(status).equalTo(row::getStatus)
-                .set(timezoneid).equalTo(row::getTimezoneId)
+                .set(timezoneId).equalTo(row::getTimezoneId)
                 .set(address).equalTo(row::getAddress);
     }
 
@@ -147,7 +147,7 @@ public interface BranchMapper extends CommonCountMapper, CommonDeleteMapper, Com
                 .set(name).equalToWhenPresent(row::getName)
                 .set(registration).equalToWhenPresent(row::getRegistration)
                 .set(status).equalToWhenPresent(row::getStatus)
-                .set(timezoneid).equalToWhenPresent(row::getTimezoneId)
+                .set(timezoneId).equalToWhenPresent(row::getTimezoneId)
                 .set(address).equalToWhenPresent(row::getAddress);
     }
 
@@ -157,7 +157,7 @@ public interface BranchMapper extends CommonCountMapper, CommonDeleteMapper, Com
             c.set(name).equalTo(row::getName)
             .set(registration).equalTo(row::getRegistration)
             .set(status).equalTo(row::getStatus)
-            .set(timezoneid).equalTo(row::getTimezoneId)
+            .set(timezoneId).equalTo(row::getTimezoneId)
             .set(address).equalTo(row::getAddress)
             .where(id, isEqualTo(row::getId))
         );
@@ -169,7 +169,7 @@ public interface BranchMapper extends CommonCountMapper, CommonDeleteMapper, Com
             c.set(name).equalToWhenPresent(row::getName)
             .set(registration).equalToWhenPresent(row::getRegistration)
             .set(status).equalToWhenPresent(row::getStatus)
-            .set(timezoneid).equalToWhenPresent(row::getTimezoneId)
+            .set(timezoneId).equalToWhenPresent(row::getTimezoneId)
             .set(address).equalToWhenPresent(row::getAddress)
             .where(id, isEqualTo(row::getId))
         );
