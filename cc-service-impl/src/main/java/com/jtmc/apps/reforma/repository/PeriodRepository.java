@@ -7,6 +7,7 @@ import com.jtmc.apps.reforma.repository.mapper.PeriodMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.dynamic.sql.SqlBuilder;
+import org.mybatis.dynamic.sql.select.ColumnSortSpecification;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
@@ -42,7 +43,10 @@ public class PeriodRepository {
     public List<Period> select() {
          try(SqlSession session = sqlSessionFactory.openSession()) {
             PeriodMapper mapper = session.getMapper(PeriodMapper.class);
-            return mapper.select(x -> x.where(PeriodDynamicSqlSupport.status, SqlBuilder.isTrue()));
+            return mapper.select(x -> x
+                    .where(PeriodDynamicSqlSupport.status, SqlBuilder.isTrue())
+                    .orderBy(new ColumnSortSpecification(PeriodDynamicSqlSupport.period.tableNameAtRuntime(), PeriodDynamicSqlSupport.year).descending())
+            );
         }
     }
 

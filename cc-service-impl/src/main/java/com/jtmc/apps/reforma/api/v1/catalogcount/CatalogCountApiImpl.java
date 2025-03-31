@@ -5,6 +5,7 @@ import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
     }
 
     @Override
+    @Transactional
     public Response insert(Integer branchId, CatalogCountRequest catalogCountRequest) {
 
         checkNotNull(catalogCountRequest, "request object cannot be null");
@@ -52,6 +54,9 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         catalogCount.setBranchid(branchId);
 
         catalogCountImpl.insertIntoCatalogCount(catalogCount);
+        if (catalogCountImpl.validateIfTransferRegistryRequired(catalogCountRequest.getCatalogCountEnumId())) {
+            catalogCountImpl.insertTransfer(catalogCount, catalogCountRequest.getTransferToAccountId());
+        }
         return Response.noContent().build();
     }
 

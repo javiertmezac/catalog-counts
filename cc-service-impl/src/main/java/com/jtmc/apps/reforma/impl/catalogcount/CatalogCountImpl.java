@@ -3,7 +3,6 @@ package com.jtmc.apps.reforma.impl.catalogcount;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
-import com.jtmc.apps.reforma.domain.Period;
 import com.jtmc.apps.reforma.domain.*;
 import com.jtmc.apps.reforma.impl.branch.BranchImpl;
 import com.jtmc.apps.reforma.impl.exception.CatalogCountLogicalDeleteException;
@@ -16,13 +15,16 @@ import com.jtmc.apps.reforma.impl.periodconfirm.PeriodDetailsConfirmationNotFoun
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ForbiddenException;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.ForbiddenException;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CatalogCountImpl {
-    final private Logger logger = LoggerFactory.getLogger(CatalogCountImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(CatalogCountImpl.class);
 
     @Inject
     private CatalogCountRepository catalogCountRepository;
@@ -131,7 +133,6 @@ public class CatalogCountImpl {
         return firstOrEmpty.map(CustomCatalogCount::getCumulativeSum).orElse(0.0);
     }
 
-    @Transactional
     public void insertIntoCatalogCount(CatalogCount catalogCount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
         validateCatalogCountEnum(catalogCount);
@@ -267,5 +268,29 @@ public class CatalogCountImpl {
                         "amount: {}, details: {}, branchId: {}, isDeleted: {}", cc.getId(),
                 cc.getRegistration().toString(), cc.getCatalogcountenumid(),
                 cc.getAmount(), cc.getDetails(), cc.getBranchid(), cc.getIsdeleted());
+    }
+
+    public void insertTransfer(CatalogCount catalogCount, int transferToAccountId) {
+        BranchDetails branchDetails = branchImpl.selectOneBranch(transferToAccountId);
+        /*
+          new table: transferRegistry
+            1. transferRegistryId (uuid)
+            2. fromAccount fk to branch
+            3. toAccount fk to branch
+            4. description (string)
+            5. account (decimal)
+            5. entryPersonId (fk to person Id)
+            6. entryDate
+            7. state (pending to accept, accepted)
+            8. acceptedPersonId (fk to person Id)
+            9. acceptedDate
+            10. transferRegistryStatus (on, off)
+         */
+    }
+
+    public boolean validateIfTransferRegistryRequired(int catalogCountEnumId) {
+        Optional<CatalogCountEnum> byFamilyAndName = catalogCountEnumRepository
+                .getByFamilyAndName("helps", "Aportación a la región");
+        return byFamilyAndName.filter(catalogCountEnum -> catalogCountEnum.getId() == catalogCountEnumId).isPresent();
     }
 }

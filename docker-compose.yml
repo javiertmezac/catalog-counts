@@ -10,7 +10,7 @@ services:
   cc-db:
     container_name: cc-service-db
     platform: linux/x86_64
-    image: mysql:8.0.28
+    image: mysql:8.0.35
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: catalog_count
