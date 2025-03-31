@@ -48,7 +48,7 @@ public class BranchApiImpl implements BranchApi {
         b.setAddress(branchRequest.getAddress());
         b.setName(branchRequest.getName());
         b.setRegistration(Instant.now());
-        b.setTimezoneid(branchRequest.getTimezoneId());
+        b.setTimezoneId(branchRequest.getTimezoneId());
         branchImpl.insertBranch(b);
         return Response.noContent().build();
     }
@@ -61,7 +61,7 @@ public class BranchApiImpl implements BranchApi {
         b.setId(id);
         b.setAddress(branchRequest.getAddress());
         b.setName(branchRequest.getName());
-        b.setTimezoneid(branchRequest.getTimezoneId());
+        b.setTimezoneId(branchRequest.getTimezoneId());
         b.setStatus(branchRequest.isStatus());
         branchImpl.updateBranch(b);
         return Response.noContent().build();
@@ -85,7 +85,7 @@ public class BranchApiImpl implements BranchApi {
         response.setAddress(branch.getAddress());
         response.setRegistration(branch.getRegistration().toString());
         response.setStatus(branch.getStatus());
-        response.setTimezoneId(branch.getTimezoneid());
+        response.setTimezoneId(branch.getTimezoneId());
         return response;
     }
 

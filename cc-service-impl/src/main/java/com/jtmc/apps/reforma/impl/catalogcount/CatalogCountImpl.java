@@ -29,6 +29,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -272,6 +273,7 @@ public class CatalogCountImpl {
 
     public void insertTransfer(CatalogCount catalogCount, int transferToAccountId) {
         BranchDetails branchDetails = branchImpl.selectOneBranch(transferToAccountId);
+        UserDetails loggedInUserDetails = userImpl.getLoggedInUserDetails();
         /*
           new table: transferRegistry
             1. transferRegistryId (uuid)
@@ -286,6 +288,16 @@ public class CatalogCountImpl {
             9. acceptedDate
             10. transferRegistryStatus (on, off)
          */
+        TransferRegistry transferRegistry = new TransferRegistry();
+        transferRegistry.setTransferRegistryId(UUID.randomUUID());
+        transferRegistry.setFromAccountId(catalogCount.getBranchid());
+        transferRegistry.setToAccountId(transferToAccountId);
+        transferRegistry.setDetails(catalogCount.getDetails());
+        transferRegistry.setAmount(catalogCount.getAmount());
+        transferRegistry.setEntryPersonId(loggedInUserDetails.getPersonaId());
+        transferRegistry.setEntryDate(catalogCount.getRegistration());
+        transferRegistry.setTransferRegistryState(false);
+        transferRegistry.setTransferRegistryState(true);
     }
 
     public boolean validateIfTransferRegistryRequired(int catalogCountEnumId) {

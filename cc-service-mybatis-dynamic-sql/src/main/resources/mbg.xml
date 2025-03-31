@@ -58,5 +58,13 @@
         <table tableName="timezone_type" >
             <property name="virtualKeyColumns" value="id"/>
         </table>
+        <table tableName="transferRegistry">
+            <property name="virtualKeyColumns" value="transferRegistryId"/>
+            <columnOverride column="entryDate" javaType="java.time.Instant" />
+            <columnOverride column="acceptedDate" javaType="java.time.Instant" />
+            <typeHandlers>
+                <typeHandler handler="com.jtmc.apps.reforma.guice.UuidTypeHandler" javaType="java.util.UUID"/>
+            </typeHandlers>
+        </table>
     </context>
 </generatorConfiguration>
