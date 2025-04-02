@@ -1,6 +1,11 @@
-package com.jtmc.apps.reforma.guice;
+package com.jtmc.apps.reforma.infrastructure;
 
 import com.google.inject.name.Names;
+import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApiImpl;
+import com.jtmc.apps.reforma.guice.UuidTypeHandler;
+import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
+import com.jtmc.apps.reforma.repository.CatalogCountRepository;
+import com.jtmc.apps.reforma.repository.TransferRegistryRepository;
 import com.jtmc.apps.reforma.repository.mapper.*;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.guice.MyBatisModule;
@@ -12,7 +17,7 @@ import java.util.Properties;
 
 public class CCMybatisModule extends MyBatisModule {
 
-    private final Logger Logger = LoggerFactory.getLogger(CCMybatisModule.class);
+    private final Logger logger = LoggerFactory.getLogger(CCMybatisModule.class);
 
     @Override
     protected void initialize() {
@@ -36,6 +41,10 @@ public class CCMybatisModule extends MyBatisModule {
         addMapperClass(CustomCatalogCountMapper.class);
         addMapperClass(CustomReportMapper.class);
 
+        bind(TransferRegistryRepository.class);
+        bind(CatalogCountRepository.class);
+        bind(CatalogCountImpl.class);
+        bind(CatalogCountApiImpl.class);
         Names.bindProperties(binder(), setMyBatisProperties());
     }
 
@@ -60,7 +69,7 @@ public class CCMybatisModule extends MyBatisModule {
             myBatisProperties.setProperty("JDBC.password", System.getenv("JDBC_PASSWORD"));
 
         } catch (Exception ex) {
-            Logger.error("Couldn't set MyBatisProperties: ", ex);
+            logger.error("Couldn't set MyBatisProperties: ", ex);
         }
 
         return myBatisProperties;

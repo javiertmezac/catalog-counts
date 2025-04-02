@@ -18,11 +18,11 @@ import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.TransferRegistryRepository;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.ForbiddenException;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Tainted;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,7 +37,6 @@ import java.util.stream.Stream;
 
 public class CatalogCountImpl {
     private final Logger logger = LoggerFactory.getLogger(CatalogCountImpl.class);
-
 
     @Inject
     private CatalogCountRepository catalogCountRepository;
@@ -277,6 +276,7 @@ public class CatalogCountImpl {
                 cc.getAmount(), cc.getDetails(), cc.getBranchid(), cc.getIsdeleted());
     }
 
+    @Transactional
     public void insertTransfer(CatalogCount catalogCount, int transferToAccountId) {
         BranchDetails branchDetails = branchImpl.selectOneBranch(transferToAccountId);
         UserDetails loggedInUserDetails = userImpl.getLoggedInUserDetails();

@@ -11,10 +11,13 @@ import com.jtmc.apps.reforma.repository.mapper.CustomCatalogCountMapper;
 import com.mysql.cj.Session;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionManager;
 import org.mybatis.dynamic.sql.BasicColumn;
 import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
+import org.mybatis.guice.session.SqlSessionFactoryProvider;
+import org.mybatis.guice.transactional.XASqlSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
-
 public class CatalogCountRepository implements ICatalogCountRepository {
     private final Logger logger = LoggerFactory.getLogger(CatalogCountRepository.class);
 
@@ -31,16 +33,11 @@ public class CatalogCountRepository implements ICatalogCountRepository {
     private SqlSessionFactory sqlSessionFactory;
 
     @Inject
-    private SqlSession session;
+    private CatalogCountMapper mapper;
+
 
     @Override
     public int insert(CatalogCount catalogCount) {
-//        try(SqlSession session = sqlSessionFactory.openSession()) {
-//            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
-//            return mapper.insert(catalogCount);
-//        }
-
-        CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
         return mapper.insert(catalogCount);
     }
 
