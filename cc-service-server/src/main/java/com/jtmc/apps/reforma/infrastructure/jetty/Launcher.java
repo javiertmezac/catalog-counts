@@ -39,7 +39,7 @@ import com.jtmc.apps.reforma.api.v1.timezone.TimeZoneApi;
 import com.jtmc.apps.reforma.api.v1.timezone.TimeZoneApiImpl;
 import com.jtmc.apps.reforma.api.v1.user.UserApi;
 import com.jtmc.apps.reforma.api.v1.user.UserApiImpl;
-import com.jtmc.apps.reforma.infrastructure.CCMybatisModule;
+import com.jtmc.apps.reforma.guice.CCMybatisModule;
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.infrastructure.GuiceApplication;
 import com.jtmc.apps.reforma.infrastructure.ServerModule;

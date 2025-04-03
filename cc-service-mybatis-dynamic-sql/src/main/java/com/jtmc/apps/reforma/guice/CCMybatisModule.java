@@ -1,11 +1,6 @@
-package com.jtmc.apps.reforma.infrastructure;
+package com.jtmc.apps.reforma.guice;
 
 import com.google.inject.name.Names;
-import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountApiImpl;
-import com.jtmc.apps.reforma.guice.UuidTypeHandler;
-import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
-import com.jtmc.apps.reforma.repository.CatalogCountRepository;
-import com.jtmc.apps.reforma.repository.TransferRegistryRepository;
 import com.jtmc.apps.reforma.repository.mapper.*;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.guice.MyBatisModule;
@@ -41,10 +36,6 @@ public class CCMybatisModule extends MyBatisModule {
         addMapperClass(CustomCatalogCountMapper.class);
         addMapperClass(CustomReportMapper.class);
 
-        bind(TransferRegistryRepository.class);
-        bind(CatalogCountRepository.class);
-        bind(CatalogCountImpl.class);
-        bind(CatalogCountApiImpl.class);
         Names.bindProperties(binder(), setMyBatisProperties());
     }
 
