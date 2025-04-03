@@ -8,11 +8,6 @@ import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionManager;
-import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
-import org.mybatis.guice.session.SqlSessionFactoryProvider;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,15 +18,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @JwtRequired
-@Singleton
 public class CatalogCountApiImpl implements CatalogCountApi {
     private final Logger logger = LoggerFactory.getLogger(CatalogCountApiImpl.class);
 
     @Inject
     private CatalogCountImpl catalogCountImpl;
-
-    @Inject
-    private SqlSessionFactoryProvider sqlSessionFactoryProvider;
 
     @Override
     public CatalogCountResponseList getList(Integer branchId) {

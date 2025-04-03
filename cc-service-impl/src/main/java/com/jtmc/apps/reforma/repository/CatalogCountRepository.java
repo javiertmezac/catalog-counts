@@ -8,16 +8,12 @@ import com.jtmc.apps.reforma.repository.mapper.CatalogCountDynamicSqlSupport;
 import com.jtmc.apps.reforma.repository.mapper.CatalogCountEnumDynamicSqlSupport;
 import com.jtmc.apps.reforma.repository.mapper.CatalogCountMapper;
 import com.jtmc.apps.reforma.repository.mapper.CustomCatalogCountMapper;
-import com.mysql.cj.Session;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionManager;
 import org.mybatis.dynamic.sql.BasicColumn;
 import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
-import org.mybatis.guice.session.SqlSessionFactoryProvider;
-import org.mybatis.guice.transactional.XASqlSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +30,6 @@ public class CatalogCountRepository implements ICatalogCountRepository {
 
     @Inject
     private CatalogCountMapper mapper;
-
 
     @Override
     public int insert(CatalogCount catalogCount) {

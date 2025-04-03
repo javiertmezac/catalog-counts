@@ -22,7 +22,6 @@ import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Tainted;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -276,7 +275,6 @@ public class CatalogCountImpl {
                 cc.getAmount(), cc.getDetails(), cc.getBranchid(), cc.getIsdeleted());
     }
 
-    @Transactional
     public void insertTransfer(CatalogCount catalogCount, int transferToAccountId) {
         BranchDetails branchDetails = branchImpl.selectOneBranch(transferToAccountId);
         UserDetails loggedInUserDetails = userImpl.getLoggedInUserDetails();
