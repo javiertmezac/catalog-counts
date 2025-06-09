@@ -61,6 +61,7 @@
         <table tableName="transferRegistry">
             <property name="virtualKeyColumns" value="transferRegistryId"/>
             <columnOverride column="entryDate" javaType="java.time.Instant" />
+            <columnOverride column="inactiveDate" javaType="java.time.Instant" />
             <columnOverride column="acceptedDate" javaType="java.time.Instant" />
         </table>
     </context>
