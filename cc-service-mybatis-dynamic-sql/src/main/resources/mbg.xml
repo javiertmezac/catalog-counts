@@ -58,7 +58,7 @@
         <table tableName="timezone_type" >
             <property name="virtualKeyColumns" value="id"/>
         </table>
-        <table tableName="transferRegistry">
+        <table tableName="transferRegistry" domainObjectName="TransferRegistry">
             <property name="virtualKeyColumns" value="transferRegistryId"/>
             <columnOverride column="entryDate" javaType="java.time.Instant" />
             <columnOverride column="inactiveDate" javaType="java.time.Instant" />

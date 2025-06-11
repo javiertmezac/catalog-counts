@@ -27,7 +27,7 @@ public class BranchImpl {
 
     public BranchDetails selectOneBranch(int branchId) {
         Optional<Branch> branch = branchRepository.selectOneBranch(branchId);
-        if (!branch.isPresent()) {
+        if (branch.isEmpty()) {
             logger.error("Branch #{} not found", branchId);
             throw new BranchNotFoundException("Branch not found", 404);
         }

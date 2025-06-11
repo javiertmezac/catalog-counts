@@ -35,6 +35,7 @@ public class CCMybatisModule extends MyBatisModule {
 
         addMapperClass(CustomCatalogCountMapper.class);
         addMapperClass(CustomReportMapper.class);
+        addMapperClass(CustomTransferRegistryMapper.class);
 
         Names.bindProperties(binder(), setMyBatisProperties());
     }

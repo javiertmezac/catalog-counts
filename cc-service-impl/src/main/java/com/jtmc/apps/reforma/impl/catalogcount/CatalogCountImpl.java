@@ -15,7 +15,6 @@ import com.jtmc.apps.reforma.impl.periodconfirm.PeriodDetailsConfirmationNotFoun
 import com.jtmc.apps.reforma.impl.user.UserImpl;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
-import com.jtmc.apps.reforma.repository.TransferRegistryRepository;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.ForbiddenException;
 import org.mybatis.guice.transactional.Transactional;
@@ -30,7 +29,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,9 +40,6 @@ public class CatalogCountImpl {
 
     @Inject
     private CatalogCountEnumRepository catalogCountEnumRepository;
-
-    @Inject
-    private TransferRegistryRepository transferRegistryRepository;
 
     @Inject
     private BranchImpl branchImpl;
@@ -216,17 +211,14 @@ public class CatalogCountImpl {
         return catalogCount.get();
     }
 
-    @Transactional
     public void logicalDeleteRecord(CatalogCount catalogCount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
-
-        CatalogCount ccFromDB = this.selectOneRecord(catalogCount.getId());
-        if (ccFromDB.getIsdeleted()) {
-            logger.error("CatalogCount {} was already marked as deleted", ccFromDB.getId());
+        if (catalogCount.getIsdeleted()) {
+            logger.error("CatalogCount {} was already marked as deleted", catalogCount.getId());
             throw new IllegalArgumentException("No valid Request");
         }
         BranchDetails branchDetails = branchImpl.selectOneBranch(catalogCount.getBranchid());
-        isCatalogCountRegistrationDateValid(branchDetails, ccFromDB.getRegistration());
+        isCatalogCountRegistrationDateValid(branchDetails, catalogCount.getRegistration());
 
         if (catalogCountRepository.logicalDelete(catalogCount) != 1) {
             logger.error("logicalDelete for record catalog-count {} was not successfully done", catalogCount.getId());
@@ -273,32 +265,5 @@ public class CatalogCountImpl {
                         "amount: {}, details: {}, branchId: {}, isDeleted: {}", cc.getId(),
                 cc.getRegistration().toString(), cc.getCatalogcountenumid(),
                 cc.getAmount(), cc.getDetails(), cc.getBranchid(), cc.getIsdeleted());
-    }
-
-    public void insertTransfer(CatalogCount catalogCount, int transferToAccountId) {
-        BranchDetails branchDetails = branchImpl.selectOneBranch(transferToAccountId);
-        UserDetails loggedInUserDetails = userImpl.getLoggedInUserDetails();
-        Optional<CatalogCountEnum> byFamilyAndName = catalogCountEnumRepository
-                .getByFamilyAndName("donations", "Donaciones");
-        int ccEnumId = byFamilyAndName.orElseThrow().getId();
-
-        TransferRegistry transferRegistry = new TransferRegistry();
-        transferRegistry.setTransferRegistryId(UUID.randomUUID());
-        transferRegistry.setFromAccountId(catalogCount.getBranchid());
-        transferRegistry.setToAccountId(transferToAccountId);
-        transferRegistry.setCatalogCountEnumId(ccEnumId);
-        transferRegistry.setDetails(catalogCount.getDetails());
-        transferRegistry.setAmount(catalogCount.getAmount());
-        transferRegistry.setEntryPersonId(loggedInUserDetails.getPersonaId());
-        transferRegistry.setEntryDate(catalogCount.getRegistration());
-        transferRegistry.setTransferRegistryState(false);
-        transferRegistry.setTransferRegistryState(true);
-        transferRegistryRepository.insert(transferRegistry);
-    }
-
-    public boolean validateIfTransferRegistryRequired(int catalogCountEnumId) {
-        Optional<CatalogCountEnum> byFamilyAndName = catalogCountEnumRepository
-                .getByFamilyAndName("helps", "Aportación a la región");
-        return byFamilyAndName.filter(catalogCountEnum -> catalogCountEnum.getId() == catalogCountEnumId).isPresent();
     }
 }

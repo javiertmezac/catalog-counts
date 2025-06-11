@@ -44,7 +44,7 @@ public class CatalogCountEnumRepository implements ICatalogCountEnumRepository {
         }
     }
 
-    public Optional<CatalogCountEnum> getByFamilyAndName(String family, String name) {
+    public Optional<CatalogCountEnum> findByFamilyAndName(String family, String name) {
         try(SqlSession session = sqlSessionFactory.openSession()) {
             CatalogCountEnumMapper mapper = session.getMapper(CatalogCountEnumMapper.class);
             return mapper.selectOne(w -> w.where(CatalogCountEnumDynamicSqlSupport.family, SqlBuilder.isEqualTo(family)).and(

@@ -1,10 +1,11 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.CatalogCount;
+import com.jtmc.apps.reforma.domain.TransferRegistry;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
+import com.jtmc.apps.reforma.impl.transferregistry.TransferRegistryImpl;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,9 @@ public class CatalogCountApiImpl implements CatalogCountApi {
 
     @Inject
     private CatalogCountImpl catalogCountImpl;
+
+    @Inject
+    private TransferRegistryImpl transferRegistryImpl;
 
     @Override
     public CatalogCountResponseList getList(Integer branchId) {
@@ -52,13 +56,14 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         catalogCount.setBranchid(branchId);
 
         catalogCountImpl.insertIntoCatalogCount(catalogCount);
-        if (catalogCountImpl.validateIfTransferRegistryRequired(catalogCountRequest.getCatalogCountEnumId())) {
-            catalogCountImpl.insertTransfer(catalogCount, catalogCountRequest.getTransferToAccountId());
+        if (transferRegistryImpl.validateIfTransferRegistryRequired(catalogCountRequest.getCatalogCountEnumId())) {
+            transferRegistryImpl.registerTransferTo(catalogCount, catalogCountRequest.getTransferToAccountId());
         }
         return Response.noContent().build();
     }
 
     @Override
+    @Transactional
     public Response updateCatalogCount(Integer branchId, CatalogCountRequest catalogCountRequest) {
         checkNotNull(catalogCountRequest, "invalid Catalog Count payload");
         checkArgument(branchId > 0, "invalid branchId");
@@ -73,6 +78,11 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         catalogCount.setBranchid(branchId);
 
         catalogCountImpl.updateCatalogCount(catalogCount);
+        if (transferRegistryImpl.validateIfTransferRegistryRequired(catalogCountRequest.getCatalogCountEnumId())) {
+            TransferRegistry byCatalogCountId = transferRegistryImpl.findByFromAccountCatalogCountId(catalogCount.getId());
+            transferRegistryImpl.delete(byCatalogCountId);
+            transferRegistryImpl.registerTransferTo(catalogCount, catalogCountRequest.getTransferToAccountId());
+        }
         return Response.noContent().build();
     }
 
@@ -93,16 +103,18 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         );
     }
 
-    //todo: should have a test to verify logicalDelete was done correctly
+    @Transactional
     public Response logicalDeleteRecord(Integer branchId, int id) {
         checkArgument(branchId > 0, "invalid branch");
         checkArgument(id > 0, "invalid catalog count id");
 
         logger.debug("CatalogCountId #{} to be deleted", id);
-        CatalogCount cc = new CatalogCount();
-        cc.setId(id);
-        cc.setBranchid(branchId);
+        CatalogCount cc = catalogCountImpl.selectOneRecord(id);
         catalogCountImpl.logicalDeleteRecord(cc);
+        if (transferRegistryImpl.validateIfTransferRegistryRequired(cc.getCatalogcountenumid())) {
+            TransferRegistry byCatalogCountId = transferRegistryImpl.findByFromAccountCatalogCountId(cc.getId());
+            transferRegistryImpl.delete(byCatalogCountId);
+        }
         return Response.noContent().build();
     }
 }
