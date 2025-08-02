@@ -34,4 +34,8 @@ public class PersonaDetailsImpl {
     public Optional<PersonaDetails> selectFirstOrDefaultByPersona(int personaId) {
         return repository.selectByPersonaId(personaId).stream().findFirst();
     }
+
+    public List<PersonaDetails> findByPersonaId(int personaId) {
+       return repository.selectByPersonaId(personaId);
+    }
 }

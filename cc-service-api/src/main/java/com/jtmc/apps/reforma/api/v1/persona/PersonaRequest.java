@@ -29,4 +29,11 @@ public class PersonaRequest {
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
+
+    public static class BranchAndRole {
+        public int branchId;
+        public int roleId;
+        public String roleName;
+        public String entryDate;
+    }
 }
