@@ -40,10 +40,21 @@ Some useful commands to troubleshoot:
 
 To create a copy of db data
 ```
-  docker exec cc-service-db /usr/bin/mysqldump -u root \
-  --extended-insert --ignore-table=catalog_count.flyway_schema_history \
-  --no-create-db --no-create-info --compact --password=${MYSQL_ROOT_PASS} \
-  catalog_count backup.sql
+mysqldump -h ${CC_SERVICE_DB_HOST} -u admin --extended-insert \
+  --ignore-table=catalog_count.flyway_schema_history \
+  --ignore-table=catalog_count.catalog_count_enum \
+  --ignore-table=catalog_count.timezone_type \
+  --no-create-db --no-create-info --compact \
+  --password=${MYSQL_ROOT_PASS} \
+  --single-transaction --set-gtid-purged=OFF \
+  catalog_count > backup.sql
+```
+cp to docker container: `docker cp backup_08162025.sql cc-service-db:/`
+
+To import the copy to a db
+```
+mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" \
+-u root -p catalog_count < backup_08162025.sql
 ```
 
 ### Excel Import
