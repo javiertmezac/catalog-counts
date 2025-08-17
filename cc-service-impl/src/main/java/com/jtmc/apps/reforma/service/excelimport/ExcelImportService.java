@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -105,13 +106,22 @@ public class ExcelImportService {
                     minutesToAdd++;
                 }
 
-                ZonedDateTime zonedDateTime = Instant
-                        .ofEpochMilli(row.getCell(def.columns.get("registration")).getDateCellValue().getTime())
-                        .atZone(branchDetails.getZoneIdFromBranchTimeZone()).plusMinutes(minutesToAdd)
-                        .plusSeconds(secondsToAdd++);
+                //note: when using google spreadsheets -> this .getTime() contains configuration/timezone
+                // for me default is "America/Tijuana" GMT-08:00 or GMT-07:00
+                Instant instant = Instant.ofEpochMilli(row.getCell(def.columns.get("registration")).getDateCellValue().getTime());
+                logger.info("instant: {}", instant);
 
-                catalogCount.setRegistration(zonedDateTime.toInstant());
-//                catalogCount.setRegistration(zonedDateTime.toLocalDateTime());
+                ZonedDateTime zonedDateTime = instant
+                        .atZone(branchDetails.getZoneIdFromBranchTimeZone());
+                logger.info("zonedDateTime: {}", zonedDateTime);
+
+                zonedDateTime = zonedDateTime
+                        .plusMinutes(minutesToAdd)
+                        .plusSeconds(secondsToAdd++);
+                logger.info("plus min and sec: {}", zonedDateTime);
+
+                catalogCount.setRegistration(zonedDateTime.toLocalDateTime());
+                logger.info("branch: {}: cc.registration {}", branchDetails.getBranch().getName(), catalogCount.getRegistration());
 
                 CatalogCountEnum ccEnum = new CatalogCountEnum();
                 Cell catalogCountEnumId = row.getCell(def.columns.get("catalogCountEnum"));
