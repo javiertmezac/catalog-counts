@@ -20,7 +20,15 @@ public class ExcelImportApiImpl implements ExcelImportApi {
     @Override
     public Response startExcelImportProcess(ExcelImportProcessRequest importProcessRequest) {
 
-        excelImportService.execute(importProcessRequest.getFileStorageKey(), importProcessRequest.getTabName());
+        ExcelImportService.CatalogCountExcelDefinition def = new ExcelImportService.CatalogCountExcelDefinition();
+        def.columns = importProcessRequest.columns;
+        def.outputPath = importProcessRequest.outputPath;
+        def.account = importProcessRequest.account;
+        def.startRow = importProcessRequest.startRow;
+        def.endRow = importProcessRequest.endRow;
+        def.commit = importProcessRequest.commit;
+
+        excelImportService.execute(importProcessRequest.getFileStorageKey(), importProcessRequest.getTabName(), def);
         return Response.noContent().build();
 
         /*

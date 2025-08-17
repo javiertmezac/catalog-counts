@@ -39,7 +39,7 @@ Some useful commands to troubleshoot:
 - `docker compose restart <service>`
 
 To create a copy of db data
-```
+```bash
 mysqldump -h ${CC_SERVICE_DB_HOST} -u admin --extended-insert \
   --ignore-table=catalog_count.flyway_schema_history \
   --ignore-table=catalog_count.catalog_count_enum \
@@ -52,7 +52,7 @@ mysqldump -h ${CC_SERVICE_DB_HOST} -u admin --extended-insert \
 cp to docker container: `docker cp backup_08162025.sql cc-service-db:/`
 
 To import the copy to a db
-```
+```bash
 mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" \
 -u root -p catalog_count < backup_08162025.sql
 ```

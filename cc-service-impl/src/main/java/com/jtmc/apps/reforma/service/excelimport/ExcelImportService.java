@@ -1,26 +1,37 @@
 package com.jtmc.apps.reforma.service.excelimport;
 
 import com.google.inject.Inject;
+import com.jtmc.apps.reforma.domain.BranchDetails;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CatalogCountEnum;
+import com.jtmc.apps.reforma.impl.branch.BranchImpl;
+import com.jtmc.apps.reforma.repository.BranchRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountEnumRepository;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import static java.lang.String.format;
+import java.util.Map;
 
 public class ExcelImportService {
+    private final Logger logger = LoggerFactory.getLogger(ExcelImportService.class);
 
     @Inject
     private CatalogCountRepository repository;
@@ -28,32 +39,46 @@ public class ExcelImportService {
     @Inject
     private CatalogCountEnumRepository ccEnumRepository;
 
+    @Inject
+    private BranchImpl branchImpl;
+
     private List<CatalogCountEnum> list = new ArrayList<>();
 
+    private static final List<Path> ALLOWED_BASES = List.of(
+            Paths.get("/Users/jtmc/cc-service"),
+            Paths.get("/tmp/uploads")
+    );
 
-    //todo: get file name from storage service. Current local file: excel-import/example1.xlsx
     private FileInputStream getExcelFile(String fileStorageKey) throws Exception {
-        File file = new File(getClass().getClassLoader().getResource(fileStorageKey).getFile());
-        return new FileInputStream(file);
+        for (Path baseDir : ALLOWED_BASES) {
+            Path resolvedPath = baseDir.resolve(fileStorageKey).normalize();
+
+            if (resolvedPath.startsWith(baseDir) && Files.exists(resolvedPath)) {
+                return new FileInputStream(resolvedPath.toFile());
+            }
+        }
+        throw new FileNotFoundException("File not found or access denied: " + fileStorageKey);
     }
 
-    public void execute(String fileStorageKey, String tabSheetName) {
+    public void execute(String fileStorageKey, String tabSheetName, CatalogCountExcelDefinition def) {
 
         try {
 
+            StringBuilder catalogCountStringBuilder = new StringBuilder();
             XSSFWorkbook wb = new XSSFWorkbook(getExcelFile(fileStorageKey));
 
-            ExcelSheet excelSheet = new ExcelSheet(wb, tabSheetName);
-            if (!excelSheet.isValid()) {
-                throw new ExcelImportServiceSheetNotValidException(format("Excel '%s' on TabSheet '%s' didn't pass validations", fileStorageKey, tabSheetName));
-            }
+//            ExcelSheet excelSheet = new ExcelSheet(wb, tabSheetName);
+//            if (!excelSheet.isValid()) {
+//                throw new ExcelImportServiceSheetNotValidException(format("Excel '%s' on TabSheet '%s' didn't pass validations", fileStorageKey, tabSheetName));
+//            }
 
             XSSFSheet sheet = wb.getSheet(tabSheetName);
 
             Iterator<Row> itr = sheet.iterator();
-            int totalRowIndex = sheet.getTables().get(0).getEndRowIndex();
+//            int totalRowIndex = sheet.getTables().get(0).getEndRowIndex();
 
             list = ccEnumRepository.selectAllCatalogCountEnum();
+            BranchDetails branchDetails = branchImpl.selectOneBranch(def.account);
 
             /*
             todo:
@@ -66,11 +91,11 @@ public class ExcelImportService {
             int minutesToAdd = 0;
             while (itr.hasNext()) {
                 Row row = itr.next();
-                if (skipFirstTwoRows(row)) {
+                if (skipFirstTwoRows(row) || row.getRowNum() < def.startRow) {
                     continue;
                 }
 
-                if(row.getRowNum() == totalRowIndex) {
+                if(row.getRowNum() == def.endRow) {
                     break;
                 }
 
@@ -79,40 +104,71 @@ public class ExcelImportService {
                     secondsToAdd = 0;
                     minutesToAdd++;
                 }
-                catalogCount.setRegistration(Instant
-                        .ofEpochMilli(row.getCell(1).getDateCellValue().getTime())
-                        .plus(minutesToAdd, ChronoUnit.MINUTES)
-                        .plusSeconds(secondsToAdd++)
-                );
+
+                ZonedDateTime zonedDateTime = Instant
+                        .ofEpochMilli(row.getCell(def.columns.get("registration")).getDateCellValue().getTime())
+                        .atZone(branchDetails.getZoneIdFromBranchTimeZone()).plusMinutes(minutesToAdd)
+                        .plusSeconds(secondsToAdd++);
+
+                catalogCount.setRegistration(zonedDateTime.toInstant());
+//                catalogCount.setRegistration(zonedDateTime.toLocalDateTime());
 
                 CatalogCountEnum ccEnum = new CatalogCountEnum();
-                CellType cellType = row.getCell(2).getCellType();
+                Cell catalogCountEnumId = row.getCell(def.columns.get("catalogCountEnum"));
+                CellType cellType = catalogCountEnumId.getCellType();
                 if (cellType.equals(CellType.STRING)) {
-                    ccEnum = mapCatalogCountWithDB(row.getCell(2).getStringCellValue());
+                    ccEnum = mapCatalogCountWithDB(catalogCountEnumId.getStringCellValue());
                 } else if (cellType.equals(CellType.NUMERIC)) {
-                    ccEnum = mapCatalogCountWithDB(String.valueOf(row.getCell(2).getNumericCellValue()));
+                    ccEnum = mapCatalogCountWithDB(String.valueOf(catalogCountEnumId.getNumericCellValue()));
                 }
-
                 catalogCount.setCatalogcountenumid(ccEnum.getId());
-                String movementDetails =  row.getCell(8) == null ? "" : row.getCell(8).getStringCellValue();
-                String movementDescription = row.getCell(3).getStringCellValue();
+
+                Cell descriptionDetailsCell = null;
+                if (def.columns.containsKey("descriptionDetails")) {
+                    Integer descriptionDetails = def.columns.get("descriptionDetails");
+                    descriptionDetailsCell = row.getCell(descriptionDetails);
+                }
+                Cell descriptionCell = row.getCell(def.columns.get("description"));
+                String movementDetails =  descriptionDetailsCell == null ? "" : descriptionDetailsCell.getStringCellValue();
+                String movementDescription = descriptionCell.getStringCellValue();
                 catalogCount.setDetails(movementDetails.isEmpty() ? movementDescription : movementDetails);
 
-                boolean expensesIdentifier = true;
+                Boolean expensesIdentifier = true;
                 if (ccEnum.getType() != expensesIdentifier) {
-                    catalogCount.setAmount(row.getCell(4).getNumericCellValue());
+                    catalogCount.setAmount(row.getCell(def.columns.get("income")).getNumericCellValue());
                 } else {
-                    catalogCount.setAmount(row.getCell(5).getNumericCellValue());
+                    catalogCount.setAmount(row.getCell(def.columns.get("outcome")).getNumericCellValue());
                 }
                 catalogCount.setIsdeleted(false);
-                catalogCount.setBranchid(1);
+                catalogCount.setBranchid(def.account);
 
-                repository.insert(catalogCount);
+                if (def.commit) {
+                    repository.insert(catalogCount);
+                }
+                catalogCountStringBuilder.append(createInsertStatement(catalogCount));
             }
+
+            writeToFile(def.outputPath, catalogCountStringBuilder);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ExcelImportException("Something went wrong during ExcelImport", e);
         }
+    }
+
+    private void writeToFile(String filePath, StringBuilder statements) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(statements.toString());
+            System.out.println("File written successfully to: " + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String createInsertStatement(CatalogCount cc) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("UTC"));
+        return "insert into catalog_count(registration, catalogCountEnumId, amount, details, isDeleted, branchId) " +
+                "values('%s', %d, %.2f, '%s', %b, %d);".formatted(formatter.format(cc.getRegistration()), cc.getCatalogcountenumid(),
+                        cc.getAmount(), cc.getDetails(), cc.getIsdeleted(), cc.getBranchid()) + "\n";
     }
 
     private CatalogCountEnum mapCatalogCountWithDB(String catalogCountIdentifier) {
@@ -124,5 +180,14 @@ public class ExcelImportService {
         int previousTotal = 1;
 
         return row.getRowNum() == headersIndex || row.getRowNum() == previousTotal;
+    }
+
+    public static class CatalogCountExcelDefinition {
+        public Map<String, Integer> columns;
+        public int account;
+        public int startRow;
+        public int endRow;
+        public boolean commit;
+        public String outputPath;
     }
 }
