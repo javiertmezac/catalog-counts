@@ -20,10 +20,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -112,15 +109,15 @@ public class ExcelImportService {
                 logger.info("instant: {}", instant);
 
                 ZonedDateTime zonedDateTime = instant
-                        .atZone(branchDetails.getZoneIdFromBranchTimeZone());
-                logger.info("zonedDateTime: {}", zonedDateTime);
-
-                zonedDateTime = zonedDateTime
+                        .atZone(branchDetails.getZoneIdFromBranchTimeZone())
                         .plusMinutes(minutesToAdd)
                         .plusSeconds(secondsToAdd++);
-                logger.info("plus min and sec: {}", zonedDateTime);
+                logger.info("zonedDateTime + mm:ss : {}", zonedDateTime);
 
-                catalogCount.setRegistration(zonedDateTime.toLocalDateTime());
+                //now let's pretend zonedDateTime to be UTC
+                Instant fakeInstantUTC = zonedDateTime.toLocalDateTime().toInstant(ZoneOffset.UTC);
+
+                catalogCount.setRegistration(fakeInstantUTC);
                 logger.info("branch: {}: cc.registration {}", branchDetails.getBranch().getName(), catalogCount.getRegistration());
 
                 CatalogCountEnum ccEnum = new CatalogCountEnum();
