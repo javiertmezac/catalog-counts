@@ -49,12 +49,21 @@ mysqldump -h ${CC_SERVICE_DB_HOST} -u admin --extended-insert \
   --single-transaction --set-gtid-purged=OFF \
   catalog_count > backup.sql
 ```
+
+"this is the one!"
+```bash
+mysqldump -h ${CC_SERVICE_DB_HOST} -u admin \
+  --password=${MYSQL_ROOT_PASS} \
+  --single-transaction --set-gtid-purged=OFF  --routines \
+  catalog_count > backup.sql
+```
+>note: this is to create a complete backup, everything. which means,
+> first time restoring a db, it should be empty. no flyway commands should run prior recovering db.
 cp to docker container: `docker cp backup_08162025.sql cc-service-db:/`
 
 To import the copy to a db
 ```bash
-mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" \
--u root -p catalog_count < backup_08162025.sql
+mysql -u root -p catalog_count < backup_08162025.sql
 ```
 
 ### Excel Import

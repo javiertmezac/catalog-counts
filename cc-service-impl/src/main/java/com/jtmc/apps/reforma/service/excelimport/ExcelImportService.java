@@ -93,7 +93,7 @@ public class ExcelImportService {
                     continue;
                 }
 
-                if(row.getRowNum() == def.endRow) {
+                if(row.getRowNum() > def.endRow) {
                     break;
                 }
 
@@ -103,21 +103,18 @@ public class ExcelImportService {
                     minutesToAdd++;
                 }
 
+                ZoneId zoneId = branchDetails.getZoneIdFromBranchTimeZone();
                 //note: when using google spreadsheets -> this .getTime() contains configuration/timezone
                 // for me default is "America/Tijuana" GMT-08:00 or GMT-07:00
                 Instant instant = Instant.ofEpochMilli(row.getCell(def.columns.get("registration")).getDateCellValue().getTime());
+                LocalDate localDate = instant
+                        .atZone(zoneId).toLocalDate();
                 logger.info("instant: {}", instant);
 
-                ZonedDateTime zonedDateTime = instant
-                        .atZone(branchDetails.getZoneIdFromBranchTimeZone())
-                        .plusMinutes(minutesToAdd)
-                        .plusSeconds(secondsToAdd++);
+                ZonedDateTime zonedDateTime = localDate.atStartOfDay(zoneId).plusMinutes(minutesToAdd).plusSeconds(secondsToAdd++);
                 logger.info("zonedDateTime + mm:ss : {}", zonedDateTime);
 
-                //now let's pretend zonedDateTime to be UTC
-                Instant fakeInstantUTC = zonedDateTime.toLocalDateTime().toInstant(ZoneOffset.UTC);
-
-                catalogCount.setRegistration(fakeInstantUTC);
+                catalogCount.setRegistration(zonedDateTime.toInstant());
                 logger.info("branch: {}: cc.registration {}", branchDetails.getBranch().getName(), catalogCount.getRegistration());
 
                 CatalogCountEnum ccEnum = new CatalogCountEnum();
@@ -172,9 +169,9 @@ public class ExcelImportService {
     }
 
     private String createInsertStatement(CatalogCount cc) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("UTC"));
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return "insert into catalog_count(registration, catalogCountEnumId, amount, details, isDeleted, branchId) " +
-                "values('%s', %d, %.2f, '%s', %b, %d);".formatted(formatter.format(cc.getRegistration()), cc.getCatalogcountenumid(),
+                "values('%s', %d, %.2f, '%s', %b, %d);".formatted(fmt.withZone(ZoneOffset.UTC).format(cc.getRegistration()), cc.getCatalogcountenumid(),
                         cc.getAmount(), cc.getDetails(), cc.getIsdeleted(), cc.getBranchid()) + "\n";
     }
 
