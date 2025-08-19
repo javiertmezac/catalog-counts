@@ -39,4 +39,31 @@ public interface CustomCatalogCountMapper {
             @Result(column="editable", property="editable", jdbcType=JdbcType.BOOLEAN),
     })
     List<CustomCatalogCount> selectManyDirect(CatalogCountCumulativeSumParams params);
+
+    @Select(value = "{ call selectCumulativeSumByBranchAndPagination(" +
+            "#{branchId, mode=IN, jdbcType=INTEGER}, " +
+            "#{deadLineDay, mode=IN, jdbcType=INTEGER}, " +
+            "#{filterYear, mode=IN, jdbcType=INTEGER}, " +
+            "#{page, mode=IN, jdbcType=INTEGER}, " +
+            "#{pageSize, mode=IN, jdbcType=INTEGER}) " +
+            "}")
+    @Options(statementType = StatementType.CALLABLE)
+    @Results(id="CatalogCountResultPagination", value = {
+            @Result(column="id", property="id", jdbcType= JdbcType.INTEGER, id=true),
+            @Result(column="registration", property="registration", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="catalogCountEnum", property="catalogCountEnum", jdbcType=JdbcType.VARCHAR),
+            @Result(column="amount", property="amount", jdbcType=JdbcType.DOUBLE),
+            @Result(column="details", property="details", jdbcType=JdbcType.VARCHAR),
+            @Result(column="total", property="cumulativeSum", jdbcType=JdbcType.DOUBLE),
+            @Result(column="editable", property="editable", jdbcType=JdbcType.BOOLEAN)
+    })
+    List<CustomCatalogCount> selectManyPagination(CatalogCountCumulativeSumParams params);
+
+    @Select("SELECT COUNT(*) FROM catalog_count cc " +
+            "INNER JOIN catalog_count_enum cce ON cce.id = cc.catalogCountEnumId " +
+            "WHERE cc.branchId = #{branchId} " +
+            "AND cc.isDeleted = 0 " +
+            "AND (#{filterYear} IS NULL OR YEAR(cc.registration) = #{filterYear})")
+    long selectManyPaginationCount(CatalogCountCumulativeSumParams params);
+
 }

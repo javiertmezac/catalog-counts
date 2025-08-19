@@ -83,6 +83,7 @@ public class Launcher {
             bind(PersonaDetailsApi.class).to(PersonaDetailsApiImpl.class);
             bind(ReportApi.class).to(ReportApiImpl.class);
             bind(TimeZoneApi.class).to(TimeZoneApiImpl.class);
+            bind(com.jtmc.apps.reforma.api.v2.catalogcount.CatalogCountApi.class).to(com.jtmc.apps.reforma.api.v2.catalogcount.CatalogCountApiImpl.class);
 
             Properties myProperties = new Properties();
             myProperties.setProperty("key", System.getenv("key"));
@@ -121,7 +122,8 @@ public class Launcher {
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),
                     injector.getInstance(ExcelImportGenericExceptionMapper.class),
-                    injector.getInstance(ImplementationGenericExceptionMapper.class)
+                    injector.getInstance(ImplementationGenericExceptionMapper.class),
+                    injector.getInstance(com.jtmc.apps.reforma.api.v2.catalogcount.CatalogCountApi.class)
             );
         }
     }

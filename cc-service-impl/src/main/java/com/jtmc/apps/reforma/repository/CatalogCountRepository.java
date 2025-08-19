@@ -55,6 +55,20 @@ public class CatalogCountRepository implements ICatalogCountRepository {
         }
     }
 
+    public Collection<CustomCatalogCount> selectAllCumulativeSumByBranchAndPagination(CatalogCountCumulativeSumParams params) {
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            CustomCatalogCountMapper mapper = session.getMapper(CustomCatalogCountMapper.class);
+            return mapper.selectManyPagination(params);
+        }
+    }
+
+    public long selectCountPagination(CatalogCountCumulativeSumParams params) {
+        try(SqlSession session = sqlSessionFactory.openSession()) {
+            CustomCatalogCountMapper mapper = session.getMapper(CustomCatalogCountMapper.class);
+            return mapper.selectManyPaginationCount(params);
+        }
+    }
+
     @Override
     public Collection<CustomCatalogCount> selectAllByBranch(Integer branchId) {
         try(SqlSession session = sqlSessionFactory.openSession()) {
