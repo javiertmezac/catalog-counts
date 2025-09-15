@@ -17,6 +17,11 @@ public interface PersonaApi {
     @Produces(MediaType.APPLICATION_JSON)
     PersonaResponse selectOne(@PathParam("personaId") int personaId);
 
+    @GET
+    @Path("/{personaId}/details")
+    @Produces(MediaType.APPLICATION_JSON)
+    PersonaResponse personaDetails(@PathParam("personaId") int personaId);
+
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -28,4 +33,12 @@ public interface PersonaApi {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response update(@PathParam("personaId") int personaId, PersonaRequest request);
+
+    @POST
+    @Path("/{personaId}/branch")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response assignBranchAndRole(@PathParam("personaId") int personaId, PersonaRequest.BranchAndRole request);
+
+
 }

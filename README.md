@@ -13,14 +13,20 @@
 - Google Guice
 - Docker, Docker compose
 
+## RELEVANT NOTES
+1. Manual add `@Options(useGeneratedKeys = true, keyProperty = "id")`
+   1. CatalogCountMapper insert
+
 ## How to set CC-Service Version
 `mvn versions:set -DnewVersion= < version >`
 
 ## Deployment
 ### Specifications
-- Mysql Engine: 8.0.28
+- Mysql Engine: 8.0.35
 
 ### Deployment to ECS - Fargate
+DEPRECATED // ~2025
+
 every push to main branch a github workflow gets executed
 and performs deployment to ECS
 

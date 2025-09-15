@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class CCMybatisModule extends MyBatisModule {
 
-    private final Logger Logger = LoggerFactory.getLogger(CCMybatisModule.class);
+    private final Logger logger = LoggerFactory.getLogger(CCMybatisModule.class);
 
     @Override
     protected void initialize() {
@@ -30,9 +30,12 @@ public class CCMybatisModule extends MyBatisModule {
         addMapperClass(PeriodDetailsMapper.class);
         addMapperClass(ReportMapper.class);
         addMapperClass(TimezoneTypeMapper.class);
+        addMapperClass(TransferRegistryMapper.class);
+        addTypeHandlerClass(UuidTypeHandler.class);
 
         addMapperClass(CustomCatalogCountMapper.class);
         addMapperClass(CustomReportMapper.class);
+        addMapperClass(CustomTransferRegistryMapper.class);
 
         Names.bindProperties(binder(), setMyBatisProperties());
     }
@@ -58,7 +61,7 @@ public class CCMybatisModule extends MyBatisModule {
             myBatisProperties.setProperty("JDBC.password", System.getenv("JDBC_PASSWORD"));
 
         } catch (Exception ex) {
-            Logger.error("Couldn't set MyBatisProperties: ", ex);
+            logger.error("Couldn't set MyBatisProperties: ", ex);
         }
 
         return myBatisProperties;

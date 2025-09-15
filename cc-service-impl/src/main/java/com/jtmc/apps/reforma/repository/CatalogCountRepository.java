@@ -22,30 +22,23 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
-
 public class CatalogCountRepository implements ICatalogCountRepository {
     private final Logger logger = LoggerFactory.getLogger(CatalogCountRepository.class);
 
     @Inject
     private SqlSessionFactory sqlSessionFactory;
 
+    @Inject
+    private CatalogCountMapper mapper;
+
     @Override
     public int insert(CatalogCount catalogCount) {
-        try(SqlSession session = sqlSessionFactory.openSession(true)) {
-            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
-            return mapper.insert(catalogCount);
-        }
+        return mapper.insert(catalogCount);
     }
 
     @Override
     public int update(CatalogCount catalogCount) {
-        try(SqlSession session = sqlSessionFactory.openSession(true)) {
-            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
-            return mapper.updateByPrimaryKeySelective(catalogCount);
-        } catch (Exception ex) {
-            logger.error("{}", ex);
-            throw ex;
-        }
+        return mapper.updateByPrimaryKeySelective(catalogCount);
     }
 
     public Collection<CustomCatalogCount> selectAllCumulativeSumByBranch(CatalogCountCumulativeSumParams params) {
@@ -91,11 +84,8 @@ public class CatalogCountRepository implements ICatalogCountRepository {
 
     @Override
     public int logicalDelete(CatalogCount catalogCount) {
-        try(SqlSession session = sqlSessionFactory.openSession(true)) {
-            CatalogCountMapper mapper = session.getMapper(CatalogCountMapper.class);
-            catalogCount.setIsdeleted(true);
-            return mapper.updateByPrimaryKeySelective(catalogCount);
-        }
+        catalogCount.setIsdeleted(true);
+        return mapper.updateByPrimaryKeySelective(catalogCount);
     }
 
     @Override

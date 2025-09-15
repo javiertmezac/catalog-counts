@@ -37,6 +37,8 @@ import com.jtmc.apps.reforma.api.v1.report.ReportApi;
 import com.jtmc.apps.reforma.api.v1.report.ReportApiImpl;
 import com.jtmc.apps.reforma.api.v1.timezone.TimeZoneApi;
 import com.jtmc.apps.reforma.api.v1.timezone.TimeZoneApiImpl;
+import com.jtmc.apps.reforma.api.v1.transferregistry.TransferRegistryApi;
+import com.jtmc.apps.reforma.api.v1.transferregistry.TransferRegistryApiImpl;
 import com.jtmc.apps.reforma.api.v1.user.UserApi;
 import com.jtmc.apps.reforma.api.v1.user.UserApiImpl;
 import com.jtmc.apps.reforma.guice.CCMybatisModule;
@@ -84,6 +86,7 @@ public class Launcher {
             bind(ReportApi.class).to(ReportApiImpl.class);
             bind(TimeZoneApi.class).to(TimeZoneApiImpl.class);
             bind(com.jtmc.apps.reforma.api.v2.catalogcount.CatalogCountApi.class).to(com.jtmc.apps.reforma.api.v2.catalogcount.CatalogCountApiImpl.class);
+            bind(TransferRegistryApi.class).to(TransferRegistryApiImpl.class);
 
             Properties myProperties = new Properties();
             myProperties.setProperty("key", System.getenv("key"));
@@ -118,6 +121,7 @@ public class Launcher {
                     injector.getInstance(PersonaDetailsApi.class),
                     injector.getInstance(ReportApi.class),
                     injector.getInstance(TimeZoneApi.class),
+                    injector.getInstance(TransferRegistryApi.class),
                     injector.getInstance(JacksonJsonProvider.class),
                     injector.getInstance(RuntimeGenericExceptionMapper.class),
                     injector.getInstance(RepositoryGenericExceptionMapper.class),

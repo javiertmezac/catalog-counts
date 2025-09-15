@@ -37,7 +37,7 @@ public class BranchRepository {
             TimezoneTypeMapper mapper = session.getMapper(TimezoneTypeMapper.class);
             return mapper.selectOne(x -> x
                     .join(BranchDynamicSqlSupport.branch)
-                    .on(BranchDynamicSqlSupport.timezoneid, SqlBuilder.equalTo(TimezoneTypeDynamicSqlSupport.id))
+                    .on(BranchDynamicSqlSupport.timezoneId, SqlBuilder.equalTo(TimezoneTypeDynamicSqlSupport.id))
                     .where(BranchDynamicSqlSupport.id, SqlBuilder.isEqualTo(branchId))
                     .and(BranchDynamicSqlSupport.status, SqlBuilder.isTrue())
             );

@@ -3,10 +3,14 @@ package com.jtmc.apps.reforma.api.v1.persona;
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.Persona;
+import com.jtmc.apps.reforma.domain.PersonaDetails;
 import com.jtmc.apps.reforma.impl.persona.PersonaImpl;
+import com.jtmc.apps.reforma.impl.personadetails.PersonaDetailsImpl;
+import com.jtmc.apps.reforma.impl.user.UserImpl;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 
-import jakarta.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +24,12 @@ public class PersonaApiImpl implements PersonaApi {
 
     @Inject
     private PersonaImpl implementation;
+
+    @Inject
+    private PersonaDetailsImpl personaDetailsImpl;
+
+    @Inject
+    private UserImpl user;
 
     @Override
     public PersonaResponseList selectAll() {
@@ -45,6 +55,21 @@ public class PersonaApiImpl implements PersonaApi {
     public PersonaResponse selectOne(int personaId) {
         Persona persona = implementation.selectOne(personaId);
         return mapToPersonaResponse(persona);
+    }
+
+    @Override
+    public PersonaResponse personaDetails(int personaId) {
+        Persona persona = implementation.selectOne(personaId);
+        List<PersonaRequest.BranchAndRole> details = personaDetailsImpl.findByPersonaId(personaId).stream().map(x -> {
+            PersonaRequest.BranchAndRole bar = new PersonaRequest.BranchAndRole();
+            bar.branchId = x.getBranchid();
+            bar.roleId = x.getRoleid();
+            bar.entryDate = x.getRegistration().toString();
+            return bar;
+        }).toList();
+        PersonaResponse r = mapToPersonaResponse(persona);
+        r.setBranchesAndRoles(details);
+        return r;
     }
 
     @Override
@@ -77,6 +102,24 @@ public class PersonaApiImpl implements PersonaApi {
         persona.setStatus(personaRequest.isStatus());
 
         implementation.update(persona);
+        return Response.noContent().build();
+    }
+
+    @Override
+    public Response assignBranchAndRole(int personaId, PersonaRequest.BranchAndRole request) {
+        user.validateAdminPermissionsForLoggedInUser();
+
+        Persona persona = implementation.selectOne(personaId);
+        if (!persona.getId().equals(personaId)) {
+            throw new BadRequestException();
+        }
+
+        PersonaDetails details = new PersonaDetails();
+        details.setPersonaid(persona.getId());
+        details.setRegistration(Instant.now());
+        details.setBranchid(request.branchId);
+        details.setRoleid(request.roleId);
+        personaDetailsImpl.insert(details);
         return Response.noContent().build();
     }
 }

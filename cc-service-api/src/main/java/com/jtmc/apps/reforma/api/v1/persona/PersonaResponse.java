@@ -1,12 +1,23 @@
 package com.jtmc.apps.reforma.api.v1.persona;
 
+import java.util.List;
+
 public class PersonaResponse {
 
     private int id;
     private String name;
     private String lastname;
     private String registration;
-    private  boolean status;
+    private boolean status;
+    private List<PersonaRequest.BranchAndRole> branchesAndRoles;
+
+    public List<PersonaRequest.BranchAndRole> getBranchesAndRoles() {
+        return branchesAndRoles;
+    }
+
+    public void setBranchesAndRoles(List<PersonaRequest.BranchAndRole> branchesAndRoles) {
+        this.branchesAndRoles = branchesAndRoles;
+    }
 
     public String getLastname() {
         return lastname;
