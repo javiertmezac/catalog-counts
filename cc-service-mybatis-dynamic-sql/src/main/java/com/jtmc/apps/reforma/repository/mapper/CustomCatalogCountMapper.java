@@ -39,4 +39,36 @@ public interface CustomCatalogCountMapper {
             @Result(column="editable", property="editable", jdbcType=JdbcType.BOOLEAN),
     })
     List<CustomCatalogCount> selectManyDirect(CatalogCountCumulativeSumParams params);
+
+    @Select(value = "{ call selectCumulativeSumByBranchAndPagination(" +
+            "#{branchId, mode=IN, jdbcType=INTEGER}, " +
+            "#{deadLineDay, mode=IN, jdbcType=INTEGER}, " +
+            "#{filterYear, mode=IN, jdbcType=INTEGER}, " +
+            "#{filterSearch, mode=IN, jdbcType=VARCHAR}, " +
+            "#{page, mode=IN, jdbcType=INTEGER}, " +
+            "#{pageSize, mode=IN, jdbcType=INTEGER}) " +
+            "}")
+    @Options(statementType = StatementType.CALLABLE)
+    @Results(id="CatalogCountResultPagination", value = {
+            @Result(column="id", property="id", jdbcType= JdbcType.INTEGER, id=true),
+            @Result(column="registration", property="registration", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="catalogCountEnum", property="catalogCountEnum", jdbcType=JdbcType.VARCHAR),
+            @Result(column="amount", property="amount", jdbcType=JdbcType.DOUBLE),
+            @Result(column="details", property="details", jdbcType=JdbcType.VARCHAR),
+            @Result(column="total", property="cumulativeSum", jdbcType=JdbcType.DOUBLE),
+            @Result(column="editable", property="editable", jdbcType=JdbcType.BOOLEAN)
+    })
+    List<CustomCatalogCount> selectManyPagination(CatalogCountCumulativeSumParams params);
+
+    @Select(value = "{ call selectCumulativeSumByBranchAndPaginationCount(" +
+            "#{branchId, mode=IN, jdbcType=INTEGER}, " +
+            "#{filterYear, mode=IN, jdbcType=INTEGER}, " +
+            "#{filterSearch, mode=IN, jdbcType=VARCHAR}) " +
+            "}")
+    @Options(statementType = StatementType.CALLABLE)
+    @Results(id="CatalogCountResultPaginationCount", value = {
+            @Result(column="totalRows", property="totalRows", jdbcType=JdbcType.DOUBLE),
+    })
+    long selectManyPaginationCount(CatalogCountCumulativeSumParams params);
+
 }

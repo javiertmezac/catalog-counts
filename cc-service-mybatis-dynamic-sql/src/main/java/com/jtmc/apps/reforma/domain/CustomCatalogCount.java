@@ -5,6 +5,7 @@ public class CustomCatalogCount extends CatalogCount {
     private String name;
     private String catalogCountEnum;
     private double cumulativeSum;
+    private int totalCountRows;
 
     private boolean editable;
 
@@ -46,5 +47,13 @@ public class CustomCatalogCount extends CatalogCount {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getTotalCountRows() {
+        return totalCountRows;
+    }
+
+    public void setTotalCountRows(int totalCountRows) {
+        this.totalCountRows = totalCountRows;
     }
 }

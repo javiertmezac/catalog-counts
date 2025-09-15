@@ -14,6 +14,10 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: catalog_count
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
     ports:
       - 3306:3306
     healthcheck:
@@ -29,9 +33,9 @@ services:
     platform: linux/x86_64
     image: flyway/flyway:6.5.5
     environment:
-      - FLYWAY_USER=root
-      - FLYWAY_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - FLYWAY_URL=jdbc:mysql://cc-db:3306/catalog_count?useUnicode=true&serverTimezone=UTC
+      FLYWAY_USER: ${MYSQL_USER}
+      FLYWAY_PASSWORD: ${MYSQL_PASSWORD}
+      FLYWAY_URL: ${DOCKER_JDBC_URL}
     volumes:
       - ./flyway-db-configuration/flyway-6.5.5/sql:/flyway/sql
     command: migrate -connectRetries=60
@@ -46,13 +50,13 @@ services:
       - 8080:8080
       - 8081:8081     # allow remote debug
     environment:
-      - app_env=local
-      - key=${CC_SERVICE_KEY}
-      - JDBC_URL=jdbc:mysql://cc-db:3306/catalog_count?useUnicode=true&serverTimezone=UTC
-      - JDBC_USERNAME=root
-      - JDBC_PASSWORD=$MYSQL_ROOT_PASSWORD
-      - CC_SERVICE_DEADLINE_DAY=10
-      - CC_SERVICE_DEFAULT_EXPIRATION_SECS=3600
+      app_env: local
+      key: ${CC_SERVICE_KEY}
+      JDBC_URL: ${DOCKER_JDBC_URL}
+      JDBC_USERNAME: ${JDBC_USER}
+      JDBC_PASSWORD: $JDBC_PASSWORD
+      CC_SERVICE_DEADLINE_DAY: ${CC_SERVICE_DEADLINE_DAY}
+      CC_SERVICE_DEFAULT_EXPIRATION_SECS: ${CC_SERVICE_DEFAULT_EXPIRATION_SECS}
     build:
       context: .
     depends_on:

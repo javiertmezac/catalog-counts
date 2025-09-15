@@ -39,11 +39,31 @@ Some useful commands to troubleshoot:
 - `docker compose restart <service>`
 
 To create a copy of db data
+```bash
+mysqldump -h ${CC_SERVICE_DB_HOST} -u admin --extended-insert \
+  --ignore-table=catalog_count.flyway_schema_history \
+  --ignore-table=catalog_count.catalog_count_enum \
+  --ignore-table=catalog_count.timezone_type \
+  --no-create-db --no-create-info --compact \
+  --password=${MYSQL_ROOT_PASS} \
+  --single-transaction --set-gtid-purged=OFF \
+  catalog_count > backup.sql
 ```
-  docker exec cc-service-db /usr/bin/mysqldump -u root \
-  --extended-insert --ignore-table=catalog_count.flyway_schema_history \
-  --no-create-db --no-create-info --compact --password=${MYSQL_ROOT_PASS} \
-  catalog_count backup.sql
+
+"this is the one!"
+```bash
+mysqldump -h ${CC_SERVICE_DB_HOST} -u admin \
+  --password=${MYSQL_ROOT_PASS} \
+  --single-transaction --set-gtid-purged=OFF  --routines \
+  catalog_count > backup.sql
+```
+>note: this is to create a complete backup, everything. which means,
+> first time restoring a db, it should be empty. no flyway commands should run prior recovering db.
+cp to docker container: `docker cp backup_08162025.sql cc-service-db:/`
+
+To import the copy to a db
+```bash
+mysql -u root -p catalog_count < backup_08162025.sql
 ```
 
 ### Excel Import
