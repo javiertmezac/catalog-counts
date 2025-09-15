@@ -1,6 +1,6 @@
 --this is an improvement to filter, still not sure if I want to filter on details, identifier and name
 --as totalCount is not considered.
---only filter that can be use and still have tocal count valid is filterYear
+--only filter that can be use and still have total count valid is filterYear
 DELIMITER //
 
 DROP PROCEDURE IF EXISTS selectCumulativeSumByBranchAndPagination //
@@ -9,11 +9,12 @@ CREATE PROCEDURE selectCumulativeSumByBranchAndPagination(
     IN branchId INT,
     IN deadLineDay INT,
     IN filterYear INT,
+    IN filterSearch VARCHAR(255),
     IN page INT,
     IN pageSize INT
 )
 BEGIN
-    DECLARE offsetRows INT DEFAULT (page - 1) * pageSize;
+    DECLARE offsetRows INT DEFAULT page * pageSize;
 
     DECLARE deadline_time DATETIME DEFAULT CAST(CONCAT(YEAR(CURRENT_DATE()), '-', LPAD(MONTH(CURRENT_DATE()), 2, '0'), '-', deadLineDay) AS DATETIME);
     DECLARE deadline DATETIME DEFAULT ADDTIME(deadline_time, '23:59:59');
@@ -58,19 +59,37 @@ BEGIN
           AND cc.isDeleted = 0
     ) AS base
     WHERE (filterYear IS NULL OR YEAR(base.registration) = filterYear)
+    AND (filterSearch IS NULL OR filterSearch = '' OR base.details LIKE CONCAT('%', filterSearch, '%') OR base.catalogCountEnum LIKE CONCAT('%', filterSearch, '%'))
     ORDER BY base.registration DESC
     LIMIT pageSize OFFSET offsetRows;
 
+END //
 
-    -- Total count for pagination (filtered display)
-    SELECT COUNT(*) AS totalCount
-    FROM catalog_count AS cc
-    INNER JOIN catalog_count_enum AS cce
-        ON cce.id = cc.catalogCountEnumId
-    WHERE cc.branchId = branchId
-      AND cc.isDeleted = 0
-      AND (filterYear IS NULL OR YEAR(cc.registration) = filterYear);
+DROP PROCEDURE IF EXISTS selectCumulativeSumByBranchAndPaginationCount //
 
+CREATE PROCEDURE selectCumulativeSumByBranchAndPaginationCount(
+    IN branchId INT,
+    IN filterYear INT,
+    IN filterSearch VARCHAR(255)
+)
+BEGIN
+
+    -- Paginated results: keep totals from all history, filter display after total calculation
+    SELECT COUNT(*) as totalRows
+    FROM (
+        SELECT
+            cc.id,
+            cc.registration,
+            CONCAT(cce.identifier, ' - ', cce.name) AS catalogCountEnum,
+            cc.amount,
+            cc.details
+        FROM catalog_count AS cc
+        INNER JOIN catalog_count_enum AS cce
+            ON cce.id = cc.catalogCountEnumId
+        WHERE cc.branchId = branchId
+    ) AS base
+    WHERE (filterYear IS NULL OR YEAR(base.registration) = filterYear)
+    AND (filterSearch IS NULL OR filterSearch = '' OR base.details LIKE CONCAT('%', filterSearch, '%') OR base.catalogCountEnum LIKE CONCAT('%', filterSearch, '%'));
 END //
 
 DELIMITER ;

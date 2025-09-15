@@ -10,6 +10,7 @@ public interface CatalogCountApi {
     @Path("/{branchId}/catalog-count")
     @Produces(MediaType.APPLICATION_JSON)
     PaginatedCatalogCount getList(@PathParam("branchId") Integer branchId, @QueryParam("page") Integer page,
-                                     @QueryParam("pageSize") Integer size, @QueryParam("filterYear") Integer filterYear);
+                                  @QueryParam("pageSize") Integer size, @QueryParam("filterYear") Integer filterYear,
+                                  @QueryParam("search") String search);
 
 }

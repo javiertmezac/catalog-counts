@@ -72,13 +72,14 @@ public class CatalogCountImpl {
         ).collect(Collectors.toList());
     }
 
-    public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId, Integer page, Integer size, Integer filterYear) {
+    public List<CatalogCountResponse> selectAllWithTotalColumn(Integer branchId, Integer page, Integer size, Integer filterYear, String search) {
         CatalogCountCumulativeSumParams params = new CatalogCountCumulativeSumParams();
         params.setBranchId(branchId);
         params.setDeadLineDay(deadLineDay);
         params.setPage(page);
         params.setPageSize(size);
         params.setFilterYear(filterYear == 0 ? null : filterYear);
+        params.setFilterSearch(search);
         return catalogCountRepository.selectAllCumulativeSumByBranchAndPagination(params).stream().map(
                 cc -> new CatalogCountResponse(
                         cc.getId(),
@@ -92,13 +93,14 @@ public class CatalogCountImpl {
         ).toList();
     }
 
-    public long selectCountPagination(Integer branchId, Integer page, Integer size, Integer filterYear) {
+    public long selectCountPagination(Integer branchId, Integer page, Integer size, Integer filterYear, String search) {
         CatalogCountCumulativeSumParams params = new CatalogCountCumulativeSumParams();
         params.setBranchId(branchId);
         params.setDeadLineDay(deadLineDay);
         params.setPage(page);
         params.setPageSize(size);
         params.setFilterYear(filterYear == 0 ? null : filterYear);
+        params.setFilterSearch(search);
         return catalogCountRepository.selectCountPagination(params);
     }
 

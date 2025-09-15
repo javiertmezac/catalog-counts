@@ -6,6 +6,15 @@ public class CatalogCountCumulativeSumParams {
     private Integer page;
     private Integer pageSize;
     private Integer filterYear;
+    private String filterSearch;
+
+    public String getFilterSearch() {
+        return filterSearch;
+    }
+
+    public void setFilterSearch(String filterSearch) {
+        this.filterSearch = filterSearch;
+    }
 
     public Integer getBranchId() {
         return branchId;
