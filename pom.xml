@@ -14,7 +14,7 @@
         <junit.version>5.10.3</junit.version>
         <junit-platform.version>1.10.3</junit-platform.version>
         <easy-random.version>5.0.0</easy-random.version>
-        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <commons-beanutils.version>1.11.0</commons-beanutils.version>
     </properties>
 
     <modules>
