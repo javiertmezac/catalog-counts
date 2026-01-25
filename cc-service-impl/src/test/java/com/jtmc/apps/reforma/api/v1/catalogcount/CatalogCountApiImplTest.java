@@ -51,31 +51,31 @@ public class CatalogCountApiImplTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void test_insert_shouldReturnBadRequest_whenRequestObjectNull() {
+    public void test_insert_shouldReturnBadRequest_whenRequestObjectNull() throws Exception {
         catalogCountApiImpl.insert(0, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInsert_shouldReturnBadRequestException_whenAmountLessThanZero() {
+    public void testInsert_shouldReturnBadRequestException_whenAmountLessThanZero() throws Exception {
         catalogCountRequest.setAmount(-0.7);
         catalogCountApiImpl.insert(0, catalogCountRequest);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInsert_shouldReturnBadRequestException_whenAmountEqualsZero() {
+    public void testInsert_shouldReturnBadRequestException_whenAmountEqualsZero() throws Exception {
         catalogCountRequest.setAmount(0.0);
         catalogCountApiImpl.insert(0, catalogCountRequest);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInsert_shouldReturnBadRequest_whenDetailsBlank() {
+    public void testInsert_shouldReturnBadRequest_whenDetailsBlank()  throws Exception{
        catalogCountRequest.setDetails("   ");
        catalogCountApiImpl.insert(defaultBranchId, catalogCountRequest);
     }
 
     @Ignore
     @Test(expected = IllegalArgumentException.class)
-    public void testInsert_shouldReturnBadRequest_whenCatalogCountEnumNotSet() {
+    public void testInsert_shouldReturnBadRequest_whenCatalogCountEnumNotSet() throws Exception {
         //note: for testing purposes we are setting catalogCountEnumId equals 0
         //this is to simulate no value was set in the original api call
         catalogCountRequest.setCatalogCountEnumId(0);
@@ -83,7 +83,7 @@ public class CatalogCountApiImplTest {
     }
 
     @Test
-    public void testInsert_shouldCall_catalogCountImpl_insertWithRegistrationDate() {
+    public void testInsert_shouldCall_catalogCountImpl_insertWithRegistrationDate() throws Exception {
         catalogCountApiImpl.insert(defaultBranchId, catalogCountRequest);
 
         ArgumentCaptor<CatalogCount> captor = ArgumentCaptor.forClass(CatalogCount.class);
@@ -213,11 +213,11 @@ public class CatalogCountApiImplTest {
      */
 
     @Test
-    public void testLogicalDelete_shouldCall_MapperLogicalDelete() {
+    public void testLogicalDelete_shouldCall_MapperLogicalDelete() throws Exception {
         int expectedId = 1;
         CatalogCount cc = new CatalogCount();
         cc.setId(expectedId);
-        catalogCountApiImpl.logicalDeleteRecord(defaultBranchId, expectedId);
+        catalogCountApiImpl.logicalDeleteRecord(defaultBranchId, expectedId, false);
         verify(catalogCountImpl, times(1)).logicalDeleteRecord(cc);
     }
 }

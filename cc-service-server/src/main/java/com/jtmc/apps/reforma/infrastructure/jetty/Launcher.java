@@ -17,10 +17,7 @@ import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumApi;
 import com.jtmc.apps.reforma.api.v1.catalogcountenum.CatalogCountEnumApiImpl;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApi;
 import com.jtmc.apps.reforma.api.v1.excelimport.ExcelImportApiImpl;
-import com.jtmc.apps.reforma.api.v1.exception.ExcelImportGenericExceptionMapper;
-import com.jtmc.apps.reforma.api.v1.exception.ImplementationGenericExceptionMapper;
-import com.jtmc.apps.reforma.api.v1.exception.RepositoryGenericExceptionMapper;
-import com.jtmc.apps.reforma.api.v1.exception.RuntimeGenericExceptionMapper;
+import com.jtmc.apps.reforma.api.v1.exception.*;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckApi;
 import com.jtmc.apps.reforma.api.v1.healthcheck.HealthcheckImpl;
 import com.jtmc.apps.reforma.api.v1.login.LoginApi;
@@ -73,7 +70,6 @@ public class Launcher {
             bind(CatalogCountApi.class).to(CatalogCountApiImpl.class);
             bind(ExcelImportApi.class).to(ExcelImportApiImpl.class);
             bind(CatalogCountEnumApi.class).to(CatalogCountEnumApiImpl.class);
-//            bind(AuditReportApi.class).to(AuditReportApiImpl.class);
             bind(LoginApi.class).to(LoginApiImpl.class);
             bind(UserApi.class).to(UserApiImpl.class);
             bind(PeriodConfirmApi.class).to(PeriodConfirmApiImpl.class);
@@ -102,13 +98,21 @@ public class Launcher {
         @Override
         protected Set<Object> serviceInstances(Injector injector) {
             return Sets.newHashSet(
+                    // ====== PROVIDERS / FILTERS / MAPPERS ======
                     injector.getInstance(CorsFilter.class),
                     injector.getInstance(JwtRequiredFilter.class),
+                    injector.getInstance(JacksonJsonProvider.class),
+
+                    injector.getInstance(RuntimeGenericExceptionMapper.class),
+                    injector.getInstance(RepositoryGenericExceptionMapper.class),
+                    injector.getInstance(ExcelImportGenericExceptionMapper.class),
+                    injector.getInstance(ImplementationGenericExceptionMapper.class),
+
+                    // ====== RESOURCES (APIs) ======
                     injector.getInstance(HealthcheckApi.class),
                     injector.getInstance(CatalogCountApi.class),
                     injector.getInstance(ExcelImportApi.class),
                     injector.getInstance(CatalogCountEnumApi.class),
-//                    injector.getInstance(AuditReportApi.class),
                     injector.getInstance(LoginApi.class),
                     injector.getInstance(UserApi.class),
                     injector.getInstance(PeriodConfirmApi.class),
@@ -118,11 +122,6 @@ public class Launcher {
                     injector.getInstance(PersonaDetailsApi.class),
                     injector.getInstance(ReportApi.class),
                     injector.getInstance(TimeZoneApi.class),
-                    injector.getInstance(JacksonJsonProvider.class),
-                    injector.getInstance(RuntimeGenericExceptionMapper.class),
-                    injector.getInstance(RepositoryGenericExceptionMapper.class),
-                    injector.getInstance(ExcelImportGenericExceptionMapper.class),
-                    injector.getInstance(ImplementationGenericExceptionMapper.class),
                     injector.getInstance(com.jtmc.apps.reforma.api.v2.catalogcount.CatalogCountApi.class)
             );
         }

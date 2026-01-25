@@ -5,6 +5,7 @@ import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +17,8 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@JwtRequired
 public class CatalogCountApiImpl implements CatalogCountApi {
-    final private Logger logger = LoggerFactory.getLogger(CatalogCountApiImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(CatalogCountApiImpl.class);
 
     @Inject
     private CatalogCountImpl catalogCountImpl;
@@ -35,7 +35,8 @@ public class CatalogCountApiImpl implements CatalogCountApi {
     }
 
     @Override
-    public Response insert(Integer branchId, CatalogCountRequest catalogCountRequest) {
+    @Transactional
+    public Response insert(Integer branchId, CatalogCountRequest catalogCountRequest) throws Exception {
 
         checkNotNull(catalogCountRequest, "request object cannot be null");
         checkNotNull(catalogCountRequest.getRegistrationDate(), "registration is not provided");
@@ -51,12 +52,17 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         catalogCount.setRegistration(catalogCountRequest.getRegistrationDate());
         catalogCount.setBranchid(branchId);
 
-        catalogCountImpl.insertIntoCatalogCount(catalogCount);
+        if (catalogCountRequest.isOutOfDateRange()) {
+           catalogCountImpl.insertOutOfDateRange(catalogCount);
+        } else {
+            catalogCountImpl.insertIntoCatalogCount(catalogCount);
+        }
         return Response.noContent().build();
     }
 
     @Override
-    public Response updateCatalogCount(Integer branchId, CatalogCountRequest catalogCountRequest) {
+    @Transactional
+    public Response updateCatalogCount(Integer branchId, CatalogCountRequest catalogCountRequest) throws Exception {
         checkNotNull(catalogCountRequest, "invalid Catalog Count payload");
         checkArgument(branchId > 0, "invalid branchId");
         checkArgument(catalogCountRequest.getAmount() > 0, "Amount should not be zero");
@@ -69,7 +75,11 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         catalogCount.setRegistration(catalogCountRequest.getRegistrationDate());
         catalogCount.setBranchid(branchId);
 
-        catalogCountImpl.updateCatalogCount(catalogCount);
+        if (catalogCountRequest.isOutOfDateRange()) {
+            catalogCountImpl.updateOutOfRange(catalogCount);
+        } else {
+            catalogCountImpl.updateCatalogCount(catalogCount);
+        }
         return Response.noContent().build();
     }
 
@@ -90,16 +100,20 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         );
     }
 
-    //todo: should have a test to verify logicalDelete was done correctly
-    public Response logicalDeleteRecord(Integer branchId, int id) {
+    @Transactional
+    public Response logicalDeleteRecord(Integer branchId, int id, boolean outOfDateRange) throws Exception {
         checkArgument(branchId > 0, "invalid branch");
         checkArgument(id > 0, "invalid catalog count id");
 
-        logger.debug("CatalogCountId #{} to be deleted", id);
         CatalogCount cc = new CatalogCount();
         cc.setId(id);
         cc.setBranchid(branchId);
-        catalogCountImpl.logicalDeleteRecord(cc);
+        if (outOfDateRange) {
+            catalogCountImpl.deleteOutOfRange(cc);
+        } else {
+            logger.debug("CatalogCountId #{} to be deleted", id);
+            catalogCountImpl.logicalDeleteRecord(cc);
+        }
         return Response.noContent().build();
     }
 }

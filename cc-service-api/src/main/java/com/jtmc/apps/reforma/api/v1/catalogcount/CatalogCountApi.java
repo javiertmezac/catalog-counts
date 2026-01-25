@@ -16,13 +16,13 @@ public interface CatalogCountApi {
     @Path("/{branchId}/catalog-count")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response insert(@PathParam("branchId") Integer branchId, CatalogCountRequest catalogCountRequest);
+    Response insert(@PathParam("branchId") Integer branchId, CatalogCountRequest catalogCountRequest) throws Exception;
 
     @PUT
     @Path("/{branchId}/catalog-count")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response updateCatalogCount(@PathParam("branchId") Integer branchId, CatalogCountRequest catalogCountRequest);
+    Response updateCatalogCount(@PathParam("branchId") Integer branchId, CatalogCountRequest catalogCountRequest) throws Exception;
 
     @GET
     @Path("/{branchId}/catalog-count/{catalogCountId}")
@@ -32,5 +32,5 @@ public interface CatalogCountApi {
     @DELETE
     @Path("/{branchId}/catalog-count/{catalogCountId}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response logicalDeleteRecord(@PathParam("branchId") Integer branchId, @PathParam("catalogCountId") int id);
+    Response logicalDeleteRecord(@PathParam("branchId") Integer branchId, @PathParam("catalogCountId") int id, @QueryParam("outOfDateRange") @DefaultValue("false") boolean outOfDateRange) throws Exception;
 }

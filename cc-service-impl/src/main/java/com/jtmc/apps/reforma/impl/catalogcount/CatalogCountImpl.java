@@ -1,5 +1,6 @@
 package com.jtmc.apps.reforma.impl.catalogcount;
 
+import com.fasterxml.jackson.core.JacksonException;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CatalogCountImpl {
-    final private Logger logger = LoggerFactory.getLogger(CatalogCountImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(CatalogCountImpl.class);
 
     @Inject
     private CatalogCountRepository catalogCountRepository;
@@ -50,6 +51,9 @@ public class CatalogCountImpl {
 
     @Inject
     private PeriodConfirmImpl periodConfirmImpl;
+
+    @Inject
+    private CatalogCountRegistryService catalogCountRegistryService;
 
     @Inject
     @Named("deadLineDay")
@@ -131,7 +135,6 @@ public class CatalogCountImpl {
         return firstOrEmpty.map(CustomCatalogCount::getCumulativeSum).orElse(0.0);
     }
 
-    @Transactional
     public void insertIntoCatalogCount(CatalogCount catalogCount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
         validateCatalogCountEnum(catalogCount);
@@ -143,6 +146,13 @@ public class CatalogCountImpl {
         logger.debug("User {} inserted new CatalogCount into branch #{}", userDetails.getUsername(), branchDetails.getBranch().getId());
     }
 
+    public void insertOutOfDateRange(CatalogCount catalogCount) throws JacksonException {
+        UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+        validateCatalogCountEnum(catalogCount);
+        branchImpl.selectOneBranch(catalogCount.getBranchid());
+        catalogCountRegistryService.insert(userDetails, CatalogCountRegistryService.RegistryType.NEW, null, catalogCount);
+    }
+
     private void validateCurrentPeriodNotConfirmed(BranchDetails branchDetails, CatalogCount catalogCount, UserDetails userDetails) {
         Branch branch = branchDetails.getBranch();
         ZonedDateTime zonedDateTime = catalogCount.getRegistration().atZone(branchDetails.getZoneIdFromBranchTimeZone());
@@ -152,7 +162,7 @@ public class CatalogCountImpl {
             throw new ForbiddenException("Current Period has been confirmed, not allowed to submit CatalogCount Movements");
         } catch (PeriodNotFoundException ex){
             this.logger.debug("Period still not registered in DB for date: {}", zonedDateTime);
-        }catch (PeriodDetailsConfirmationNotFoundException ex) {
+        } catch (PeriodDetailsConfirmationNotFoundException ex) {
            logger.debug("Period confirmation still not registered in DB for date: {}", zonedDateTime);
         }
     }
@@ -182,7 +192,15 @@ public class CatalogCountImpl {
         catalogCountRepository.insert(catalogCount);
     }
 
-    @Transactional
+    public void updateOutOfRange(CatalogCount catalogCount) throws JacksonException{
+        UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+        validateCatalogCountEnum(catalogCount);
+        branchImpl.selectOneBranch(catalogCount.getBranchid());
+
+        CatalogCount ccToBeUpdated = this.selectOneRecord(catalogCount.getId());
+        catalogCountRegistryService.insert(userDetails, CatalogCountRegistryService.RegistryType.UPDATE, ccToBeUpdated, catalogCount);
+    }
+
     public void updateCatalogCount(CatalogCount catalogCount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
         validateCatalogCountEnum(catalogCount);
@@ -210,7 +228,18 @@ public class CatalogCountImpl {
         return catalogCount.get();
     }
 
-    @Transactional
+    public void deleteOutOfRange(CatalogCount catalogCount) throws JacksonException {
+        UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
+        CatalogCount ccFromDB = this.selectOneRecord(catalogCount.getId());
+        if (ccFromDB.getIsdeleted()) {
+            logger.error("CatalogCount {} was already marked as deleted", ccFromDB.getId());
+            throw new IllegalArgumentException("No valid Request");
+        }
+
+        BranchDetails branchDetails = branchImpl.selectOneBranch(catalogCount.getBranchid());
+        catalogCountRegistryService.insert(userDetails, CatalogCountRegistryService.RegistryType.DELETE, ccFromDB, null);
+    }
+
     public void logicalDeleteRecord(CatalogCount catalogCount) {
         UserDetails userDetails = userImpl.validateWritePermissionsForLoggedInUser();
 
@@ -268,4 +297,7 @@ public class CatalogCountImpl {
                 cc.getRegistration().toString(), cc.getCatalogcountenumid(),
                 cc.getAmount(), cc.getDetails(), cc.getBranchid(), cc.getIsdeleted());
     }
+
+
+
 }

@@ -3,19 +3,15 @@ package com.jtmc.apps.reforma.impl.user;
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtUserClaim;
 import com.jtmc.apps.reforma.domain.*;
-import com.jtmc.apps.reforma.impl.exception.ImplementationException;
 import com.jtmc.apps.reforma.impl.exception.NoWritePermissionsException;
 import com.jtmc.apps.reforma.impl.persona.PersonaImpl;
 import com.jtmc.apps.reforma.repository.PersonaRepository;
 import com.jtmc.apps.reforma.repository.RoleRepository;
 import com.jtmc.apps.reforma.repository.UserRepositoryImpl;
-import com.jtmc.apps.reforma.repository.exception.UnauthorizedUserException;
+import jakarta.ws.rs.ForbiddenException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.xmlbeans.impl.xb.ltgfmt.impl.FileDescImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.ws.rs.ForbiddenException;
 
 import java.util.Collection;
 import java.util.Optional;

@@ -14,15 +14,18 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Provider
-@JwtRequired
 @Priority(Priorities.AUTHENTICATION)
 public class JwtRequiredFilter implements ContainerRequestFilter {
+
+    private final Logger logger = LoggerFactory.getLogger(JwtRequiredFilter.class);
 
     @Inject
     @Named("key")
@@ -33,9 +36,22 @@ public class JwtRequiredFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
+
+        String path = containerRequestContext.getUriInfo().getPath();
+
+        if (path.startsWith("public")) {
+            return;
+        }
+
         String authHeader = containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-        if(authHeader == null || authHeader.isEmpty() || authHeader.trim().isEmpty()) {
-            throw new WebApplicationException("Expected Authorization Header", Response.Status.BAD_REQUEST);
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            containerRequestContext.abortWith(
+                    Response.status(Response.Status.UNAUTHORIZED)
+                            .entity("Missing or invalid Authorization header")
+                            .build()
+            );
+            return;
         }
 
         try {
@@ -51,10 +67,16 @@ public class JwtRequiredFilter implements ContainerRequestFilter {
             userClaim.setId((Integer)claims.getPayload().get("uid"));
 
         } catch (ExpiredJwtException ex) {
-            throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+            containerRequestContext.abortWith(
+                    Response.status(Response.Status.UNAUTHORIZED)
+                            .entity("Authorization Expired")
+                            .build()
+            );
         } catch (JwtException exception) {
-            exception.printStackTrace();
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            logger.error("", exception);
+            containerRequestContext.abortWith(
+                    Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()
+            );
         }
     }
 }

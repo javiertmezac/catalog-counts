@@ -8,6 +8,7 @@ public class CatalogCountRequest {
     private double amount;
     private String details;
     private Instant registrationDate;
+    private boolean outOfDateRange;
 
     public int getId() {
         return id;
@@ -47,5 +48,13 @@ public class CatalogCountRequest {
 
     public void setRegistrationDate(Instant registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public boolean isOutOfDateRange() {
+        return outOfDateRange;
+    }
+
+    public void setOutOfDateRange(boolean outOfDateRange) {
+        this.outOfDateRange = outOfDateRange;
     }
 }
