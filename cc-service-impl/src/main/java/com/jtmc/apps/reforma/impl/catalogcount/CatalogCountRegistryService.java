@@ -7,7 +7,6 @@ import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.domain.CatalogCountRegistry;
 import com.jtmc.apps.reforma.domain.UserDetails;
 import com.jtmc.apps.reforma.repository.CatalogCountRegistryRepository;
-import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 
 import java.util.UUID;
 
@@ -18,6 +17,10 @@ public class CatalogCountRegistryService {
 
     @Inject
     private ObjectMapper mapper;
+
+    public CatalogCountRegistry findByCatalogCountId(int catalogCountId) {
+        return repository.findByCatalogCountIdAndInactiveIsNull(catalogCountId);
+    }
 
     public enum RegistryType {
         NEW,
@@ -37,7 +40,6 @@ public class CatalogCountRegistryService {
                 String details = mapper.writeValueAsString(newEntry);
                 registry.setDetails(details);
                 yield registry;
-
             }
             case RegistryType.UPDATE -> {
                 CatalogCountRegistry registry = new CatalogCountRegistry();
@@ -45,6 +47,7 @@ public class CatalogCountRegistryService {
                 registry.setRegistrytype(RegistryType.UPDATE.name());
                 registry.setCatalogcountregistryid(UUID.randomUUID());
                 registry.setEntrypersonid(userDetails.getPersonaId());
+                registry.setCatalogcountid(old.getId());
 
                 String details  = mapper.writeValueAsString(new CatalogCountRegistryUpdate(old, newEntry));
                 registry.setDetails(details);
@@ -56,6 +59,7 @@ public class CatalogCountRegistryService {
                 registry.setRegistrytype(RegistryType.DELETE.name());
                 registry.setCatalogcountregistryid(UUID.randomUUID());
                 registry.setEntrypersonid(userDetails.getPersonaId());
+                registry.setCatalogcountid(old.getId());
 
                 String details = mapper.writeValueAsString(old);
                 registry.setDetails(details);

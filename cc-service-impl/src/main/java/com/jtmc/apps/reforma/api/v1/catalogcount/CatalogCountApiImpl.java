@@ -1,18 +1,19 @@
 package com.jtmc.apps.reforma.api.v1.catalogcount;
 
 import com.google.inject.Inject;
-import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
 import com.jtmc.apps.reforma.domain.CatalogCount;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.C;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.core.Response;
-
+import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -83,7 +84,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         return Response.noContent().build();
     }
 
-    public CatalogCountResponse getCatalogCount(Integer branchId, int id) {
+    public CatalogCountCumulativeSumResponse getCatalogCount(Integer branchId, int id) {
         checkArgument(id > 0, "CatalogCountId not valid");
         checkArgument(branchId > 0, "branchId not valid");
 
@@ -91,13 +92,22 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         if (!Objects.equals(catalogCount.getBranchid(), branchId)) {
             throw new BadRequestException();
         }
-        return new CatalogCountResponse(
-                catalogCount.getId(),
-                catalogCount.getRegistration().toString(),
-                catalogCount.getCatalogcountenumid().toString(),
-                catalogCount.getAmount(),
-                catalogCount.getDetails()
-        );
+
+        CatalogCountCumulativeSumResponse response = new CatalogCountCumulativeSumResponse();
+        response.setId(catalogCount.getId());
+        response.setRegistrationDate(catalogCount.getRegistration());
+        response.setCatalogCountEnumId(catalogCount.getCatalogcountenumid());
+        response.setAmount(catalogCount.getAmount());
+        response.setDetails(catalogCount.getDetails());
+
+        RegistryPendingAction registryPendingAction = catalogCountImpl.findCatalogCountRegistryByCatalogCountId(catalogCount.getId());
+        if (registryPendingAction != null) {
+            response.setRegistryId(registryPendingAction.registryId);
+            response.setRegistryEntryDate(registryPendingAction.entryDate);
+            response.setRegistryType(registryPendingAction.registryType);
+        }
+
+        return response;
     }
 
     @Transactional
@@ -116,4 +126,6 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         }
         return Response.noContent().build();
     }
+
+    public record RegistryPendingAction(UUID registryId, Instant entryDate, String registryType){}
 }

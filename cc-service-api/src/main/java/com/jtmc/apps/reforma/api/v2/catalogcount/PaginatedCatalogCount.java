@@ -1,20 +1,20 @@
 package com.jtmc.apps.reforma.api.v2.catalogcount;
 
-import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
+import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountCumulativeSumResponse;
 import com.jtmc.apps.reforma.api.v2.Pagination;
 
 import java.util.List;
 
 public class PaginatedCatalogCount {
-    private List<CatalogCountResponse> catalogCountResponseCollection;
+    private List<CatalogCountCumulativeSumResponse> catalogCountCumulativeSumResponseCollection;
     private Pagination pagination;
 
-    public List<CatalogCountResponse> getCatalogCountResponseCollection() {
-        return catalogCountResponseCollection;
+    public List<CatalogCountCumulativeSumResponse> getCatalogCountResponseCollection() {
+        return catalogCountCumulativeSumResponseCollection;
     }
 
-    public void setCatalogCountResponseCollection(List<CatalogCountResponse> catalogCountResponseCollection) {
-        this.catalogCountResponseCollection = catalogCountResponseCollection;
+    public void setCatalogCountResponseCollection(List<CatalogCountCumulativeSumResponse> catalogCountCumulativeSumResponseCollection) {
+        this.catalogCountCumulativeSumResponseCollection = catalogCountCumulativeSumResponseCollection;
     }
 
     public Pagination getPagination() {

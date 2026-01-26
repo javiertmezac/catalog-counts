@@ -127,26 +127,23 @@ public class CatalogCountApiImplTest {
         int expectedId = 3;
         String expectedCatalogCountEnumDescription = "random-value";
 
-        CatalogCountResponse expectedCatalogCountResponse =
-                new CatalogCountResponse(
-                        expectedId,
-                        expectedDate.toString(),
-                        expectedCatalogCountEnumDescription,
-                        expectedAmount,
-                        expectedDetails
-                );
+        CatalogCountCumulativeSumResponse expectedResponse =
+                new CatalogCountCumulativeSumResponse();
+        expectedResponse.setId(expectedId);
+        expectedResponse.setRegistrationDate(expectedDate);
 
-        List<CatalogCountResponse> listOfCatalogCount = new ArrayList<>();
-        listOfCatalogCount.add(expectedCatalogCountResponse);
+
+        List<CatalogCountCumulativeSumResponse> listOfCatalogCount = new ArrayList<>();
+        listOfCatalogCount.add(expectedResponse);
         when(catalogCountImpl.selectAllWithTotalColumn(defaultBranchId)).thenReturn(listOfCatalogCount);
 
         CatalogCountResponseList actualList = catalogCountApiImpl.getList(0);
 
 //        Assert.assertTrue(expectedSaldoAnterior == actualList.getSaldoAnterior());
 
-        CatalogCountResponse actualCatalogCountResponse = actualList.getCatalogCountResponseCollection().get(0);
-        Assert.assertEquals(expectedCatalogCountResponse.getDetails(), actualCatalogCountResponse.getDetails());
-        Assert.assertEquals(expectedDate.toString(), actualCatalogCountResponse.getRegistrationDate());
+        CatalogCountCumulativeSumResponse actualCatalogCountCumulativeSumResponse = actualList.getCatalogCountResponseCollection().get(0);
+        Assert.assertEquals(expectedResponse.getDetails(), actualCatalogCountCumulativeSumResponse.getDetails());
+        Assert.assertEquals(expectedDate.toString(), actualCatalogCountCumulativeSumResponse.getRegistrationDate());
 
         verify(catalogCountImpl).selectAllWithTotalColumn(0);
     }
@@ -193,11 +190,11 @@ public class CatalogCountApiImplTest {
 
         when(catalogCountImpl.selectOneRecord(expectedId)).thenReturn(expectedCatalogCount);
 
-        CatalogCountResponse actualResponse = catalogCountApiImpl.getCatalogCount(defaultBranchId, expectedId);
+        CatalogCountCumulativeSumResponse  actualResponse = catalogCountApiImpl.getCatalogCount(defaultBranchId, expectedId);
         verify(catalogCountImpl, times(1)).selectOneRecord(expectedId);
 
         Assert.assertEquals(expectedDetails, actualResponse.getDetails());
-        Assert.assertEquals("identifier - random", actualResponse.getCatalogCountEnum());
+        Assert.assertEquals("identifier - random", actualResponse.getCatalogCountEnumDisplay());
     }
 
     @Test(expected = RuntimeException.class)

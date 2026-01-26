@@ -27,7 +27,7 @@ public interface CatalogCountApi {
     @GET
     @Path("/{branchId}/catalog-count/{catalogCountId}")
     @Produces(MediaType.APPLICATION_JSON)
-    CatalogCountResponse getCatalogCount(@PathParam("branchId") Integer branchId, @PathParam("catalogCountId") int id);
+    CatalogCountCumulativeSumResponse getCatalogCount(@PathParam("branchId") Integer branchId, @PathParam("catalogCountId") int id);
 
     @DELETE
     @Path("/{branchId}/catalog-count/{catalogCountId}")

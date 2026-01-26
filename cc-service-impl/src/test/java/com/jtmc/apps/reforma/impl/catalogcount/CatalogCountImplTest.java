@@ -1,6 +1,6 @@
 package com.jtmc.apps.reforma.impl.catalogcount;
 
-import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
+import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountCumulativeSumResponse;
 import com.jtmc.apps.reforma.domain.CustomCatalogCount;
 import com.jtmc.apps.reforma.repository.CatalogCountRepository;
 import com.jtmc.apps.reforma.repository.exception.RepositoryException;
@@ -99,7 +99,7 @@ class CatalogCountImplTest {
         when(catalogCountRepository.selectAllByBranch(anyInt())).thenReturn(catalogCounts);
 
         //todo: make sure which structure keeps order of the records
-        List<CatalogCountResponse> actualResponse = catalogCountImpl.selectAllWithTotalColumn(0);
+        List<CatalogCountCumulativeSumResponse> actualResponse = catalogCountImpl.selectAllWithTotalColumn(0);
 
         Assertions.assertNotNull(actualResponse);
         Assertions.assertEquals(expectedRecordsSize, actualResponse.size());

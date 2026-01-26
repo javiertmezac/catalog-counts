@@ -4,13 +4,13 @@ import java.util.List;
 
 public class CatalogCountResponseList {
 
-    private List<CatalogCountResponse> catalogCountResponseCollection;
+    private List<CatalogCountCumulativeSumResponse> catalogCountCumulativeSumResponseCollection;
 
-    public List<CatalogCountResponse> getCatalogCountResponseCollection() {
-        return catalogCountResponseCollection;
+    public List<CatalogCountCumulativeSumResponse> getCatalogCountResponseCollection() {
+        return catalogCountCumulativeSumResponseCollection;
     }
 
-    public void setCatalogCountResponseCollection(List<CatalogCountResponse> catalogCountResponseCollection) {
-        this.catalogCountResponseCollection = catalogCountResponseCollection;
+    public void setCatalogCountResponseCollection(List<CatalogCountCumulativeSumResponse> catalogCountCumulativeSumResponseCollection) {
+        this.catalogCountCumulativeSumResponseCollection = catalogCountCumulativeSumResponseCollection;
     }
 }

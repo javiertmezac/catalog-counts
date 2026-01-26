@@ -39,7 +39,7 @@ public class JwtRequiredFilter implements ContainerRequestFilter {
 
         String path = containerRequestContext.getUriInfo().getPath();
 
-        if (path.startsWith("public")) {
+        if (path.startsWith("public") || path.startsWith("login")) {
             return;
         }
 

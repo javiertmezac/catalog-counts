@@ -2,7 +2,7 @@ package com.jtmc.apps.reforma.api.v2.catalogcount;
 
 import com.google.inject.Inject;
 import com.jtmc.apps.reforma.api.v1.annotations.JwtRequired;
-import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountResponse;
+import com.jtmc.apps.reforma.api.v1.catalogcount.CatalogCountCumulativeSumResponse;
 import com.jtmc.apps.reforma.api.v2.Pagination;
 import com.jtmc.apps.reforma.impl.catalogcount.CatalogCountImpl;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class CatalogCountApiImpl implements CatalogCountApi {
         checkArgument(size > 0, "Invalid page size number");
         checkArgument(filterYear > 2021, "Invalid Filter Year (minimum 2022)");
 
-        List<CatalogCountResponse> list = catalogCountImpl.selectAllWithTotalColumn(branchId, page, size, filterYear, search);
+        List<CatalogCountCumulativeSumResponse> list = catalogCountImpl.selectAllWithTotalColumn(branchId, page, size, filterYear, search);
         long totalItems = catalogCountImpl.selectCountPagination(branchId, page, size, filterYear, search);
         Pagination pagination = new Pagination(page, size, totalPages(totalItems, size), totalItems);
 
